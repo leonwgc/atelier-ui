@@ -1,0 +1,1 @@
+.at-color-picker{display:inline-flex;align-items:center;gap:10px;color:var(--at-color-subtle);font-size:14px}.at-color-picker input{width:42px;height:38px;padding:3px;border:1px solid var(--at-color-border);border-radius:8px;background:#fff;cursor:pointer}.at-color-picker code{color:var(--at-color-primary)}

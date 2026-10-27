@@ -1,0 +1,1 @@
+.at-list{display:flex;max-width:600px;flex-direction:column;margin:0;padding:0;list-style:none}.at-list li{padding:12px 14px;border-bottom:1px solid var(--at-color-border)}.at-list--bordered{border:1px solid var(--at-color-border);border-radius:var(--at-radius-md);overflow:hidden}.at-list--bordered li:last-child{border-bottom:0}

@@ -1,0 +1,1 @@
+.at-cascader{display:flex;flex-wrap:wrap;gap:8px}.at-cascader select,.at-tree-select select{min-width:150px;height:40px;padding:0 10px;border:1px solid var(--at-color-border-strong);border-radius:var(--at-radius-sm);background:#fff;color:var(--at-color-text)}

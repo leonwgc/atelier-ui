@@ -7,44 +7,275 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "engines": { "node": ">=20.19.0" },
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./button": { "types": "./dist/entries/button.d.ts", "import": "./dist/button.js", "require": "./dist/button.cjs" },
-    "./input": { "types": "./dist/entries/input.d.ts", "import": "./dist/input.js", "require": "./dist/input.cjs" },
-    "./textarea": { "types": "./dist/entries/textarea.d.ts", "import": "./dist/textarea.js", "require": "./dist/textarea.cjs" },
-    "./select": { "types": "./dist/entries/select.d.ts", "import": "./dist/select.js", "require": "./dist/select.cjs" },
-    "./checkbox": { "types": "./dist/entries/checkbox.d.ts", "import": "./dist/checkbox.js", "require": "./dist/checkbox.cjs" },
-    "./radio": { "types": "./dist/entries/radio.d.ts", "import": "./dist/radio.js", "require": "./dist/radio.cjs" },
-    "./switch": { "types": "./dist/entries/switch.d.ts", "import": "./dist/switch.js", "require": "./dist/switch.cjs" },
-    "./modal": { "types": "./dist/entries/modal.d.ts", "import": "./dist/modal.js", "require": "./dist/modal.cjs" },
-    "./table": { "types": "./dist/entries/table.d.ts", "import": "./dist/table.js", "require": "./dist/table.cjs" },
-    "./alert": { "types": "./dist/entries/alert.d.ts", "import": "./dist/alert.js", "require": "./dist/alert.cjs" },
-    "./tag": { "types": "./dist/entries/tag.d.ts", "import": "./dist/tag.js", "require": "./dist/tag.cjs" },
-    "./avatar": { "types": "./dist/entries/avatar.d.ts", "import": "./dist/avatar.js", "require": "./dist/avatar.cjs" },
-    "./tooltip": { "types": "./dist/entries/tooltip.d.ts", "import": "./dist/tooltip.js", "require": "./dist/tooltip.cjs" },
-    "./badge": { "types": "./dist/entries/badge.d.ts", "import": "./dist/badge.js", "require": "./dist/badge.cjs" },
-    "./breadcrumb": { "types": "./dist/entries/breadcrumb.d.ts", "import": "./dist/breadcrumb.js", "require": "./dist/breadcrumb.cjs" },
-    "./divider": { "types": "./dist/entries/divider.d.ts", "import": "./dist/divider.js", "require": "./dist/divider.cjs" },
-    "./empty": { "types": "./dist/entries/empty.d.ts", "import": "./dist/empty.js", "require": "./dist/empty.cjs" },
-    "./pagination": { "types": "./dist/entries/pagination.d.ts", "import": "./dist/pagination.js", "require": "./dist/pagination.cjs" },
-    "./progress": { "types": "./dist/entries/progress.d.ts", "import": "./dist/progress.js", "require": "./dist/progress.cjs" },
-    "./skeleton": { "types": "./dist/entries/skeleton.d.ts", "import": "./dist/skeleton.js", "require": "./dist/skeleton.cjs" },
-    "./spin": { "types": "./dist/entries/spin.d.ts", "import": "./dist/spin.js", "require": "./dist/spin.cjs" },
-    "./tabs": { "types": "./dist/entries/tabs.d.ts", "import": "./dist/tabs.js", "require": "./dist/tabs.cjs" },
-    "./card": { "types": "./dist/entries/card.d.ts", "import": "./dist/card.js", "require": "./dist/card.cjs" },
-    "./descriptions": { "types": "./dist/entries/descriptions.d.ts", "import": "./dist/descriptions.js", "require": "./dist/descriptions.cjs" },
-    "./steps": { "types": "./dist/entries/steps.d.ts", "import": "./dist/steps.js", "require": "./dist/steps.cjs" },
-    "./timeline": { "types": "./dist/entries/timeline.d.ts", "import": "./dist/timeline.js", "require": "./dist/timeline.cjs" },
-    "./collapse": { "types": "./dist/entries/collapse.d.ts", "import": "./dist/collapse.js", "require": "./dist/collapse.cjs" },
-    "./date-picker": { "types": "./dist/entries/date-picker.d.ts", "import": "./dist/date-picker.js", "require": "./dist/date-picker.cjs" },
-    "./upload": { "types": "./dist/entries/upload.d.ts", "import": "./dist/upload.js", "require": "./dist/upload.cjs" },
-    "./drawer": { "types": "./dist/entries/drawer.d.ts", "import": "./dist/drawer.js", "require": "./dist/drawer.cjs" },
-    "./form": { "types": "./dist/entries/form.d.ts", "import": "./dist/form.js", "require": "./dist/form.cjs" },
+    "./button": {
+      "types": "./dist/entries/button.d.ts",
+      "import": "./dist/button.js",
+      "require": "./dist/button.cjs"
+    },
+    "./input": {
+      "types": "./dist/entries/input.d.ts",
+      "import": "./dist/input.js",
+      "require": "./dist/input.cjs"
+    },
+    "./textarea": {
+      "types": "./dist/entries/textarea.d.ts",
+      "import": "./dist/textarea.js",
+      "require": "./dist/textarea.cjs"
+    },
+    "./select": {
+      "types": "./dist/entries/select.d.ts",
+      "import": "./dist/select.js",
+      "require": "./dist/select.cjs"
+    },
+    "./checkbox": {
+      "types": "./dist/entries/checkbox.d.ts",
+      "import": "./dist/checkbox.js",
+      "require": "./dist/checkbox.cjs"
+    },
+    "./radio": {
+      "types": "./dist/entries/radio.d.ts",
+      "import": "./dist/radio.js",
+      "require": "./dist/radio.cjs"
+    },
+    "./switch": {
+      "types": "./dist/entries/switch.d.ts",
+      "import": "./dist/switch.js",
+      "require": "./dist/switch.cjs"
+    },
+    "./modal": {
+      "types": "./dist/entries/modal.d.ts",
+      "import": "./dist/modal.js",
+      "require": "./dist/modal.cjs"
+    },
+    "./table": {
+      "types": "./dist/entries/table.d.ts",
+      "import": "./dist/table.js",
+      "require": "./dist/table.cjs"
+    },
+    "./alert": {
+      "types": "./dist/entries/alert.d.ts",
+      "import": "./dist/alert.js",
+      "require": "./dist/alert.cjs"
+    },
+    "./tag": {
+      "types": "./dist/entries/tag.d.ts",
+      "import": "./dist/tag.js",
+      "require": "./dist/tag.cjs"
+    },
+    "./avatar": {
+      "types": "./dist/entries/avatar.d.ts",
+      "import": "./dist/avatar.js",
+      "require": "./dist/avatar.cjs"
+    },
+    "./tooltip": {
+      "types": "./dist/entries/tooltip.d.ts",
+      "import": "./dist/tooltip.js",
+      "require": "./dist/tooltip.cjs"
+    },
+    "./badge": {
+      "types": "./dist/entries/badge.d.ts",
+      "import": "./dist/badge.js",
+      "require": "./dist/badge.cjs"
+    },
+    "./breadcrumb": {
+      "types": "./dist/entries/breadcrumb.d.ts",
+      "import": "./dist/breadcrumb.js",
+      "require": "./dist/breadcrumb.cjs"
+    },
+    "./divider": {
+      "types": "./dist/entries/divider.d.ts",
+      "import": "./dist/divider.js",
+      "require": "./dist/divider.cjs"
+    },
+    "./empty": {
+      "types": "./dist/entries/empty.d.ts",
+      "import": "./dist/empty.js",
+      "require": "./dist/empty.cjs"
+    },
+    "./pagination": {
+      "types": "./dist/entries/pagination.d.ts",
+      "import": "./dist/pagination.js",
+      "require": "./dist/pagination.cjs"
+    },
+    "./progress": {
+      "types": "./dist/entries/progress.d.ts",
+      "import": "./dist/progress.js",
+      "require": "./dist/progress.cjs"
+    },
+    "./skeleton": {
+      "types": "./dist/entries/skeleton.d.ts",
+      "import": "./dist/skeleton.js",
+      "require": "./dist/skeleton.cjs"
+    },
+    "./spin": {
+      "types": "./dist/entries/spin.d.ts",
+      "import": "./dist/spin.js",
+      "require": "./dist/spin.cjs"
+    },
+    "./tabs": {
+      "types": "./dist/entries/tabs.d.ts",
+      "import": "./dist/tabs.js",
+      "require": "./dist/tabs.cjs"
+    },
+    "./card": {
+      "types": "./dist/entries/card.d.ts",
+      "import": "./dist/card.js",
+      "require": "./dist/card.cjs"
+    },
+    "./descriptions": {
+      "types": "./dist/entries/descriptions.d.ts",
+      "import": "./dist/descriptions.js",
+      "require": "./dist/descriptions.cjs"
+    },
+    "./steps": {
+      "types": "./dist/entries/steps.d.ts",
+      "import": "./dist/steps.js",
+      "require": "./dist/steps.cjs"
+    },
+    "./timeline": {
+      "types": "./dist/entries/timeline.d.ts",
+      "import": "./dist/timeline.js",
+      "require": "./dist/timeline.cjs"
+    },
+    "./collapse": {
+      "types": "./dist/entries/collapse.d.ts",
+      "import": "./dist/collapse.js",
+      "require": "./dist/collapse.cjs"
+    },
+    "./date-picker": {
+      "types": "./dist/entries/date-picker.d.ts",
+      "import": "./dist/date-picker.js",
+      "require": "./dist/date-picker.cjs"
+    },
+    "./upload": {
+      "types": "./dist/entries/upload.d.ts",
+      "import": "./dist/upload.js",
+      "require": "./dist/upload.cjs"
+    },
+    "./drawer": {
+      "types": "./dist/entries/drawer.d.ts",
+      "import": "./dist/drawer.js",
+      "require": "./dist/drawer.cjs"
+    },
+    "./form": {
+      "types": "./dist/entries/form.d.ts",
+      "import": "./dist/form.js",
+      "require": "./dist/form.cjs"
+    },
+    "./float-button": {
+      "types": "./dist/entries/float-button.d.ts",
+      "import": "./dist/float-button.js",
+      "require": "./dist/float-button.cjs"
+    },
+    "./icon": {
+      "types": "./dist/entries/icon.d.ts",
+      "import": "./dist/icon.js",
+      "require": "./dist/icon.cjs"
+    },
+    "./typography": {
+      "types": "./dist/entries/typography.d.ts",
+      "import": "./dist/typography.js",
+      "require": "./dist/typography.cjs"
+    },
+    "./flex": {
+      "types": "./dist/entries/flex.d.ts",
+      "import": "./dist/flex.js",
+      "require": "./dist/flex.cjs"
+    },
+    "./space": {
+      "types": "./dist/entries/space.d.ts",
+      "import": "./dist/space.js",
+      "require": "./dist/space.cjs"
+    },
+    "./layout": {
+      "types": "./dist/entries/layout.d.ts",
+      "import": "./dist/layout.js",
+      "require": "./dist/layout.cjs"
+    },
+    "./grid": {
+      "types": "./dist/entries/grid.d.ts",
+      "import": "./dist/grid.js",
+      "require": "./dist/grid.cjs"
+    },
+    "./affix": {
+      "types": "./dist/entries/affix.d.ts",
+      "import": "./dist/affix.js",
+      "require": "./dist/affix.cjs"
+    },
+    "./anchor": {
+      "types": "./dist/entries/anchor.d.ts",
+      "import": "./dist/anchor.js",
+      "require": "./dist/anchor.cjs"
+    },
+    "./dropdown": {
+      "types": "./dist/entries/dropdown.d.ts",
+      "import": "./dist/dropdown.js",
+      "require": "./dist/dropdown.cjs"
+    },
+    "./auto-complete": {
+      "types": "./dist/entries/auto-complete.d.ts",
+      "import": "./dist/auto-complete.js",
+      "require": "./dist/auto-complete.cjs"
+    },
+    "./input-number": {
+      "types": "./dist/entries/input-number.d.ts",
+      "import": "./dist/input-number.js",
+      "require": "./dist/input-number.cjs"
+    },
+    "./rate": {
+      "types": "./dist/entries/rate.d.ts",
+      "import": "./dist/rate.js",
+      "require": "./dist/rate.cjs"
+    },
+    "./slider": {
+      "types": "./dist/entries/slider.d.ts",
+      "import": "./dist/slider.js",
+      "require": "./dist/slider.cjs"
+    },
+    "./time-picker": {
+      "types": "./dist/entries/time-picker.d.ts",
+      "import": "./dist/time-picker.js",
+      "require": "./dist/time-picker.cjs"
+    },
+    "./segmented": {
+      "types": "./dist/entries/segmented.d.ts",
+      "import": "./dist/segmented.js",
+      "require": "./dist/segmented.cjs"
+    },
+    "./statistic": {
+      "types": "./dist/entries/statistic.d.ts",
+      "import": "./dist/statistic.js",
+      "require": "./dist/statistic.cjs"
+    },
+    "./image": {
+      "types": "./dist/entries/image.d.ts",
+      "import": "./dist/image.js",
+      "require": "./dist/image.cjs"
+    },
+    "./popover": {
+      "types": "./dist/entries/popover.d.ts",
+      "import": "./dist/popover.js",
+      "require": "./dist/popover.cjs"
+    },
+    "./popconfirm": {
+      "types": "./dist/entries/popconfirm.d.ts",
+      "import": "./dist/popconfirm.js",
+      "require": "./dist/popconfirm.cjs"
+    },
+    "./result": {
+      "types": "./dist/entries/result.d.ts",
+      "import": "./dist/result.js",
+      "require": "./dist/result.cjs"
+    },
     "./resolvers/zod": {
       "types": "./dist/entries/zodResolver.d.ts",
       "import": "./dist/zodResolver.js"
@@ -52,10 +283,124 @@
     "./resolvers/yup": {
       "types": "./dist/entries/yupResolver.d.ts",
       "import": "./dist/yupResolver.js"
+    },
+    "./cascader": {
+      "types": "./dist/entries/cascader.d.ts",
+      "import": "./dist/cascader.js",
+      "require": "./dist/cascader.cjs"
+    },
+    "./color-picker": {
+      "types": "./dist/entries/color-picker.d.ts",
+      "import": "./dist/color-picker.js",
+      "require": "./dist/color-picker.cjs"
+    },
+    "./mentions": {
+      "types": "./dist/entries/mentions.d.ts",
+      "import": "./dist/mentions.js",
+      "require": "./dist/mentions.cjs"
+    },
+    "./transfer": {
+      "types": "./dist/entries/transfer.d.ts",
+      "import": "./dist/transfer.js",
+      "require": "./dist/transfer.cjs"
+    },
+    "./tree-select": {
+      "types": "./dist/entries/tree-select.d.ts",
+      "import": "./dist/tree-select.js",
+      "require": "./dist/tree-select.cjs"
+    },
+    "./calendar": {
+      "types": "./dist/entries/calendar.d.ts",
+      "import": "./dist/calendar.js",
+      "require": "./dist/calendar.cjs"
+    },
+    "./carousel": {
+      "types": "./dist/entries/carousel.d.ts",
+      "import": "./dist/carousel.js",
+      "require": "./dist/carousel.cjs"
+    },
+    "./list": {
+      "types": "./dist/entries/list.d.ts",
+      "import": "./dist/list.js",
+      "require": "./dist/list.cjs"
+    },
+    "./listy": {
+      "types": "./dist/entries/listy.d.ts",
+      "import": "./dist/listy.js",
+      "require": "./dist/listy.cjs"
+    },
+    "./masonry": {
+      "types": "./dist/entries/masonry.d.ts",
+      "import": "./dist/masonry.js",
+      "require": "./dist/masonry.cjs"
+    },
+    "./qrcode": {
+      "types": "./dist/entries/qrcode.d.ts",
+      "import": "./dist/qrcode.js",
+      "require": "./dist/qrcode.cjs"
+    },
+    "./menu": {
+      "types": "./dist/entries/menu.d.ts",
+      "import": "./dist/menu.js",
+      "require": "./dist/menu.cjs"
+    },
+    "./tree": {
+      "types": "./dist/entries/tree.d.ts",
+      "import": "./dist/tree.js",
+      "require": "./dist/tree.cjs"
+    },
+    "./tour": {
+      "types": "./dist/entries/tour.d.ts",
+      "import": "./dist/tour.js",
+      "require": "./dist/tour.cjs"
+    },
+    "./watermark": {
+      "types": "./dist/entries/watermark.d.ts",
+      "import": "./dist/watermark.js",
+      "require": "./dist/watermark.cjs"
+    },
+    "./splitter": {
+      "types": "./dist/entries/splitter.d.ts",
+      "import": "./dist/splitter.js",
+      "require": "./dist/splitter.cjs"
+    },
+    "./message": {
+      "types": "./dist/entries/message.d.ts",
+      "import": "./dist/message.js",
+      "require": "./dist/message.cjs"
+    },
+    "./notification": {
+      "types": "./dist/entries/notification.d.ts",
+      "import": "./dist/notification.js",
+      "require": "./dist/notification.cjs"
+    },
+    "./app": {
+      "types": "./dist/entries/app.d.ts",
+      "import": "./dist/app.js",
+      "require": "./dist/app.cjs"
+    },
+    "./config-provider": {
+      "types": "./dist/entries/config-provider.d.ts",
+      "import": "./dist/config-provider.js",
+      "require": "./dist/config-provider.cjs"
+    },
+    "./border-beam": {
+      "types": "./dist/entries/border-beam.d.ts",
+      "import": "./dist/border-beam.js",
+      "require": "./dist/border-beam.cjs"
+    },
+    "./util": {
+      "types": "./dist/entries/util.d.ts",
+      "import": "./dist/util.js",
+      "require": "./dist/util.cjs"
     }
   },
-  "files": ["dist"],
-  "sideEffects": ["**/*.css"],
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "dev": "vite --config demo/vite.config.ts",
     "build": "npm run build:lib && npm run build:demo",
@@ -69,16 +414,24 @@
     "react-dom": "^18.2.0"
   },
   "peerDependenciesMeta": {
-    "react": { "optional": false },
-    "react-dom": { "optional": false }
+    "react": {
+      "optional": false
+    },
+    "react-dom": {
+      "optional": false
+    }
   },
   "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@types/node": "^22.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.8.2",
-    "vite": "^8.3.0"
+    "vite": "^8.3.5"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
   }
 }

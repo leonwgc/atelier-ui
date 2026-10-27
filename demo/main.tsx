@@ -5,9 +5,10 @@ import {
   Select, Skeleton, Spin, Steps, Switch, Table, Tabs, Tag, Textarea, Timeline, Tooltip, Upload, useFieldArray, useForm, useWatch,
   type TableColumn,
 } from '../src';
+import { additionalComponents, AdditionalComponentPage, isAdditionalPageId, type AdditionalPageId } from './AdditionalPages';
 import './styles.css';
 
-type PageId = 'overview' | 'form' | 'buttons' | 'inputs' | 'selection' | 'feedback' | 'table' | 'alert' | 'tag' | 'avatar' | 'tooltip' | 'badge' | 'breadcrumb' | 'divider' | 'empty' | 'pagination' | 'progress' | 'skeleton' | 'spin' | 'tabs' | 'card' | 'descriptions' | 'steps' | 'timeline' | 'collapse' | 'datePicker' | 'upload' | 'drawer';
+type PageId = 'overview' | 'form' | 'buttons' | 'inputs' | 'selection' | 'feedback' | 'table' | 'alert' | 'tag' | 'avatar' | 'tooltip' | 'badge' | 'breadcrumb' | 'divider' | 'empty' | 'pagination' | 'progress' | 'skeleton' | 'spin' | 'tabs' | 'card' | 'descriptions' | 'steps' | 'timeline' | 'collapse' | 'datePicker' | 'upload' | 'drawer' | AdditionalPageId;
 
 const navigation: Array<{ id: PageId; title: string; icon: string; group: string }> = [
   { id: 'overview', title: '组件总览', icon: '◫', group: '开始使用' },
@@ -38,6 +39,7 @@ const navigation: Array<{ id: PageId; title: string; icon: string; group: string
   { id: 'timeline', title: 'Timeline 时间轴', icon: '⋮', group: '数据展示' },
   { id: 'collapse', title: 'Collapse 折叠面板', icon: '⌄', group: '数据展示' },
   { id: 'divider', title: 'Divider 分割线', icon: '―', group: '基础组件' },
+  ...additionalComponents.map(({ id, title, icon, group }) => ({ id, title, icon, group })),
 ];
 
 function App() {
@@ -106,7 +108,7 @@ function App() {
           </div>;
         })}
       </nav>
-      <div className="sidebar__bottom"><div className="sidebar-note"><span className="sidebar-note__spark">✳</span><div><strong>精心打磨每个细节</strong><span>为产品界面而生的组件</span></div></div><a href="https://ant.design/components/form-cn/" target="_blank" rel="noreferrer" className="sidebar__link">Form 能力参考 <span>↗</span></a><div className="sidebar__copyright">Made for thoughtful interfaces <span>✦</span></div></div>
+      <div className="sidebar__bottom"><div className="sidebar-note"><span className="sidebar-note__spark">✳</span><div><strong>精心打磨每个细节</strong><span>为产品界面而生的组件</span></div></div><div className="sidebar__copyright">Made for thoughtful interfaces <span>✦</span></div></div>
     </aside>
     <main className="main-area" id="top">
       <header className="topbar"><button className="sidebar-toggle" type="button" aria-label={sidebarCollapsed ? '展开侧边栏' : '收起侧边栏'} title={sidebarCollapsed ? '展开侧边栏' : '收起侧边栏'} onClick={() => setSidebarCollapsed((collapsed) => !collapsed)}><span aria-hidden="true">{sidebarCollapsed ? '›' : '‹'}</span></button><button className="mobile-menu" type="button" aria-label={mobileMenu ? '关闭导航' : '打开导航'} onClick={() => { setSidebarCollapsed(false); setMobileMenu((open) => !open); }}>☰</button><div className="breadcrumbs"><span>组件手册</span><span className="crumb-separator">/</span><strong>{currentPage.title}</strong></div><div className="topbar__right"><button ref={searchButtonRef} className="search-trigger" type="button" onClick={() => { setSearchQuery(''); setActiveResult(0); setSearchOpen(true); }} aria-label="全局搜索，Command 加 K"><span aria-hidden="true">⌕</span><kbd>⌘ K</kbd></button><span className="topbar__status"><i /> 所有组件已就绪</span></div></header>
@@ -139,6 +141,7 @@ function App() {
         {page === 'datePicker' && <DatePickerPage />}
         {page === 'upload' && <UploadPage />}
         {page === 'drawer' && <DrawerPage />}
+        {isAdditionalPageId(page) && <AdditionalComponentPage id={page} />}
         <footer className="site-footer"><span>Atelier UI · 让界面细节自然发生</span><span>React 18 · TypeScript</span></footer>
       </div>
     </main>

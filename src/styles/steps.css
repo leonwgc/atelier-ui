@@ -3,6 +3,7 @@
 .at-steps__action { position: relative; z-index: 1; display: flex; min-width: 0; align-items: flex-start; gap: 9px; border: 0; padding: 0; color: inherit; background: transparent; font: inherit; text-align: left; }
 .at-steps__indicator { display: grid; width: 25px; height: 25px; flex: 0 0 auto; place-items: center; border: 1px solid #dedfe8; border-radius: 50%; color: #989cad; background: #fff; font-size: 12px; }
 .at-steps__content { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
+.at-steps--horizontal .at-steps__content { position: relative; z-index: 2; padding-right: 8px; background: var(--at-color-surface, #fff); }
 .at-steps__title { color: #777c90; font-size: 13px; font-weight: 500; }
 .at-steps__description { color: #a0a4b2; font-size: 11px; line-height: 1.4; }
 .at-steps__item--process .at-steps__indicator { border-color: #685cf6; color: #fff; background: #685cf6; }

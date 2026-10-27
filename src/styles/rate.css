@@ -1,0 +1,1 @@
+.at-rate{display:inline-flex;gap:4px}.at-rate__star{padding:1px;border:0;background:none;color:var(--at-color-border-strong);font-size:27px;line-height:1}.at-rate__star--active{color:#e9a438}.at-rate__star:focus-visible{outline:2px solid var(--at-color-primary);border-radius:4px}

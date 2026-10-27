@@ -1,0 +1,1 @@
+.at-statistic{display:flex;flex-direction:column;gap:7px}.at-statistic__title{color:var(--at-color-muted);font-size:14px}.at-statistic__value{color:var(--at-color-text);font-size:30px;font-weight:700;letter-spacing:-.03em}.at-statistic__value span{margin-right:4px;font-size:16px;font-weight:500}

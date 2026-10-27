@@ -1,0 +1,267 @@
+import { createContext, useContext, useEffect, useId, useState, type ButtonHTMLAttributes, type CSSProperties, type ElementType, type HTMLAttributes, type ImgHTMLAttributes, type InputHTMLAttributes, type ReactNode } from 'react';
+import QRCodeEncoder from 'qrcode';
+
+export interface FloatButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> { icon?: ReactNode; description?: ReactNode; shape?: 'circle' | 'square' }
+export function FloatButton({ icon = '↑', description, shape = 'circle', className = '', ...props }: FloatButtonProps) {
+  return <button {...props} type={props.type ?? 'button'} className={`at-float-button at-float-button--${shape} ${className}`} aria-label={props['aria-label'] ?? (typeof description === 'string' ? description : '快捷操作')}><span>{icon}</span>{description && <small>{description}</small>}</button>;
+}
+
+export type IconName = 'plus' | 'search' | 'check' | 'close' | 'arrow-right' | 'info' | 'more';
+const iconPaths: Record<IconName, ReactNode> = {
+  plus: <><path d="M12 5v14M5 12h14" /></>, search: <><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></>, check: <path d="m5 12 4 4L19 6" />, close: <><path d="m6 6 12 12M18 6 6 18" /></>, 'arrow-right': <><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></>, info: <><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8h.01" /></>, more: <><circle cx="5" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /></>,
+};
+export function Icon({ name, size = 20, title, className = '' }: { name: IconName; size?: number; title?: string; className?: string }) {
+  return <svg className={`at-icon ${className}`} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" role={title ? 'img' : undefined} aria-hidden={title ? undefined : true}>{title && <title>{title}</title>}{iconPaths[name]}</svg>;
+}
+
+export function Typography({ as: Component = 'p', variant = 'body', children, className = '', ...props }: HTMLAttributes<HTMLElement> & { as?: ElementType; variant?: 'display' | 'title' | 'body' | 'secondary' | 'caption' }) {
+  return <Component {...props} className={`at-typography at-typography--${variant} ${className}`}>{children}</Component>;
+}
+
+export interface FlexProps extends HTMLAttributes<HTMLDivElement> { vertical?: boolean; gap?: number | string; align?: CSSProperties['alignItems']; justify?: CSSProperties['justifyContent']; wrap?: boolean }
+export function Flex({ vertical = false, gap = 12, align = 'center', justify = 'flex-start', wrap = false, style, className = '', ...props }: FlexProps) {
+  return <div {...props} className={`at-flex ${className}`} style={{ display: 'flex', flexDirection: vertical ? 'column' : 'row', gap, alignItems: align, justifyContent: justify, flexWrap: wrap ? 'wrap' : 'nowrap', ...style }} />;
+}
+export function Space({ size = 12, direction = 'horizontal', wrap = false, children, className = '' }: { size?: number | string; direction?: 'horizontal' | 'vertical'; wrap?: boolean; children: ReactNode; className?: string }) {
+  return <div className={`at-space at-space--${direction} ${className}`} style={{ gap: size, flexWrap: wrap ? 'wrap' : 'nowrap' }}>{children}</div>;
+}
+
+export interface LayoutProps extends HTMLAttributes<HTMLDivElement> { children: ReactNode }
+export function Layout({ children, className = '', ...props }: LayoutProps) { return <div {...props} className={`at-layout ${className}`}>{children}</div>; }
+export function LayoutHeader({ children, className = '', ...props }: LayoutProps) { return <header {...props} className={`at-layout__header ${className}`}>{children}</header>; }
+export function LayoutSider({ children, width = 220, className = '', ...props }: LayoutProps & { width?: number | string }) { return <aside {...props} className={`at-layout__sider ${className}`} style={{ width, ...props.style }}>{children}</aside>; }
+export function LayoutContent({ children, className = '', ...props }: LayoutProps) { return <main {...props} className={`at-layout__content ${className}`}>{children}</main>; }
+export function LayoutFooter({ children, className = '', ...props }: LayoutProps) { return <footer {...props} className={`at-layout__footer ${className}`}>{children}</footer>; }
+
+export function Grid({ columns = 24, gap = 16, children, className = '' }: { columns?: number; gap?: number | string; children: ReactNode; className?: string }) {
+  return <div className={`at-grid ${className}`} style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap }}>{children}</div>;
+}
+export function GridCol({ span = 12, children, className = '' }: { span?: number; children: ReactNode; className?: string }) {
+  return <div className={`at-grid__col ${className}`} style={{ gridColumn: `span ${span}` }}>{children}</div>;
+}
+
+export function Affix({ top = 16, children, className = '' }: { top?: number; children: ReactNode; className?: string }) {
+  return <div className={`at-affix ${className}`} style={{ position: 'sticky', top, zIndex: 2 }}>{children}</div>;
+}
+export interface AnchorItem { href: string; title: ReactNode }
+export function Anchor({ items, className = '' }: { items: AnchorItem[]; className?: string }) {
+  return <nav className={`at-anchor ${className}`} aria-label="页面锚点">{items.map((item) => <a key={item.href} href={item.href}>{item.title}</a>)}</nav>;
+}
+
+export interface DropdownItem { key: string; label: ReactNode; disabled?: boolean; onClick?: () => void }
+export function Dropdown({ items, children, placement = 'bottom-start' }: { items: DropdownItem[]; children: ReactNode; placement?: 'bottom-start' | 'bottom-end' }) {
+  return <details className={`at-dropdown at-dropdown--${placement}`}><summary>{children}<span aria-hidden="true">⌄</span></summary><div className="at-dropdown__menu" role="menu">{items.map((item) => <button key={item.key} type="button" role="menuitem" disabled={item.disabled} onClick={() => { item.onClick?.(); const details = document.activeElement?.closest('details'); details?.removeAttribute('open'); }}>{item.label}</button>)}</div></details>;
+}
+
+export function AutoComplete({ options, value, defaultValue, onChange, placeholder = '输入以搜索…', label, className = '' }: { options: string[]; value?: string; defaultValue?: string; onChange?: (value: string) => void; placeholder?: string; label?: string; className?: string }) {
+  const listId = useId();
+  return <label className={`at-autocomplete ${className}`}>{label && <span>{label}</span>}<input list={listId} value={value} defaultValue={defaultValue} placeholder={placeholder} onChange={(event) => onChange?.(event.target.value)} /><datalist id={listId}>{options.map((option) => <option key={option} value={option} />)}</datalist></label>;
+}
+export function InputNumber(props: Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & { label?: string; onValueChange?: (value: number | null) => void }) {
+  const { label, onValueChange, className = '', ...inputProps } = props;
+  return <label className="at-input-number">{label && <span>{label}</span>}<input {...inputProps} className={className} type="number" onChange={(event) => { inputProps.onChange?.(event); onValueChange?.(event.target.value === '' ? null : Number(event.target.value)); }} /></label>;
+}
+export function Rate({ value, defaultValue = 0, count = 5, allowClear = true, onChange, label = '评分' }: { value?: number; defaultValue?: number; count?: number; allowClear?: boolean; onChange?: (value: number) => void; label?: string }) {
+  const [current, setCurrent] = useState(defaultValue);
+  const selected = value ?? current;
+  return <div className="at-rate" role="group" aria-label={label}>{Array.from({ length: count }, (_, index) => <button key={index} type="button" aria-label={`${index + 1} 星`} aria-pressed={selected > index} className={selected > index ? 'at-rate__star at-rate__star--active' : 'at-rate__star'} onClick={() => { const next = allowClear && selected === index + 1 ? 0 : index + 1; setCurrent(next); onChange?.(next); }}>★</button>)}</div>;
+}
+export function Slider({ value, defaultValue = 40, min = 0, max = 100, step = 1, onChange, label = '数值' }: { value?: number; defaultValue?: number; min?: number; max?: number; step?: number; onChange?: (value: number) => void; label?: string }) {
+  const [current, setCurrent] = useState(defaultValue);
+  const resolved = value ?? current;
+  return <label className="at-slider"><span>{label}<output>{resolved}</output></span><input aria-label={label} type="range" min={min} max={max} step={step} value={resolved} onChange={(event) => { const next = Number(event.target.value); setCurrent(next); onChange?.(next); }} /></label>;
+}
+export function TimePicker({ label, value, defaultValue, className = '', ...props }: InputHTMLAttributes<HTMLInputElement> & { label?: string }) {
+  return <label className="at-time-picker">{label && <span>{label}</span>}<input {...props} className={className} type="time" value={value} defaultValue={defaultValue} /></label>;
+}
+
+export function Segmented<T extends string>({ options, value, defaultValue, onChange, ariaLabel = '视图切换' }: { options: Array<{ label: ReactNode; value: T; disabled?: boolean }>; value?: T; defaultValue?: T; onChange?: (value: T) => void; ariaLabel?: string }) {
+  const [current, setCurrent] = useState<T | undefined>(defaultValue ?? options[0]?.value);
+  const selected = value ?? current;
+  return <div className="at-segmented" role="group" aria-label={ariaLabel}>{options.map((option) => <button key={option.value} type="button" disabled={option.disabled} aria-pressed={selected === option.value} className={selected === option.value ? 'at-segmented__option at-segmented__option--active' : 'at-segmented__option'} onClick={() => { setCurrent(option.value); onChange?.(option.value); }}>{option.label}</button>)}</div>;
+}
+export function Statistic({ title, value, prefix, suffix, precision = 0 }: { title: ReactNode; value: number | string; prefix?: ReactNode; suffix?: ReactNode; precision?: number }) {
+  const formatted = typeof value === 'number' ? value.toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision }) : value;
+  return <div className="at-statistic"><div className="at-statistic__title">{title}</div><div className="at-statistic__value">{prefix && <span>{prefix}</span>}{formatted}{suffix && <span>{suffix}</span>}</div></div>;
+}
+
+export function Image({ src, alt = '', preview = true, className = '', ...props }: ImgHTMLAttributes<HTMLImageElement> & { preview?: boolean }) {
+  const [open, setOpen] = useState(false);
+  return <><img {...props} src={src} alt={alt} className={`at-image ${preview ? 'at-image--previewable' : ''} ${className}`} onClick={(event) => { props.onClick?.(event); if (preview) setOpen(true); }} />{open && <div className="at-image-preview" role="dialog" aria-label="图片预览" onClick={() => setOpen(false)}><button type="button" aria-label="关闭预览" onClick={() => setOpen(false)}>×</button><img src={src} alt={alt} /></div>}</>;
+}
+export function Popover({ content, children, title, trigger = 'click' }: { content: ReactNode; children: ReactNode; title?: ReactNode; trigger?: 'click' | 'hover' }) {
+  const [open, setOpen] = useState(false);
+  return <span className={`at-popover at-popover--${trigger}`} onMouseEnter={trigger === 'hover' ? () => setOpen(true) : undefined} onMouseLeave={trigger === 'hover' ? () => setOpen(false) : undefined}><button type="button" className="at-popover__trigger" aria-expanded={open} onClick={trigger === 'click' ? () => setOpen((current) => !current) : undefined} onFocus={trigger === 'hover' ? () => setOpen(true) : undefined} onBlur={trigger === 'hover' ? () => setOpen(false) : undefined}>{children}</button>{open && <span className="at-popover__panel" role="dialog">{title && <strong>{title}</strong>}<span>{content}</span></span>}</span>;
+}
+export function Popconfirm({ title, description, onConfirm, children }: { title: ReactNode; description?: ReactNode; onConfirm?: () => void; children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return <span className="at-popconfirm"><button type="button" aria-expanded={open} onClick={() => setOpen((current) => !current)}>{children}</button>{open && <span className="at-popconfirm__panel" role="alertdialog" aria-label={typeof title === 'string' ? title : '确认操作'}><strong>{title}</strong>{description && <span>{description}</span>}<span className="at-popconfirm__actions"><button type="button" onClick={() => setOpen(false)}>取消</button><button type="button" onClick={() => { onConfirm?.(); setOpen(false); }}>确定</button></span></span>}</span>;
+}
+export function Result({ status = 'info', title, subTitle, extra }: { status?: 'success' | 'error' | 'info' | 'warning' | '404' | '500'; title: ReactNode; subTitle?: ReactNode; extra?: ReactNode }) {
+  const icons = { success: '✓', error: '×', info: 'i', warning: '!', '404': '404', '500': '500' };
+  return <section className={`at-result at-result--${status}`}><span className="at-result__icon" aria-hidden="true">{icons[status]}</span><h2>{title}</h2>{subTitle && <p>{subTitle}</p>}{extra && <div className="at-result__extra">{extra}</div>}</section>;
+}
+
+export interface CascaderOption { label: string; value: string; disabled?: boolean; children?: CascaderOption[] }
+export function Cascader({ options, value, defaultValue = [], onChange, placeholder = '请选择…' }: { options: CascaderOption[]; value?: string[]; defaultValue?: string[]; onChange?: (path: string[], selectedOptions: CascaderOption[]) => void; placeholder?: string }) {
+  const [internal, setInternal] = useState(defaultValue);
+  const path = value ?? internal;
+  const columns: CascaderOption[][] = [];
+  let current = options;
+  for (let depth = 0; depth <= path.length; depth += 1) {
+    columns.push(current);
+    const selected = current.find((item) => item.value === path[depth]);
+    if (!selected?.children?.length) break;
+    current = selected.children;
+  }
+  return <div className="at-cascader">{columns.map((items, depth) => <select key={depth} aria-label={`第 ${depth + 1} 级选项`} value={path[depth] ?? ''} onChange={(event) => {
+    const next = [...path.slice(0, depth), event.target.value];
+    const selected: CascaderOption[] = [];
+    let level = options;
+    for (const itemValue of next) { const match = level.find((item) => item.value === itemValue); if (!match) break; selected.push(match); level = match.children ?? []; }
+    setInternal(next); onChange?.(next, selected);
+  }}><option value="">{placeholder}</option>{items.map((item) => <option key={item.value} value={item.value} disabled={item.disabled}>{item.label}</option>)}</select>)}</div>;
+}
+export function ColorPicker({ value, defaultValue = '#685cf6', onChange, disabled, label = '选择颜色' }: { value?: string; defaultValue?: string; onChange?: (value: string) => void; disabled?: boolean; label?: string }) {
+  const [internal, setInternal] = useState(defaultValue);
+  const color = value ?? internal;
+  return <label className="at-color-picker"><span>{label}</span><input aria-label={label} type="color" disabled={disabled} value={color} onChange={(event) => { setInternal(event.target.value); onChange?.(event.target.value); }} /><code>{color.toUpperCase()}</code></label>;
+}
+export function Mentions({ options, value, defaultValue = '', onChange, placeholder = '输入 @ 提及成员', label = '内容' }: { options: string[]; value?: string; defaultValue?: string; onChange?: (value: string) => void; placeholder?: string; label?: string }) {
+  const [internal, setInternal] = useState(defaultValue);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const current = value ?? internal;
+  const listId = useId();
+  const mention = current.match(/(?:^|\s)@([^\s@]*)$/);
+  const suggestions = mention ? options.filter((option) => option.toLocaleLowerCase().includes(mention[1].toLocaleLowerCase())) : [];
+  const choose = (option: string) => {
+    const next = current.replace(/@[\S]*$/, `@${option} `);
+    setInternal(next);
+    onChange?.(next);
+  };
+  return <div className="at-mentions"><label htmlFor={listId}>{label}</label><textarea id={listId} value={current} placeholder={placeholder} rows={3} aria-autocomplete="list" aria-expanded={suggestions.length > 0} aria-controls={`${listId}-options`} onChange={(event) => { setInternal(event.target.value); setActiveIndex(0); onChange?.(event.target.value); }} onKeyDown={(event) => {
+    if (!suggestions.length) return;
+    if (event.key === 'ArrowDown') { event.preventDefault(); setActiveIndex((index) => Math.min(index + 1, suggestions.length - 1)); }
+    if (event.key === 'ArrowUp') { event.preventDefault(); setActiveIndex((index) => Math.max(index - 1, 0)); }
+    if (event.key === 'Enter' && suggestions[activeIndex]) { event.preventDefault(); choose(suggestions[activeIndex]); }
+  }} />{suggestions.length > 0 && <div id={`${listId}-options`} className="at-mentions__options" role="listbox" aria-label="可提及成员">{suggestions.map((option, index) => <button key={option} type="button" role="option" aria-selected={activeIndex === index} onMouseDown={(event) => event.preventDefault()} onClick={() => choose(option)}>@{option}</button>)}</div>}<small>输入 @ 后可选择团队成员</small></div>;
+}
+export interface TransferItem { key: string; title: string; disabled?: boolean }
+export function Transfer({ dataSource, targetKeys, defaultTargetKeys = [], onChange, titles = ['可选项目', '已选项目'] }: { dataSource: TransferItem[]; targetKeys?: string[]; defaultTargetKeys?: string[]; onChange?: (nextTargetKeys: string[]) => void; titles?: [string, string] | string[] }) {
+  const [internal, setInternal] = useState(defaultTargetKeys);
+  const [selected, setSelected] = useState<string[]>([]);
+  const targets = targetKeys ?? internal;
+  const move = (toTarget: boolean) => { const next = toTarget ? [...new Set([...targets, ...selected])] : targets.filter((key) => !selected.includes(key)); setInternal(next); onChange?.(next); setSelected([]); };
+  const renderList = (target: boolean, title: string) => <section className="at-transfer__panel"><strong>{title}</strong><div>{dataSource.filter((item) => targets.includes(item.key) === target).map((item) => <label key={item.key}><input type="checkbox" disabled={item.disabled} checked={selected.includes(item.key)} onChange={(event) => setSelected((keys) => event.target.checked ? [...keys, item.key] : keys.filter((key) => key !== item.key))} />{item.title}</label>)}</div><small>{dataSource.filter((item) => targets.includes(item.key) === target).length} 项</small></section>;
+  return <div className="at-transfer">{renderList(false, titles[0] ?? '可选项目')}<div className="at-transfer__actions"><button type="button" disabled={!selected.some((key) => !targets.includes(key))} onClick={() => move(true)} aria-label="移至已选">›</button><button type="button" disabled={!selected.some((key) => targets.includes(key))} onClick={() => move(false)} aria-label="移回可选">‹</button></div>{renderList(true, titles[1] ?? '已选项目')}</div>;
+}
+export function TreeSelect({ options, value, defaultValue = '', onChange, placeholder = '请选择…', label }: { options: CascaderOption[]; value?: string; defaultValue?: string; onChange?: (value: string) => void; placeholder?: string; label?: string }) {
+  const flatten = (items: CascaderOption[], prefix = ''): Array<{ value: string; label: string; disabled?: boolean }> => items.flatMap((item) => [{ value: item.value, label: `${prefix}${item.label}`, disabled: item.disabled }, ...flatten(item.children ?? [], `${prefix}　`)]);
+  return <label className="at-tree-select">{label && <span>{label}</span>}<select value={value} defaultValue={value === undefined ? defaultValue : undefined} onChange={(event) => onChange?.(event.target.value)}><option value="">{placeholder}</option>{flatten(options).map((item) => <option key={item.value} value={item.value} disabled={item.disabled}>{item.label}</option>)}</select></label>;
+}
+
+export interface CalendarProps { value?: Date; defaultValue?: Date; onChange?: (date: Date) => void }
+export function Calendar({ value, defaultValue = new Date(), onChange }: CalendarProps) {
+  const [visibleMonth, setVisibleMonth] = useState(() => new Date(defaultValue.getFullYear(), defaultValue.getMonth(), 1));
+  const [internalValue, setInternalValue] = useState(defaultValue);
+  const selected = value ?? internalValue;
+  const firstDay = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth(), 1).getDay();
+  const days = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + 1, 0).getDate();
+  return <div className="at-calendar"><header><button type="button" aria-label="上个月" onClick={() => setVisibleMonth(new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() - 1, 1))}>‹</button><strong>{visibleMonth.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long' })}</strong><button type="button" aria-label="下个月" onClick={() => setVisibleMonth(new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + 1, 1))}>›</button></header><div className="at-calendar__grid">{'日一二三四五六'.split('').map((day, index) => <span className="at-calendar__weekday" key={`${day}${index}`}>{day}</span>)}{Array.from({ length: firstDay }, (_, index) => <span aria-hidden="true" className="at-calendar__blank" key={`blank-${index}`} />)}{Array.from({ length: days }, (_, index) => { const date = index + 1; const isSelected = selected.getFullYear() === visibleMonth.getFullYear() && selected.getMonth() === visibleMonth.getMonth() && selected.getDate() === date; return <button type="button" key={date} aria-pressed={isSelected} className={isSelected ? 'at-calendar__day at-calendar__day--selected' : 'at-calendar__day'} onClick={() => { const next = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth(), date); setInternalValue(next); onChange?.(next); }}>{date}</button>; })}</div></div>;
+}
+export function Carousel({ items, autoplay = false, interval = 4000 }: { items: ReactNode[]; autoplay?: boolean; interval?: number }) {
+  const [current, setCurrent] = useState(0);
+  useEffect(() => {
+    if (!autoplay || items.length < 2) return;
+    const timer = window.setInterval(() => setCurrent((index) => (index + 1) % items.length), Math.max(1000, interval));
+    return () => window.clearInterval(timer);
+  }, [autoplay, interval, items.length]);
+  return <div className="at-carousel" data-autoplay={autoplay} data-interval={interval}><div className="at-carousel__slide" aria-live="polite">{items[current]}</div><div className="at-carousel__controls"><button type="button" aria-label="上一张" onClick={() => setCurrent((index) => (index - 1 + items.length) % items.length)}>‹</button><span>{current + 1} / {items.length}</span><button type="button" aria-label="下一张" onClick={() => setCurrent((index) => (index + 1) % items.length)}>›</button></div></div>;
+}
+export function List<T>({ dataSource, renderItem, bordered = false }: { dataSource: T[]; renderItem: (item: T, index: number) => ReactNode; bordered?: boolean }) {
+  return <ul className={`at-list ${bordered ? 'at-list--bordered' : ''}`}>{dataSource.map((item, index) => <li key={index}>{renderItem(item, index)}</li>)}</ul>;
+}
+export function Listy({ items, itemHeight = 44, height = 220 }: { items: ReactNode[]; itemHeight?: number; height?: number }) {
+  const [scrollTop, setScrollTop] = useState(0);
+  const start = Math.max(0, Math.floor(scrollTop / itemHeight));
+  const visible = Math.ceil(height / itemHeight) + 2;
+  return <div className="at-listy" style={{ height, overflowY: 'auto' }} onScroll={(event) => setScrollTop(event.currentTarget.scrollTop)}><div style={{ height: items.length * itemHeight, position: 'relative' }}><div className="at-listy__window" style={{ position: 'absolute', top: start * itemHeight, left: 0, right: 0 }}>{items.slice(start, start + visible).map((item, index) => <div className="at-listy__item" style={{ height: itemHeight }} key={start + index}>{item}</div>)}</div></div></div>;
+}
+export function Masonry({ items, columns = 3, gap = 16 }: { items: ReactNode[]; columns?: number; gap?: number }) {
+  return <div className="at-masonry" style={{ columnCount: columns, columnGap: gap, '--at-masonry-gap': `${gap}px` } as CSSProperties}>{items.map((item, index) => <div className="at-masonry__item" key={index}>{item}</div>)}</div>;
+}
+export function QRCode({ value, size = 144, title = '二维码' }: { value: string; size?: number; title?: string }) {
+  const [source, setSource] = useState('');
+  useEffect(() => {
+    let active = true;
+    QRCodeEncoder.toDataURL(value, { width: size, margin: 1, color: { dark: '#222438', light: '#ffffff' } })
+      .then((url) => { if (active) setSource(url); })
+      .catch(() => { if (active) setSource(''); });
+    return () => { active = false; };
+  }, [size, value]);
+  return source ? <img className="at-qrcode" src={source} width={size} height={size} alt={`${title}：${value}`} /> : <span className="at-qrcode__loading" role="status">正在生成二维码…</span>;
+}
+
+export interface MenuItem { key: string; label: ReactNode; disabled?: boolean; onClick?: () => void }
+export function Menu({ items, selectedKey, onSelect, orientation = 'vertical' }: { items: MenuItem[]; selectedKey?: string; onSelect?: (key: string) => void; orientation?: 'vertical' | 'horizontal' }) {
+  return <nav className={`at-menu at-menu--${orientation}`} aria-label="菜单">{items.map((item) => <button key={item.key} type="button" disabled={item.disabled} aria-current={selectedKey === item.key ? 'page' : undefined} className={selectedKey === item.key ? 'at-menu__item at-menu__item--active' : 'at-menu__item'} onClick={() => { onSelect?.(item.key); item.onClick?.(); }}>{item.label}</button>)}</nav>;
+}
+export function Tree({ options, onSelect }: { options: CascaderOption[]; onSelect?: (option: CascaderOption) => void }) {
+  const renderItems = (items: CascaderOption[]) => <ul>{items.map((item) => <li key={item.value}>{item.children?.length ? <details open><summary>{item.label}</summary>{renderItems(item.children)}</details> : <button type="button" disabled={item.disabled} onClick={() => onSelect?.(item)}>{item.label}</button>}</li>)}</ul>;
+  return <div className="at-tree">{renderItems(options)}</div>;
+}
+export function Tour({ steps, open = true, onClose }: { steps: Array<{ title: ReactNode; description?: ReactNode }>; open?: boolean; onClose?: () => void }) {
+  const [current, setCurrent] = useState(0);
+  if (!open || !steps.length) return null;
+  const step = steps[Math.min(current, steps.length - 1)];
+  return <section className="at-tour" role="dialog" aria-modal="true" aria-label="产品引导"><span>步骤 {current + 1} / {steps.length}</span><h3>{step.title}</h3>{step.description && <p>{step.description}</p>}<footer><button type="button" onClick={onClose}>跳过</button>{current > 0 && <button type="button" onClick={() => setCurrent((index) => index - 1)}>上一步</button>}<button type="button" onClick={() => current === steps.length - 1 ? onClose?.() : setCurrent((index) => index + 1)}>{current === steps.length - 1 ? '完成' : '下一步'}</button></footer></section>;
+}
+export function Watermark({ content, children, rotate = -20, opacity = 0.1 }: { content: string; children: ReactNode; rotate?: number; opacity?: number }) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="100"><text x="12" y="54" fill="#685cf6" fill-opacity="${opacity}" font-size="15" transform="rotate(${rotate} 90 50)">${content.replace(/[<>&"']/g, '')}</text></svg>`;
+  return <div className="at-watermark" style={{ backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(svg)}")` }}>{children}</div>;
+}
+export function Splitter({ first, second, defaultSize = 50 }: { first: ReactNode; second: ReactNode; defaultSize?: number }) {
+  const [size, setSize] = useState(defaultSize);
+  return <div className="at-splitter" style={{ gridTemplateColumns: `${size}% 8px 1fr` }} onPointerMove={(event) => { if (!event.buttons) return; const rect = event.currentTarget.getBoundingClientRect(); setSize(Math.min(80, Math.max(20, ((event.clientX - rect.left) / rect.width) * 100))); }}><div>{first}</div><div className="at-splitter__bar" role="separator" aria-orientation="vertical" aria-label="调整面板宽度" aria-valuenow={Math.round(size)} tabIndex={0} onKeyDown={(event) => { if (event.key === 'ArrowLeft') setSize((value) => Math.max(20, value - 2)); if (event.key === 'ArrowRight') setSize((value) => Math.min(80, value + 2)); }} onPointerDown={(event) => event.currentTarget.setPointerCapture(event.pointerId)} /><div>{second}</div></div>;
+}
+
+export type MessageType = 'success' | 'info' | 'warning' | 'error';
+export function Message({ type = 'info', content, duration = 4000, onClose }: { type?: MessageType; content: ReactNode; duration?: number; onClose?: () => void }) {
+  const [visible, setVisible] = useState(true);
+  useEffect(() => {
+    if (!duration) return;
+    const timer = window.setTimeout(() => { setVisible(false); onClose?.(); }, duration);
+    return () => window.clearTimeout(timer);
+  }, [duration, onClose]);
+  if (!visible) return null;
+  const close = () => { setVisible(false); onClose?.(); };
+  return <div className={`at-message at-message--${type}`} role={type === 'error' ? 'alert' : 'status'}><span aria-hidden="true">{type === 'success' ? '✓' : type === 'error' ? '!' : '·'}</span>{content}<button type="button" aria-label="关闭提示" onClick={close}>×</button></div>;
+}
+export function Notification({ title, description, type = 'info', placement = 'top-right', onClose }: { title: ReactNode; description?: ReactNode; type?: MessageType; placement?: 'top-right' | 'bottom-right' | 'top-left' | 'bottom-left'; onClose?: () => void }) {
+  return <aside className={`at-notification at-notification--${placement} at-notification--${type}`} role="status"><div><strong>{title}</strong>{description && <p>{description}</p>}</div>{onClose && <button type="button" aria-label="关闭通知" onClick={onClose}>×</button>}</aside>;
+}
+
+export interface AppProps extends HTMLAttributes<HTMLDivElement> { children?: ReactNode }
+export function App({ children, className = '', ...props }: AppProps) {
+  return <div {...props} className={`at-app ${className}`}>{children}</div>;
+}
+export interface UIConfig { prefixCls: string; direction: 'ltr' | 'rtl' }
+const defaultUIConfig: UIConfig = { prefixCls: 'at', direction: 'ltr' };
+const UIConfigContext = createContext<UIConfig>(defaultUIConfig);
+export function ConfigProvider({ children, prefixCls = 'at', direction = 'ltr', theme }: { children: ReactNode; prefixCls?: string; direction?: 'ltr' | 'rtl'; theme?: { primaryColor?: string; borderRadius?: string } }) {
+  const style: CSSProperties & { '--at-color-primary'?: string; '--at-radius-md'?: string } = {};
+  if (theme?.primaryColor) style['--at-color-primary'] = theme.primaryColor;
+  if (theme?.borderRadius) style['--at-radius-md'] = theme.borderRadius;
+  return <UIConfigContext.Provider value={{ prefixCls, direction }}><div className={`${prefixCls}-config`} dir={direction} style={style}>{children}</div></UIConfigContext.Provider>;
+}
+export function useConfig() { return useContext(UIConfigContext); }
+
+export function BorderBeam({ children, color = '#8b7dff', duration = 5 }: { children: ReactNode; color?: string; duration?: number }) {
+  return <div className="at-border-beam" style={{ '--at-beam-color': color, '--at-beam-duration': `${duration}s` } as CSSProperties}><div>{children}</div></div>;
+}
+
+export const Util = {
+  clamp(value: number, min: number, max: number) { return Math.min(max, Math.max(min, value)); },
+  formatNumber(value: number, locale = 'zh-CN') { return new Intl.NumberFormat(locale).format(value); },
+  classNames(...names: Array<string | false | null | undefined>) { return names.filter(Boolean).join(' '); },
+};
