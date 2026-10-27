@@ -1,0 +1,40 @@
+:root {
+  --at-color-primary: #685cf6;
+  --at-color-primary-hover: #5749e5;
+  --at-color-primary-soft: #f0efff;
+  --at-color-text: #222438;
+  --at-color-subtle: #697087;
+  --at-color-muted: #9298aa;
+  --at-color-border: #e4e6ef;
+  --at-color-border-strong: #d1d4e1;
+  --at-color-surface: #ffffff;
+  --at-color-surface-muted: #f7f8fb;
+  --at-color-danger: #d94d64;
+  --at-color-success: #2f9472;
+  --at-color-warning: #c98a29;
+  --at-radius-sm: 8px;
+  --at-radius-md: 11px;
+  --at-radius-lg: 16px;
+  --at-shadow-sm: 0 2px 8px rgb(38 42 75 / 5%);
+  --at-shadow-modal: 0 24px 80px rgb(28 30 57 / 22%);
+  --at-font: 'DM Sans', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --at-transition: 160ms ease;
+  color: var(--at-color-text);
+  font-family: var(--at-font);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

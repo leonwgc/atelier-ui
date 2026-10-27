@@ -1,0 +1,11 @@
+.at-skeleton { width: 100%; }
+.at-skeleton__avatar-row { display: flex; align-items: flex-start; gap: 14px; }
+.at-skeleton__avatar, .at-skeleton__title, .at-skeleton__paragraph span { display: block; border-radius: 5px; background: #eeeff5; }
+.at-skeleton__avatar { width: 42px; height: 42px; flex: 0 0 auto; border-radius: 50%; }
+.at-skeleton__body { flex: 1; min-width: 0; }
+.at-skeleton__title { width: 42%; height: 16px; margin-bottom: 14px; }
+.at-skeleton__paragraph { display: grid; gap: 10px; }
+.at-skeleton__paragraph span { height: 13px; }
+.at-skeleton--active .at-skeleton__avatar, .at-skeleton--active .at-skeleton__title, .at-skeleton--active .at-skeleton__paragraph span { background: linear-gradient(90deg, #eeeff5 25%, #f7f7fa 38%, #eeeff5 63%); background-size: 400% 100%; animation: at-skeleton-wave 1.4s ease infinite; }
+@keyframes at-skeleton-wave { to { background-position: -120% 0; } }
+@media (prefers-reduced-motion: reduce) { .at-skeleton--active .at-skeleton__avatar, .at-skeleton--active .at-skeleton__title, .at-skeleton--active .at-skeleton__paragraph span { animation: none; } }

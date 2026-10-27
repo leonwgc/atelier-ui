@@ -1,0 +1,12 @@
+.at-input-wrap { position: relative; display: flex; align-items: center; min-width: 0; border: 1px solid var(--at-color-border); background: var(--at-color-surface); border-radius: var(--at-radius-sm); transition: border var(--at-transition), box-shadow var(--at-transition); }
+.at-input-wrap:focus-within { border-color: var(--at-color-primary); box-shadow: 0 0 0 3px rgb(104 92 246 / 10%); }
+.at-input-wrap--error { border-color: var(--at-color-danger); }
+.at-input-wrap--disabled { background: var(--at-color-surface-muted); }
+.at-input-wrap--sm { min-height: 34px; padding: 0 10px; }
+.at-input-wrap--md { min-height: 42px; padding: 0 12px; }
+.at-input-wrap--lg { min-height: 50px; padding: 0 14px; }
+.at-input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; background: transparent; color: var(--at-color-text); font-size: 17px; }
+.at-input::placeholder { color: #a5a9b8; }
+.at-input:focus-visible { outline: 0; }
+.at-input-wrap__adornment { display: inline-flex; flex: 0 0 auto; align-items: center; color: var(--at-color-muted); font-size: 15px; }
+.at-input-wrap__clear { border: 0; background: transparent; color: #9ba0b0; font-size: 22px; line-height: 1; }

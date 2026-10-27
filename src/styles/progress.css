@@ -1,0 +1,8 @@
+.at-progress { display: flex; width: 100%; align-items: center; gap: 10px; color: #70758a; font-size: 13px; }
+.at-progress__track { flex: 1; overflow: hidden; height: 8px; border-radius: 99px; background: #eeeff5; }
+.at-progress__bar { display: block; height: 100%; border-radius: inherit; background: #685cf6; transition: width .25s ease; }
+.at-progress--success .at-progress__bar { background: #48a982; }
+.at-progress--exception .at-progress__bar { background: #df5269; }
+.at-progress--active .at-progress__bar { background-image: linear-gradient(45deg, rgb(255 255 255 / 24%) 25%, transparent 25%, transparent 50%, rgb(255 255 255 / 24%) 50%, rgb(255 255 255 / 24%) 75%, transparent 75%); background-size: 18px 18px; animation: at-progress-stripes 1s linear infinite; }
+.at-progress__info { min-width: 36px; text-align: right; }
+@keyframes at-progress-stripes { to { background-position: 18px 0; } }

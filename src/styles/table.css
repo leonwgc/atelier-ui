@@ -1,0 +1,20 @@
+.at-table-shell { overflow: hidden; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface); }
+.at-table-scroll { overflow-x: auto; }
+.at-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 15px; }
+.at-table th { height: 43px; padding: 0 14px; border-bottom: 1px solid var(--at-color-border); color: #757b91; background: #fafbfc; font-size: 14px; font-weight: 600; white-space: nowrap; }
+.at-table td { height: 51px; padding: 0 14px; border-bottom: 1px solid #f0f1f5; color: #4a4f62; }
+.at-table tbody tr:last-child td { border-bottom: 0; }
+.at-table tbody tr:hover { background: #fafaff; }
+.at-table__heading { display: inline-flex; align-items: center; gap: 7px; }
+.at-table__sort, .at-table__filter { border: 0; background: transparent; color: #9da2b1; font-size: 14px; }
+.at-table__sort:hover { color: var(--at-color-primary); }
+.at-table__filter { max-width: 92px; padding: 3px 5px; border: 1px solid var(--at-color-border); border-radius: 5px; background: #fff; }
+.at-table__selection { width: 44px; text-align: center; }
+.at-table__status { display: flex; justify-content: center; align-items: center; gap: 9px; min-height: 112px; color: var(--at-color-muted); }
+.at-table__pagination { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 15px; border-top: 1px solid #f0f1f5; color: var(--at-color-muted); font-size: 14px; }
+.at-table__page-controls { display: inline-flex; align-items: center; gap: 9px; }
+.at-table__page-controls label { display: flex; align-items: center; gap: 5px; }
+.at-table__page-controls select { padding: 4px 5px; border: 1px solid var(--at-color-border); border-radius: 5px; background: #fff; color: var(--at-color-subtle); font-size: 14px; }
+.at-table__page-controls button { padding: 5px 8px; border: 1px solid var(--at-color-border); border-radius: 6px; background: #fff; color: var(--at-color-subtle); font-size: 14px; }
+.at-table__page-controls button:disabled { opacity: .42; }
+.at-table__page { min-width: 38px; color: #53586c; text-align: center; }

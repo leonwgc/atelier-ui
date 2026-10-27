@@ -1,0 +1,9 @@
+.at-badge { position: relative; display: inline-flex; }
+.at-badge__count { position: absolute; top: 0; right: 0; display: inline-flex; min-width: 19px; height: 19px; justify-content: center; align-items: center; transform: translate(50%, -50%); border: 2px solid #fff; border-radius: 999px; padding: 0 5px; color: #fff; background: #e05268; font-size: 11px; font-weight: 600; line-height: 1; white-space: nowrap; }
+.at-badge__count--dot { min-width: 9px; width: 9px; height: 9px; padding: 0; }
+.at-badge__count--success, .at-badge__status--success { background: #46a982; }
+.at-badge__count--processing, .at-badge__status--processing { background: #685cf6; }
+.at-badge__count--warning, .at-badge__status--warning { background: #e5a23c; }
+.at-badge__count--error, .at-badge__status--error { background: #e05268; }
+.at-badge__standalone { display: inline-flex; align-items: center; gap: 8px; color: #666b80; font-size: 13px; }
+.at-badge__status { width: 8px; height: 8px; border-radius: 50%; background: #a0a4b3; }

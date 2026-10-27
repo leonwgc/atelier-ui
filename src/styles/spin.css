@@ -1,0 +1,13 @@
+.at-spin-standalone { display: inline-flex; flex-direction: column; align-items: center; gap: 8px; color: #685cf6; }
+.at-spin { display: inline-flex; width: 28px; height: 28px; flex-wrap: wrap; align-content: center; justify-content: center; gap: 3px; animation: at-spin-rotate 1s linear infinite; }
+.at-spin--sm { width: 20px; height: 20px; gap: 2px; }
+.at-spin--lg { width: 38px; height: 38px; gap: 4px; }
+.at-spin > span { width: 9px; height: 9px; border-radius: 3px; background: #8175f8; opacity: .35; }
+.at-spin--sm > span { width: 6px; height: 6px; border-radius: 2px; }
+.at-spin--lg > span { width: 12px; height: 12px; }
+.at-spin > span:nth-child(1) { opacity: 1; }.at-spin > span:nth-child(2) { opacity: .75; }.at-spin > span:nth-child(3) { opacity: .5; }
+.at-spin__tip { color: #84899b; font-size: 13px; }
+.at-spin-container { position: relative; }
+.at-spin-container__overlay { position: absolute; z-index: 2; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; border-radius: inherit; background: rgb(255 255 255 / 72%); }
+@keyframes at-spin-rotate { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .at-spin { animation-duration: 2s; } }

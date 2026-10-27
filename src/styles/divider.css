@@ -1,0 +1,9 @@
+.at-divider { position: relative; box-sizing: border-box; display: flex; width: 100%; align-items: center; margin: 20px 0; border: 0; color: #85899b; font-size: 13px; }
+.at-divider::before, .at-divider::after { content: ''; flex: 1; border-top: 1px solid #e8e9f0; }
+.at-divider:not(.at-divider--with-text)::after { display: none; }
+.at-divider--dashed::before, .at-divider--dashed::after { border-top-style: dashed; }
+.at-divider__text { padding: 0 12px; color: #85899b; }
+.at-divider__text--plain { color: #4d5268; font-weight: 600; }
+.at-divider--vertical { display: inline-block; width: 1px; height: 1em; margin: 0 10px; border-left: 1px solid #e8e9f0; vertical-align: middle; }
+.at-divider--vertical::before, .at-divider--vertical::after { display: none !important; }
+.at-divider--vertical.at-divider--dashed { border-left-style: dashed; }

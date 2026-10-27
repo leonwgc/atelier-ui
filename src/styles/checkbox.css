@@ -1,0 +1,7 @@
+.at-check { display: inline-flex; position: relative; align-items: center; gap: 9px; min-height: 22px; color: #50556a; font-size: 15px; cursor: pointer; }
+.at-check__input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.at-check__box { display: grid; place-items: center; width: 17px; height: 17px; border: 1px solid #cfd2df; border-radius: 5px; color: transparent; background: #fff; font-size: 13px; font-weight: 800; transition: all var(--at-transition); }
+.at-check__input:checked + .at-check__box { border-color: var(--at-color-primary); color: #fff; background: var(--at-color-primary); }
+.at-check__input:disabled + .at-check__box { opacity: .5; }
+.at-check__input:focus-visible + .at-check__box { outline: 3px solid rgb(104 92 246 / 24%); outline-offset: 2px; }
+.at-choice-group { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; }

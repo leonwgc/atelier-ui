@@ -1,0 +1,13 @@
+.at-upload { border: 1px dashed #d9dbe7; border-radius: 9px; padding: 17px; background: #fcfcfe; transition: border-color .16s ease, background .16s ease; }
+.at-upload:hover { border-color: #9c92fb; background: #fbfaff; }
+.at-upload--disabled { opacity: .55; cursor: not-allowed; }
+.at-upload__input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.at-upload__prompt { display: flex; align-items: center; gap: 12px; color: #686d82; }
+.at-upload__icon { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 9px; color: #766af0; background: #f0eeff; font-size: 19px; }
+.at-upload__prompt > div { display: flex; flex-direction: column; gap: 4px; }
+.at-upload__prompt strong { font-size: 13px; font-weight: 500; }
+.at-upload__prompt span:not(.at-upload__icon) { color: #9a9eae; font-size: 11px; }
+.at-upload__prompt button, .at-upload__list button { border: 0; padding: 0; color: #685cf6; background: transparent; font: inherit; cursor: pointer; }
+.at-upload__prompt button:disabled { cursor: not-allowed; }
+.at-upload__list { display: grid; gap: 5px; margin: 14px 0 0; padding: 0; list-style: none; }
+.at-upload__list li { display: flex; justify-content: space-between; gap: 12px; border-radius: 6px; padding: 7px 9px; color: #666b80; background: #fff; font-size: 12px; }

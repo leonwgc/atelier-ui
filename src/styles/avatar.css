@@ -1,0 +1,6 @@
+.at-avatar { display: inline-grid; flex: 0 0 auto; overflow: hidden; place-items: center; border-radius: 50%; color: #6158bf; background: #eeecff; font-weight: 650; vertical-align: middle; }
+.at-avatar--sm { width: 28px; height: 28px; font-size: 12px; }
+.at-avatar--md { width: 36px; height: 36px; font-size: 15px; }
+.at-avatar--lg { width: 48px; height: 48px; font-size: 19px; }
+.at-avatar__image { width: 100%; height: 100%; object-fit: cover; }
+.at-avatar__fallback { line-height: 1; }

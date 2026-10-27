@@ -1,0 +1,5 @@
+.at-field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.at-field__label { color: #44495e; font-size: 15px; font-weight: 600; }
+.at-field__hint, .at-field__error { font-size: 14px; line-height: 1.5; }
+.at-field__hint { color: var(--at-color-muted); }
+.at-field__error { color: var(--at-color-danger); }
