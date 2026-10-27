@@ -42,6 +42,11 @@ button:disabled { cursor: not-allowed; }
   transition-timing-function: var(--at-ease-standard);
 }
 
+:where(button, a, input, select, textarea, summary, [role='button'], [role='menuitem'], [role='option']):focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--at-color-primary) 55%, transparent);
+  outline-offset: 2px;
+}
+
 :where(button, [role='button'], [role='menuitem']):active:not(:disabled):not([aria-disabled='true']) {
   transform: scale(.985);
 }
