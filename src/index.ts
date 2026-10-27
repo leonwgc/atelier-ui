@@ -86,7 +86,9 @@ export { Segmented } from './Segmented';
 export { Statistic } from './Statistic';
 export { Image } from './Image';
 export { Popover } from './Popover';
+export type { FloatingPlacement, PopoverProps } from './Popover';
 export { Popconfirm } from './Popconfirm';
+export type { PopconfirmProps } from './Popconfirm';
 export { Result } from './Result';
 
 export { Cascader } from './Cascader';

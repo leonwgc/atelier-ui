@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useId, useState, type ButtonHTMLAttributes, type CSSProperties, type ElementType, type HTMLAttributes, type ImgHTMLAttributes, type InputHTMLAttributes, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useId, useLayoutEffect, useRef, useState, type ButtonHTMLAttributes, type CSSProperties, type ElementType, type HTMLAttributes, type ImgHTMLAttributes, type InputHTMLAttributes, type MouseEvent as ReactMouseEvent, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import QRCodeEncoder from 'qrcode';
 
 export interface FloatButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> { icon?: ReactNode; description?: ReactNode; shape?: 'circle' | 'square' }
@@ -89,13 +90,186 @@ export function Image({ src, alt = '', preview = true, className = '', ...props 
   const [open, setOpen] = useState(false);
   return <><img {...props} src={src} alt={alt} className={`at-image ${preview ? 'at-image--previewable' : ''} ${className}`} onClick={(event) => { props.onClick?.(event); if (preview) setOpen(true); }} />{open && <div className="at-image-preview" role="dialog" aria-label="图片预览" onClick={() => setOpen(false)}><button type="button" aria-label="关闭预览" onClick={() => setOpen(false)}>×</button><img src={src} alt={alt} /></div>}</>;
 }
-export function Popover({ content, children, title, trigger = 'click' }: { content: ReactNode; children: ReactNode; title?: ReactNode; trigger?: 'click' | 'hover' }) {
-  const [open, setOpen] = useState(false);
-  return <span className={`at-popover at-popover--${trigger}`} onMouseEnter={trigger === 'hover' ? () => setOpen(true) : undefined} onMouseLeave={trigger === 'hover' ? () => setOpen(false) : undefined}><button type="button" className="at-popover__trigger" aria-expanded={open} onClick={trigger === 'click' ? () => setOpen((current) => !current) : undefined} onFocus={trigger === 'hover' ? () => setOpen(true) : undefined} onBlur={trigger === 'hover' ? () => setOpen(false) : undefined}>{children}</button>{open && <span className="at-popover__panel" role="dialog">{title && <strong>{title}</strong>}<span>{content}</span></span>}</span>;
+export type FloatingPlacement = 'top' | 'bottom' | 'left' | 'right';
+interface FloatingPosition { top: number; left: number; placement: FloatingPlacement }
+const oppositePlacement: Record<FloatingPlacement, FloatingPlacement> = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' };
+
+function getFloatingPosition(anchor: HTMLElement, floating: HTMLElement, preferred: FloatingPlacement): FloatingPosition {
+  const anchorRect = anchor.getBoundingClientRect();
+  const floatingRect = floating.getBoundingClientRect();
+  const gap = 10;
+  const edge = 12;
+  const spaces: Record<FloatingPlacement, number> = {
+    top: anchorRect.top - edge,
+    bottom: window.innerHeight - anchorRect.bottom - edge,
+    left: anchorRect.left - edge,
+    right: window.innerWidth - anchorRect.right - edge,
+  };
+  const required: Record<FloatingPlacement, number> = {
+    top: floatingRect.height + gap,
+    bottom: floatingRect.height + gap,
+    left: floatingRect.width + gap,
+    right: floatingRect.width + gap,
+  };
+  const alternate = oppositePlacement[preferred];
+  const placement = spaces[preferred] >= required[preferred]
+    ? preferred
+    : spaces[alternate] >= required[alternate]
+      ? alternate
+      : spaces[preferred] >= spaces[alternate] ? preferred : alternate;
+  const centeredLeft = anchorRect.left + (anchorRect.width - floatingRect.width) / 2;
+  const centeredTop = anchorRect.top + (anchorRect.height - floatingRect.height) / 2;
+  const top = placement === 'top' ? anchorRect.top - floatingRect.height - gap
+    : placement === 'bottom' ? anchorRect.bottom + gap : centeredTop;
+  const left = placement === 'left' ? anchorRect.left - floatingRect.width - gap
+    : placement === 'right' ? anchorRect.right + gap : centeredLeft;
+  return {
+    top: Math.max(edge, Math.min(top, window.innerHeight - floatingRect.height - edge)),
+    left: Math.max(edge, Math.min(left, window.innerWidth - floatingRect.width - edge)),
+    placement,
+  };
 }
-export function Popconfirm({ title, description, onConfirm, children }: { title: ReactNode; description?: ReactNode; onConfirm?: () => void; children: ReactNode }) {
+
+function useFloatingPanel<TAnchor extends HTMLElement = HTMLElement>(open: boolean, placement: FloatingPlacement) {
+  const anchorRef = useRef<TAnchor | null>(null);
+  const panelRef = useRef<HTMLSpanElement>(null);
+  const [position, setPosition] = useState<FloatingPosition | null>(null);
+  const updatePosition = useCallback(() => {
+    if (!anchorRef.current || !panelRef.current) return;
+    setPosition(getFloatingPosition(anchorRef.current, panelRef.current, placement));
+  }, [placement]);
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setPosition(null);
+      return;
+    }
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition, true);
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(updatePosition);
+    if (anchorRef.current) observer?.observe(anchorRef.current);
+    if (panelRef.current) observer?.observe(panelRef.current);
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition, true);
+      observer?.disconnect();
+    };
+  }, [open, updatePosition]);
+
+  return { anchorRef, panelRef, position };
+}
+
+export interface PopoverProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'content' | 'title'> {
+  content: ReactNode;
+  title?: ReactNode;
+  trigger?: 'click' | 'hover';
+  placement?: FloatingPlacement;
+  children: ReactNode;
+}
+
+export function Popover({ content, children, title, trigger = 'click', placement = 'bottom', className = '', ...props }: PopoverProps) {
+  const id = useId();
   const [open, setOpen] = useState(false);
-  return <span className="at-popconfirm"><button type="button" aria-expanded={open} onClick={() => setOpen((current) => !current)}>{children}</button>{open && <span className="at-popconfirm__panel" role="alertdialog" aria-label={typeof title === 'string' ? title : '确认操作'}><strong>{title}</strong>{description && <span>{description}</span>}<span className="at-popconfirm__actions"><button type="button" onClick={() => setOpen(false)}>取消</button><button type="button" onClick={() => { onConfirm?.(); setOpen(false); }}>确定</button></span></span>}</span>;
+  const { anchorRef, panelRef, position } = useFloatingPanel<HTMLButtonElement>(open, placement);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openPopover = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setOpen(true);
+  };
+  const scheduleClose = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setOpen(false), 120);
+  };
+
+  useEffect(() => () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+  }, []);
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (!anchorRef.current?.contains(target) && !panelRef.current?.contains(target)) setOpen(false);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open, anchorRef, panelRef]);
+
+  return <span {...props} className={`at-popover at-popover--${trigger} ${className}`}>
+    <button ref={anchorRef} type="button" className="at-popover__trigger" aria-expanded={open} aria-controls={id} aria-haspopup="dialog" onClick={trigger === 'click' ? () => setOpen((current) => !current) : undefined} onMouseEnter={trigger === 'hover' ? openPopover : undefined} onMouseLeave={trigger === 'hover' ? scheduleClose : undefined} onFocus={trigger === 'hover' ? openPopover : undefined} onBlur={trigger === 'hover' ? scheduleClose : undefined}>{children}</button>
+    {open && typeof document !== 'undefined' && createPortal(<span ref={panelRef} id={id} className={`at-popover__panel at-popover__panel--${position?.placement ?? placement}`} role="dialog" aria-label={typeof title === 'string' ? title : undefined} style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }} onMouseEnter={trigger === 'hover' ? openPopover : undefined} onMouseLeave={trigger === 'hover' ? scheduleClose : undefined}>
+      {title && <strong>{title}</strong>}<span>{content}</span>
+    </span>, document.body)}
+  </span>;
+}
+
+export interface PopconfirmProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'title' | 'onConfirm'> {
+  title: ReactNode;
+  description?: ReactNode;
+  onConfirm?: (event: ReactMouseEvent<HTMLButtonElement>) => void | Promise<void>;
+  onCancel?: (event: ReactMouseEvent<HTMLButtonElement>) => void;
+  placement?: FloatingPlacement;
+  confirmText?: string;
+  cancelText?: string;
+  children: ReactNode;
+}
+
+export function Popconfirm({ title, description, onConfirm, onCancel, placement = 'bottom', confirmText = '确定', cancelText = '取消', children, className = '', ...props }: PopconfirmProps) {
+  const id = useId();
+  const [open, setOpen] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [confirmError, setConfirmError] = useState(false);
+  const { anchorRef, panelRef, position } = useFloatingPanel<HTMLButtonElement>(open, placement);
+
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (!anchorRef.current?.contains(target) && !panelRef.current?.contains(target)) setOpen(false);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open, anchorRef, panelRef]);
+
+  const handleConfirm = async (event: ReactMouseEvent<HTMLButtonElement>) => {
+    setConfirmError(false);
+    setConfirming(true);
+    try {
+      await onConfirm?.(event);
+      setOpen(false);
+    } catch {
+      setConfirmError(true);
+    } finally {
+      setConfirming(false);
+    }
+  };
+
+  const handleCancel = (event: ReactMouseEvent<HTMLButtonElement>) => {
+    onCancel?.(event);
+    setOpen(false);
+  };
+
+  return <span {...props} className={`at-popconfirm ${className}`}>
+    <button ref={anchorRef} type="button" aria-expanded={open} aria-controls={id} aria-haspopup="dialog" onClick={() => setOpen((current) => !current)}>{children}</button>
+    {open && typeof document !== 'undefined' && createPortal(<span ref={panelRef} id={id} className={`at-popconfirm__panel at-popconfirm__panel--${position?.placement ?? placement}`} role="alertdialog" aria-label={typeof title === 'string' ? title : '确认操作'} aria-busy={confirming} style={{ top: position?.top ?? -9999, left: position?.left ?? -9999 }}>
+      <strong>{title}</strong>{description && <span>{description}</span>}{confirmError && <span className="at-popconfirm__error" role="alert">操作失败，请重试。</span>}
+      <span className="at-popconfirm__actions"><button type="button" disabled={confirming} onClick={handleCancel}>{cancelText}</button><button type="button" disabled={confirming} onClick={(event) => { void handleConfirm(event); }}>{confirming ? '处理中…' : confirmText}</button></span>
+    </span>, document.body)}
+  </span>;
 }
 export function Result({ status = 'info', title, subTitle, extra }: { status?: 'success' | 'error' | 'info' | 'warning' | '404' | '500'; title: ReactNode; subTitle?: ReactNode; extra?: ReactNode }) {
   const icons = { success: '✓', error: '×', info: 'i', warning: '!', '404': '404', '500': '500' };

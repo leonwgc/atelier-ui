@@ -420,7 +420,10 @@ export function NotificationPreferences() {
 
   return (
     <div>
-      <Checkbox checked={updatesEnabled} onChange={(event) => setUpdatesEnabled(event.target.checked)}>
+      <Checkbox
+        checked={updatesEnabled}
+        onChange={(event) => setUpdatesEnabled(event.target.checked)}
+      >
         接收产品更新
       </Checkbox>
       <CheckboxGroup options={topicOptions} value={topics} onChange={setTopics} />

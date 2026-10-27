@@ -54,7 +54,13 @@ export function ActionIcons() {
     code: `import { Typography } from 'atelier-ui/typography';
 
 export function TextHierarchy() {
-  return <><Typography as="h2" variant="title">项目概览</Typography><Typography variant="body">查看团队的最新进展。</Typography><Typography variant="caption">最近更新 · 3 分钟前</Typography></>;
+  return (
+    <>
+      <Typography as="h2" variant="title">项目概览</Typography>
+      <Typography variant="body">查看团队的最新进展。</Typography>
+      <Typography variant="caption">最近更新 · 3 分钟前</Typography>
+    </>
+  );
 }`,
     rows: [['as', 'ElementType', 'p'], ['variant', "'display' | 'title' | 'body' | 'secondary' | 'caption'", 'body'], ['children', 'ReactNode', 'required']],
     preview: <div className="additional-type-preview"><Typography as="h2" variant="title">项目概览</Typography><Typography variant="body">查看团队的最新进展。</Typography><Typography variant="caption">最近更新 · 3 分钟前</Typography></div>,
@@ -65,7 +71,12 @@ export function TextHierarchy() {
 import { Flex } from 'atelier-ui/flex';
 
 export function Toolbar() {
-  return <Flex gap={12} justify="space-between"><strong>项目</strong><button type="button">筛选</button></Flex>;
+  return (
+    <Flex gap={12} justify="space-between">
+      <strong>项目</strong>
+      <button type="button">筛选</button>
+    </Flex>
+  );
 }`,
     rows: [['vertical', 'boolean', 'false'], ['gap', 'number | string', '12'], ['align', 'CSSProperties[alignItems]', 'center'], ['justify', 'CSSProperties[justifyContent]', 'flex-start'], ['wrap', 'boolean', 'false']],
     preview: <Flex className="additional-flex-preview" justify="space-between"><strong>项目工作区</strong><Button size="sm">筛选</Button><TagLike>全部项目</TagLike></Flex>,
@@ -86,7 +97,16 @@ export function Actions() {
     code: `import { Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider } from 'atelier-ui/layout';
 
 export function ProjectLayout() {
-  return <Layout><LayoutHeader>工作区标题</LayoutHeader><Layout><LayoutSider>项目导航</LayoutSider><LayoutContent>主要内容</LayoutContent></Layout><LayoutFooter>© 2026</LayoutFooter></Layout>;
+  return (
+    <Layout>
+      <LayoutHeader>工作区标题</LayoutHeader>
+      <Layout>
+        <LayoutSider>项目导航</LayoutSider>
+        <LayoutContent>主要内容</LayoutContent>
+      </Layout>
+      <LayoutFooter>© 2026</LayoutFooter>
+    </Layout>
+  );
 }`,
     rows: [['Layout', 'HTMLAttributes<HTMLDivElement>', 'flex container'], ['LayoutHeader', 'HTMLAttributes<HTMLElement>', 'header region'], ['LayoutSider', 'width?: number | string', '220'], ['LayoutContent', 'HTMLAttributes<HTMLElement>', 'main region'], ['LayoutFooter', 'HTMLAttributes<HTMLElement>', 'footer region']],
     preview: <Layout className="additional-layout-preview"><LayoutHeader>工作区标题</LayoutHeader><Layout><LayoutSider width={105}>项目导航</LayoutSider><LayoutContent>主要内容</LayoutContent></Layout><LayoutFooter>© 2026</LayoutFooter></Layout>,
@@ -96,7 +116,13 @@ export function ProjectLayout() {
     code: `import { Grid, GridCol } from 'atelier-ui/grid';
 
 export function ProjectGrid() {
-  return <Grid columns={24} gap={12}><GridCol span={12}>项目名称</GridCol><GridCol span={12}>负责人</GridCol><GridCol span={24}>更多信息</GridCol></Grid>;
+  return (
+    <Grid columns={24} gap={12}>
+      <GridCol span={12}>项目名称</GridCol>
+      <GridCol span={12}>负责人</GridCol>
+      <GridCol span={24}>更多信息</GridCol>
+    </Grid>
+  );
 }`,
     rows: [['Grid.columns', 'number', '24'], ['Grid.gap', 'number | string', '16'], ['GridCol.span', 'number', '12']],
     preview: <Grid columns={24}><GridCol span={12}>项目名称</GridCol><GridCol span={12}>负责人</GridCol><GridCol span={24}>最近更新 · 今天</GridCol></Grid>,
@@ -117,7 +143,18 @@ export function StickyAction() {
     code: `import { Anchor } from 'atelier-ui/anchor';
 
 export function PageNavigation() {
-  return <><Anchor items={[{ href: '#overview', title: '概览' }, { href: '#members', title: '成员' }]} /><section id="overview">项目概览</section><section id="members">项目成员</section></>;
+  return (
+    <>
+      <Anchor
+        items={[
+          { href: '#overview', title: '概览' },
+          { href: '#members', title: '成员' },
+        ]}
+      />
+      <section id="overview">项目概览</section>
+      <section id="members">项目成员</section>
+    </>
+  );
 }`,
     rows: [['items', 'AnchorItem[]', 'required'], ['AnchorItem.href', 'string', 'required'], ['AnchorItem.title', 'ReactNode', 'required']],
     preview: <Anchor items={[{ href: '#overview', title: '项目概览' }, { href: '#members', title: '项目成员' }, { href: '#activity', title: '最近动态' }]} />,
@@ -128,7 +165,16 @@ export function PageNavigation() {
 import { Dropdown } from 'atelier-ui/dropdown';
 
 export function ProjectActions() {
-  return <Dropdown items={[{ key: 'edit', label: '编辑项目' }, { key: 'archive', label: '归档项目' }]}><Button>更多操作</Button></Dropdown>;
+  return (
+    <Dropdown
+      items={[
+        { key: 'edit', label: '编辑项目' },
+        { key: 'archive', label: '归档项目' },
+      ]}
+    >
+      <Button>更多操作</Button>
+    </Dropdown>
+  );
 }`,
     rows: [['items', 'DropdownItem[]', 'required'], ['placement', "'bottom-start' | 'bottom-end'", 'bottom-start'], ['DropdownItem.onClick', '() => void', '—']],
     preview: <Dropdown items={[{ key: 'edit', label: '编辑项目', onClick: () => window.alert('编辑项目') }, { key: 'archive', label: '归档项目' }]}><Button>更多操作</Button></Dropdown>,
@@ -148,7 +194,15 @@ export function ProjectSearch() {
     code: `import { InputNumber } from 'atelier-ui/input-number';
 
 export function TeamCapacity() {
-  return <InputNumber label="团队人数" min={1} max={100} defaultValue={8} onValueChange={(value) => console.log(value)} />;
+  return (
+    <InputNumber
+      label="团队人数"
+      min={1}
+      max={100}
+      defaultValue={8}
+      onValueChange={(value) => console.log(value)}
+    />
+  );
 }`,
     rows: [['min / max', 'number', '—'], ['step', 'number', '1'], ['value', 'number | string', '—'], ['onValueChange', '(value: number | null) => void', '—']],
     preview: <InputNumber label="团队人数" min={1} max={100} defaultValue={8} />,
@@ -168,7 +222,15 @@ export function Satisfaction() {
     code: `import { Slider } from 'atelier-ui/slider';
 
 export function OpacitySetting() {
-  return <Slider label="透明度" min={0} max={100} defaultValue={72} onChange={(value) => console.log(value)} />;
+  return (
+    <Slider
+      label="透明度"
+      min={0}
+      max={100}
+      defaultValue={72}
+      onChange={(value) => console.log(value)}
+    />
+  );
 }`,
     rows: [['min / max', 'number', '0 / 100'], ['step', 'number', '1'], ['value', 'number', '—'], ['onChange', '(value: number) => void', '—']],
     preview: <Slider label="透明度" min={0} max={100} defaultValue={72} />,
@@ -188,7 +250,15 @@ export function MeetingTime() {
     code: `import { Segmented } from 'atelier-ui/segmented';
 
 export function ViewSwitch() {
-  return <Segmented options={[{ label: '列表', value: 'list' }, { label: '看板', value: 'board' }]} onChange={(value) => console.log(value)} />;
+  return (
+    <Segmented
+      options={[
+        { label: '列表', value: 'list' },
+        { label: '看板', value: 'board' },
+      ]}
+      onChange={(value) => console.log(value)}
+    />
+  );
 }`,
     rows: [['options', 'Array<{ label, value, disabled? }>', 'required'], ['value', 'string', '—'], ['defaultValue', 'string', '首个选项'], ['onChange', '(value) => void', '—']],
     preview: <Segmented options={[{ label: '列表', value: 'list' }, { label: '看板', value: 'board' }, { label: '日历', value: 'calendar' }]} />,
@@ -218,19 +288,42 @@ export function CoverImage() {
     code: `import { Popover } from 'atelier-ui/popover';
 
 export function ShareDetails() {
-  return <Popover title="分享项目" content={<span>复制链接并邀请团队成员加入。</span>}><span>分享说明</span></Popover>;
+  return (
+    <Popover
+      title="分享项目"
+      content={<span>复制链接并邀请团队成员加入。</span>}
+      placement="bottom"
+    >
+      <span>分享说明</span>
+    </Popover>
+  );
 }`,
-    rows: [['content', 'ReactNode', 'required'], ['title', 'ReactNode', '—'], ['trigger', "'click' | 'hover'", 'click'], ['children', 'ReactNode', 'required']],
+    rows: [['content', 'ReactNode', 'required'], ['title', 'ReactNode', '—'], ['trigger', "'click' | 'hover'", 'click'], ['placement', "'top' | 'bottom' | 'left' | 'right'", 'bottom'], ['children', 'ReactNode', 'required']],
     preview: <Popover title="分享项目" content="复制链接并邀请团队成员加入。"><span>分享说明</span></Popover>,
   },
   {
     id: 'popconfirm', title: 'Popconfirm 气泡确认框', icon: '✓', group: '反馈组件', description: '在执行小型、可撤销操作前就地请求用户确认。',
-    code: `import { Popconfirm } from 'atelier-ui/popconfirm';
+    code: `import type { MouseEvent } from 'react';
+import { Popconfirm } from 'atelier-ui/popconfirm';
 
 export function ArchiveProject() {
-  return <Popconfirm title="归档这个项目？" description="你之后仍可以从归档列表恢复。" onConfirm={() => console.log('已归档')}><span>归档项目</span></Popconfirm>;
+  async function archiveProject(event: MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    await Promise.resolve();
+    console.log('已归档');
+  }
+
+  return (
+    <Popconfirm
+      title="归档这个项目？"
+      description="你之后仍可以从归档列表恢复。"
+      onConfirm={archiveProject}
+    >
+      <span>归档项目</span>
+    </Popconfirm>
+  );
 }`,
-    rows: [['title', 'ReactNode', 'required'], ['description', 'ReactNode', '—'], ['onConfirm', '() => void', '—'], ['children', 'ReactNode', 'required']],
+    rows: [['title', 'ReactNode', 'required'], ['description', 'ReactNode', '—'], ['onConfirm', '(event: MouseEvent<HTMLButtonElement>) => void | Promise<void>', '—'], ['onCancel', '(event: MouseEvent<HTMLButtonElement>) => void', '—'], ['placement', "'top' | 'bottom' | 'left' | 'right'", 'bottom'], ['children', 'ReactNode', 'required']],
     preview: <Popconfirm title="归档这个项目？" description="你之后仍可以从归档列表恢复。" onConfirm={() => window.alert('项目已归档')}><span>归档项目</span></Popconfirm>,
   },
   {
@@ -239,7 +332,14 @@ export function ArchiveProject() {
 import { Result } from 'atelier-ui/result';
 
 export function SaveResult() {
-  return <Result status="success" title="保存成功" subTitle="项目设置已更新。" extra={<Button variant="primary">返回项目</Button>} />;
+  return (
+    <Result
+      status="success"
+      title="保存成功"
+      subTitle="项目设置已更新。"
+      extra={<Button variant="primary">返回项目</Button>}
+    />
+  );
 }`,
     rows: [['status', "'success' | 'error' | 'info' | 'warning' | '404' | '500'", 'info'], ['title', 'ReactNode', 'required'], ['subTitle', 'ReactNode', '—'], ['extra', 'ReactNode', '—']],
     preview: <Result status="success" title="保存成功" subTitle="项目设置已更新。" extra={<Button variant="primary">返回项目</Button>} />,
@@ -249,7 +349,19 @@ export function SaveResult() {
     id: 'cascader', title: 'Cascader 级联选择', icon: '›', group: '数据录入', description: '按层级逐步缩小范围，适合地点、组织和分类路径。',
     code: `import { Cascader } from 'atelier-ui/cascader';
 
-const regions = [{ label: '中国', value: 'cn', children: [{ label: '上海', value: 'sh', children: [{ label: '徐汇区', value: 'xh' }] }] }];
+const regions = [
+  {
+    label: '中国',
+    value: 'cn',
+    children: [
+      {
+        label: '上海',
+        value: 'sh',
+        children: [{ label: '徐汇区', value: 'xh' }],
+      },
+    ],
+  },
+];
 
 export function RegionPicker() {
   return <Cascader options={regions} onChange={(path) => console.log(path)} />;
@@ -262,7 +374,13 @@ export function RegionPicker() {
     code: `import { ColorPicker } from 'atelier-ui/color-picker';
 
 export function BrandColor() {
-  return <ColorPicker label="品牌主色" defaultValue="#685cf6" onChange={(color) => console.log(color)} />;
+  return (
+    <ColorPicker
+      label="品牌主色"
+      defaultValue="#685cf6"
+      onChange={(color) => console.log(color)}
+    />
+  );
 }`,
     rows: [['value / defaultValue', 'string', '— / #685cf6'], ['onChange', '(color: string) => void', '—'], ['disabled', 'boolean', 'false']],
     preview: <ColorPicker label="品牌主色" defaultValue="#685cf6" />,
@@ -272,7 +390,13 @@ export function BrandColor() {
     code: `import { Mentions } from 'atelier-ui/mentions';
 
 export function TeamNote() {
-  return <Mentions label="项目留言" options={['林知夏', '陈一川', '周禾']} onChange={(text) => console.log(text)} />;
+  return (
+    <Mentions
+      label="项目留言"
+      options={['林知夏', '陈一川', '周禾']}
+      onChange={(text) => console.log(text)}
+    />
+  );
 }`,
     rows: [['options', 'string[]', 'required'], ['value / defaultValue', 'string', '— / 空字符串'], ['onChange', '(value: string) => void', '—']],
     preview: <Mentions label="项目留言" options={['林知夏', '陈一川', '周禾']} defaultValue="@林知夏 请确认设计稿" />,
@@ -281,10 +405,20 @@ export function TeamNote() {
     id: 'transfer', title: 'Transfer 穿梭框', icon: '⇄', group: '数据录入', description: '在可选列表与已选列表之间批量移动条目。',
     code: `import { Transfer } from 'atelier-ui/transfer';
 
-const members = [{ key: 'lin', title: '林知夏' }, { key: 'chen', title: '陈一川' }, { key: 'zhou', title: '周禾' }];
+const members = [
+  { key: 'lin', title: '林知夏' },
+  { key: 'chen', title: '陈一川' },
+  { key: 'zhou', title: '周禾' },
+];
 
 export function MemberTransfer() {
-  return <Transfer dataSource={members} defaultTargetKeys={['lin']} onChange={(keys) => console.log(keys)} />;
+  return (
+    <Transfer
+      dataSource={members}
+      defaultTargetKeys={['lin']}
+      onChange={(keys) => console.log(keys)}
+    />
+  );
 }`,
     rows: [['dataSource', 'TransferItem[]', 'required'], ['targetKeys', 'string[]', '—'], ['defaultTargetKeys', 'string[]', '[]'], ['onChange', '(nextTargetKeys) => void', '—']],
     preview: <Transfer dataSource={[{ key: 'lin', title: '林知夏' }, { key: 'chen', title: '陈一川' }, { key: 'zhou', title: '周禾' }]} defaultTargetKeys={['lin']} />,
@@ -296,7 +430,14 @@ export function MemberTransfer() {
 const teams = [{ label: '设计部', value: 'design', children: [{ label: '品牌组', value: 'brand' }] }];
 
 export function TeamSelect() {
-  return <TreeSelect label="所属团队" options={teams} defaultValue="brand" onChange={(value) => console.log(value)} />;
+  return (
+    <TreeSelect
+      label="所属团队"
+      options={teams}
+      defaultValue="brand"
+      onChange={(value) => console.log(value)}
+    />
+  );
 }`,
     rows: [['options', 'CascaderOption[]', 'required'], ['value / defaultValue', 'string', '— / 空字符串'], ['onChange', '(value: string) => void', '—']],
     preview: <TreeSelect label="所属团队" options={[{ label: '设计部', value: 'design', children: [{ label: '品牌组', value: 'brand' }, { label: '体验组', value: 'ux' }] }, { label: '工程部', value: 'engineering' }]} defaultValue="brand" />,
@@ -318,7 +459,16 @@ export function ProjectCalendar() {
     code: `import { Carousel } from 'atelier-ui/carousel';
 
 export function FeatureCarousel() {
-  return <Carousel autoplay interval={5000} items={[<span key="one">灵活的表单 Hooks</span>, <span key="two">按需加载组件</span>]} />;
+  return (
+    <Carousel
+      autoplay
+      interval={5000}
+      items={[
+        <span key="one">灵活的表单 Hooks</span>,
+        <span key="two">按需加载组件</span>,
+      ]}
+    />
+  );
 }`,
     rows: [['items', 'ReactNode[]', 'required'], ['autoplay', 'boolean', 'false'], ['interval', 'number', '4000 ms']],
     preview: <Carousel items={[<span key="one">灵活的表单 Hooks</span>, <span key="two">按需加载组件</span>, <span key="three">独立组件样式</span>]} />,
@@ -352,7 +502,21 @@ export function VirtualMembers() {
     code: `import { Masonry } from 'atelier-ui/masonry';
 
 export function ProjectGallery() {
-  return <Masonry columns={3} gap={14} items={[<article key="a">品牌升级</article>, <article key="b">移动端体验改版<br />新增设计规范</article>, <article key="c">数据看板</article>]} />;
+  return (
+    <Masonry
+      columns={3}
+      gap={14}
+      items={[
+        <article key="a">品牌升级</article>,
+        <article key="b">
+          移动端体验改版
+          <br />
+          新增设计规范
+        </article>,
+        <article key="c">数据看板</article>,
+      ]}
+    />
+  );
 }`,
     rows: [['items', 'ReactNode[]', 'required'], ['columns', 'number', '3'], ['gap', 'number', '16']],
     preview: <Masonry columns={3} items={[<span key="a">品牌升级</span>, <span key="b">移动端体验改版<br />新增设计规范</span>, <span key="c">数据看板</span>, <span key="d">设计系统</span>]} />,
@@ -374,7 +538,16 @@ import { Menu } from 'atelier-ui/menu';
 
 export function WorkspaceMenu() {
   const [selectedKey, setSelectedKey] = useState('projects');
-  return <Menu selectedKey={selectedKey} onSelect={setSelectedKey} items={[{ key: 'projects', label: '项目' }, { key: 'members', label: '成员' }]} />;
+  return (
+    <Menu
+      selectedKey={selectedKey}
+      onSelect={setSelectedKey}
+      items={[
+        { key: 'projects', label: '项目' },
+        { key: 'members', label: '成员' },
+      ]}
+    />
+  );
 }`,
     rows: [['items', 'MenuItem[]', 'required'], ['selectedKey', 'string', '—'], ['orientation', "'vertical' | 'horizontal'", 'vertical'], ['onSelect', '(key: string) => void', '—']],
     preview: <Menu selectedKey="projects" items={[{ key: 'projects', label: '项目' }, { key: 'members', label: '成员' }, { key: 'settings', label: '设置' }]} />,
@@ -383,7 +556,16 @@ export function WorkspaceMenu() {
     id: 'tree', title: 'Tree 树形控件', icon: '⋮', group: '数据展示', description: '以可展开层级结构呈现目录、组织或分类数据。',
     code: `import { Tree } from 'atelier-ui/tree';
 
-const folders = [{ label: '设计部', value: 'design', children: [{ label: '品牌项目', value: 'brand' }, { label: '体验规范', value: 'ux' }] }];
+const folders = [
+  {
+    label: '设计部',
+    value: 'design',
+    children: [
+      { label: '品牌项目', value: 'brand' },
+      { label: '体验规范', value: 'ux' },
+    ],
+  },
+];
 
 export function FolderTree() {
   return <Tree options={folders} onSelect={(node) => console.log(node.value)} />;
@@ -396,7 +578,15 @@ export function FolderTree() {
     code: `import { Tour } from 'atelier-ui/tour';
 
 export function ProductOnboarding() {
-  return <Tour steps={[{ title: '创建项目', description: '从空白工作区开始。' }, { title: '邀请成员', description: '与团队一起协作。' }]} onClose={() => console.log('引导结束')} />;
+  return (
+    <Tour
+      steps={[
+        { title: '创建项目', description: '从空白工作区开始。' },
+        { title: '邀请成员', description: '与团队一起协作。' },
+      ]}
+      onClose={() => console.log('引导结束')}
+    />
+  );
 }`,
     rows: [['steps', 'Array<{ title, description? }>', 'required'], ['open', 'boolean', 'true'], ['onClose', '() => void', '—']],
     preview: <Tour steps={[{ title: '创建项目', description: '先为项目取一个清晰的名称。' }, { title: '邀请成员', description: '和团队一起完成设置。' }]} />,
@@ -406,7 +596,11 @@ export function ProductOnboarding() {
     code: `import { Watermark } from 'atelier-ui/watermark';
 
 export function ProtectedPreview() {
-  return <Watermark content="Atelier · 内部预览"><div style={{ minHeight: 120 }}>工作区内容</div></Watermark>;
+  return (
+    <Watermark content="Atelier · 内部预览">
+      <div style={{ minHeight: 120 }}>工作区内容</div>
+    </Watermark>
+  );
 }`,
     rows: [['content', 'string', 'required'], ['rotate', 'number', '-20'], ['opacity', 'number', '0.1'], ['children', 'ReactNode', 'required']],
     preview: <Watermark content="Atelier · 内部预览"><div>工作区内容 · 仅供团队查看</div></Watermark>,
@@ -429,7 +623,18 @@ import { Message } from 'atelier-ui/message';
 
 export function SaveMessage() {
   const [visible, setVisible] = useState(false);
-  return <><Button onClick={() => setVisible(true)}>保存设置</Button>{visible && <Message type="success" content="设置已保存" onClose={() => setVisible(false)} />}</>;
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>保存设置</Button>
+      {visible && (
+        <Message
+          type="success"
+          content="设置已保存"
+          onClose={() => setVisible(false)}
+        />
+      )}
+    </>
+  );
 }`,
     rows: [['type', "'success' | 'info' | 'warning' | 'error'", 'info'], ['content', 'ReactNode', 'required'], ['duration', 'number', '4000 ms'], ['onClose', '() => void', '—']],
     preview: <Message type="success" content="设置已保存" />,
@@ -439,7 +644,15 @@ export function SaveMessage() {
     code: `import { Notification } from 'atelier-ui/notification';
 
 export function ProjectNotice() {
-  return <Notification title="成员已加入" description="林知夏已加入 Aurora workspace。" type="success" placement="top-right" onClose={() => console.log('已关闭')} />;
+  return (
+    <Notification
+      title="成员已加入"
+      description="林知夏已加入 Aurora workspace。"
+      type="success"
+      placement="top-right"
+      onClose={() => console.log('已关闭')}
+    />
+  );
 }`,
     rows: [['title', 'ReactNode', 'required'], ['description', 'ReactNode', '—'], ['type', "'success' | 'info' | 'warning' | 'error'", 'info'], ['placement', "'top-right' | 'bottom-right' | 'top-left' | 'bottom-left'", 'top-right']],
     preview: <Notification title="成员已加入" description="林知夏已加入 Aurora workspace。" type="success" placement="top-right" />,
@@ -461,7 +674,13 @@ export function AppRoot() {
 import { Button } from 'atelier-ui/button';
 
 export function BrandedSection() {
-  return <ConfigProvider theme={{ primaryColor: '#2f9472', borderRadius: '16px' }}><Button variant="primary">保存更改</Button></ConfigProvider>;
+  return (
+    <ConfigProvider
+      theme={{ primaryColor: '#2f9472', borderRadius: '16px' }}
+    >
+      <Button variant="primary">保存更改</Button>
+    </ConfigProvider>
+  );
 }`,
     rows: [['prefixCls', 'string', 'at'], ['direction', "'ltr' | 'rtl'", 'ltr'], ['theme.primaryColor', 'string', '—'], ['theme.borderRadius', 'string', '—'], ['useConfig()', 'UIConfig', '读取上下文']],
     preview: <ConfigProvider theme={{ primaryColor: '#2f9472' }}><Button variant="primary">保存更改</Button></ConfigProvider>,
@@ -482,7 +701,12 @@ export function HighlightCard() {
 
 export function CapacityLabel() {
   const value = Util.clamp(128, 0, 100);
-  return <span>{Util.formatNumber(value)} 位成员 · {Util.classNames('capacity', value === 100 && 'capacity--full')}</span>;
+  return (
+    <span>
+      {Util.formatNumber(value)} 位成员 ·{' '}
+      {Util.classNames('capacity', value === 100 && 'capacity--full')}
+    </span>
+  );
 }`,
     rows: [['Util.clamp(value, min, max)', '(number, number, number) => number', '—'], ['Util.formatNumber(value, locale?)', '(number, string?) => string', 'zh-CN'], ['Util.classNames(...names)', '(...string[]) => string', '—']],
     preview: <span>{Util.formatNumber(1284)} 位活跃成员 · {Util.classNames('capacity', 'capacity--active')}</span>,
