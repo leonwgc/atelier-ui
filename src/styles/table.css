@@ -5,6 +5,7 @@
 .at-table td { height: 51px; padding: 0 14px; border-bottom: 1px solid #f0f1f5; color: #4a4f62; }
 .at-table tbody tr:last-child td { border-bottom: 0; }
 .at-table tbody tr:hover { background: #fafaff; }
+.at-table tbody tr { transition: background-color var(--at-motion-fast) var(--at-ease-standard); }
 .at-table__heading { display: inline-flex; align-items: center; gap: 7px; }
 .at-table__sort, .at-table__filter { border: 0; background: transparent; color: #9da2b1; font-size: 14px; }
 .at-table__sort:hover { color: var(--at-color-primary); }

@@ -2,6 +2,8 @@
 .at-steps--horizontal .at-steps__item { position: relative; display: flex; flex: 1; min-width: 0; }
 .at-steps__action { position: relative; z-index: 1; display: flex; min-width: 0; align-items: flex-start; gap: 9px; border: 0; padding: 0; color: inherit; background: transparent; font: inherit; text-align: left; }
 .at-steps__indicator { display: grid; width: 25px; height: 25px; flex: 0 0 auto; place-items: center; border: 1px solid #dedfe8; border-radius: 50%; color: #989cad; background: #fff; font-size: 12px; }
+.at-steps__indicator { transition: color var(--at-transition), background-color var(--at-transition), border-color var(--at-transition), transform var(--at-transition); }
+.at-steps__item--process .at-steps__indicator { animation: at-step-current 260ms var(--at-ease-emphasized) both; }
 .at-steps__content { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
 .at-steps--horizontal .at-steps__content { position: relative; z-index: 2; padding-right: 8px; background: var(--at-color-surface, #fff); }
 .at-steps__title { color: #777c90; font-size: 13px; font-weight: 500; }
@@ -17,3 +19,4 @@
 .at-steps--vertical { flex-direction: column; gap: 0; }
 .at-steps--vertical .at-steps__item { position: relative; min-height: 58px; }
 .at-steps--vertical .at-steps__connector { top: 28px; bottom: 0; left: 12px; width: 1px; height: auto; }
+@keyframes at-step-current { from { transform: scale(.88); } to { transform: scale(1); } }

@@ -3,5 +3,7 @@
 .at-tabs__tab { position: relative; flex: 0 0 auto; border: 0; padding: 0 1px 12px; color: #81869a; background: transparent; font: inherit; font-size: 14px; cursor: pointer; }
 .at-tabs__tab[aria-selected="true"] { color: #685cf6; font-weight: 600; }
 .at-tabs__tab[aria-selected="true"]::after { position: absolute; right: 0; bottom: -1px; left: 0; height: 2px; border-radius: 2px; background: #685cf6; content: ''; }
+.at-tabs__tab::after { opacity: .7; transition: opacity var(--at-motion-fast) var(--at-ease-standard), transform var(--at-motion-base) var(--at-ease-emphasized); }
+.at-tabs__tab:not([aria-selected="true"])::after { transform: scaleX(.35); }
 .at-tabs__tab:disabled { color: #c1c3cc; cursor: not-allowed; }
 .at-tabs__panel { padding-top: 17px; color: #666b80; font-size: 14px; line-height: 1.65; }

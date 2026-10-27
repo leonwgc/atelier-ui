@@ -18,7 +18,12 @@
   --at-shadow-sm: 0 2px 8px rgb(38 42 75 / 5%);
   --at-shadow-modal: 0 24px 80px rgb(28 30 57 / 22%);
   --at-font: 'DM Sans', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --at-transition: 160ms ease;
+  --at-motion-fast: 140ms;
+  --at-motion-base: 200ms;
+  --at-motion-slow: 280ms;
+  --at-ease-standard: cubic-bezier(.2, .7, .2, 1);
+  --at-ease-emphasized: cubic-bezier(.2, .85, .25, 1);
+  --at-transition: var(--at-motion-base) var(--at-ease-standard);
   color: var(--at-color-text);
   font-family: var(--at-font);
   font-synthesis: none;
@@ -29,6 +34,22 @@
 button, input, select, textarea { font: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
+
+/* Shared motion primitives; component-specific movement remains in each component stylesheet. */
+:where(button, a, input, select, textarea, summary, [role='button'], [role='menuitem'], [role='option']) {
+  transition-property: color, background-color, border-color, box-shadow, opacity, outline-color, transform;
+  transition-duration: var(--at-motion-fast);
+  transition-timing-function: var(--at-ease-standard);
+}
+
+:where(button, [role='button'], [role='menuitem']):active:not(:disabled):not([aria-disabled='true']) {
+  transform: scale(.985);
+}
+
+@keyframes at-motion-enter {
+  from { opacity: 0; transform: translateY(6px) scale(.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
