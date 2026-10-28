@@ -26,6 +26,11 @@
       "import": "./dist/input.js",
       "require": "./dist/input.cjs"
     },
+    "./input-otp": {
+      "types": "./dist/entries/input-otp.d.ts",
+      "import": "./dist/input-otp.js",
+      "require": "./dist/input-otp.cjs"
+    },
     "./textarea": {
       "types": "./dist/entries/textarea.d.ts",
       "import": "./dist/textarea.js",

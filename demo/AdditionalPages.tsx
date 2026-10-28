@@ -1,14 +1,14 @@
 import { useState, type ReactNode } from 'react';
 import {
   Affix, Anchor, App, AutoComplete, BorderBeam, Button, Calendar, Carousel, Cascader, ColorPicker, ConfigProvider,
-  Dropdown, Flex, FloatButton, Grid, GridCol, Icon, Image, InputNumber, Layout, LayoutContent, LayoutFooter, LayoutHeader,
+  Dropdown, Flex, FloatButton, Grid, GridCol, Icon, Image, InputNumber, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader,
   LayoutSider, List, Listy, Masonry, Menu, Mentions, Message, Notification, Popconfirm, Popover, QRCode, Rate, Result,
   Segmented, Slider, Space, Splitter, Statistic, TimePicker, Tour, Transfer, Tree, TreeSelect, Typography, Util, Watermark,
 } from '../src';
 
 export type AdditionalPageId =
   | 'affix' | 'anchor' | 'autoComplete' | 'dropdown' | 'floatButton' | 'flex' | 'grid' | 'icon' | 'image'
-  | 'inputNumber' | 'layout' | 'popover' | 'popconfirm' | 'rate' | 'result' | 'segmented' | 'slider'
+  | 'inputNumber' | 'inputOTP' | 'layout' | 'popover' | 'popconfirm' | 'rate' | 'result' | 'segmented' | 'slider'
   | 'space' | 'statistic' | 'timePicker' | 'typography'
   | 'cascader' | 'colorPicker' | 'mentions' | 'transfer' | 'treeSelect' | 'calendar' | 'carousel' | 'list' | 'listy'
   | 'masonry' | 'qrcode' | 'menu' | 'tree' | 'tour' | 'watermark' | 'splitter' | 'message' | 'notification'
@@ -206,6 +206,26 @@ export function TeamCapacity() {
 }`,
     rows: [['min / max', 'number', '—'], ['step', 'number', '1'], ['value', 'number | string', '—'], ['onValueChange', '(value: number | null) => void', '—']],
     preview: <InputNumber label="团队人数" min={1} max={100} defaultValue={8} />,
+  },
+  {
+    id: 'inputOTP', title: 'InputOTP 验证码输入', icon: '▦', group: '数据录入', description: '将一次性验证码拆分为易于输入和校验的独立数字格。',
+    code: `import { useState } from 'react';
+import { InputOTP } from 'atelier-ui/input-otp';
+
+export function VerificationCode() {
+  const [code, setCode] = useState('');
+
+  return (
+    <InputOTP
+      value={code}
+      onChange={setCode}
+      onComplete={(value) => console.log('验证码：', value)}
+      ariaLabel="登录验证码"
+    />
+  );
+}`,
+    rows: [['length', 'number', '6'], ['value / defaultValue', 'string', '—'], ['onChange', '(value: string) => void', '—'], ['onComplete', '(value: string) => void', '—'], ['disabled', 'boolean', 'false'], ['autoFocus', 'boolean', 'false']],
+    preview: <InputOTP defaultValue="482" ariaLabel="演示验证码" />,
   },
   {
     id: 'rate', title: 'Rate 评分', icon: '★', group: '数据录入', description: '用离散星级快速收集满意度或质量评分。',

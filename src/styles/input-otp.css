@@ -1,0 +1,6 @@
+.at-input-otp { display: inline-flex; align-items: center; gap: 10px; }
+.at-input-otp__cell { box-sizing: border-box; width: 46px; height: 50px; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-sm); background: var(--at-color-surface); color: var(--at-color-text); text-align: center; font-family: inherit; font-size: 21px; font-weight: 600; line-height: 1; transition: border-color var(--at-transition), box-shadow var(--at-transition), background var(--at-transition); }
+.at-input-otp__cell:focus-visible { border-color: var(--at-color-primary); outline: 0; box-shadow: 0 0 0 3px rgb(104 92 246 / 14%); }
+.at-input-otp__cell:disabled { background: var(--at-color-surface-muted); color: var(--at-color-muted); cursor: not-allowed; }
+@media (max-width: 480px) { .at-input-otp { gap: 6px; } .at-input-otp__cell { width: 40px; height: 44px; } }
+@media (prefers-reduced-motion: reduce) { .at-input-otp__cell { transition: none; } }

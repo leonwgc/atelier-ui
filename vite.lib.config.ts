@@ -39,6 +39,7 @@ export default defineConfig({
         index: resolve(process.cwd(), 'src/index.ts'),
         button: resolve(process.cwd(), 'src/entries/button.ts'),
         input: resolve(process.cwd(), 'src/entries/input.ts'),
+        'input-otp': resolve(process.cwd(), 'src/entries/input-otp.ts'),
         textarea: resolve(process.cwd(), 'src/entries/textarea.ts'),
         select: resolve(process.cwd(), 'src/entries/select.ts'),
         checkbox: resolve(process.cwd(), 'src/entries/checkbox.ts'),

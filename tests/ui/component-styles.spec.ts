@@ -86,3 +86,24 @@ test('Transfer component is laid out and moves a selected item', async ({ page }
 
   await expect(page.locator('.at-transfer__panel').nth(1)).toContainText('陈一川');
 });
+
+test('InputOTP exposes styled numeric cells and accepts pasted verification codes', async ({ page }) => {
+  await page.getByRole('button', { name: 'InputOTP 验证码输入' }).click();
+
+  const cells = page.getByRole('group', { name: '演示验证码' }).locator('input');
+  await expect(cells).toHaveCount(6);
+  await expect(cells.first()).toHaveCSS('width', '46px');
+  await cells.nth(2).focus();
+  await cells.nth(2).evaluate((input) => {
+    const data = new DataTransfer();
+    data.setData('text/plain', '731');
+    input.dispatchEvent(new ClipboardEvent('paste', { bubbles: true, clipboardData: data }));
+  });
+
+  await expect(cells.nth(0)).toHaveValue('4');
+  await expect(cells.nth(1)).toHaveValue('8');
+  await expect(cells.nth(2)).toHaveValue('7');
+  await expect(cells.nth(3)).toHaveValue('3');
+  await expect(cells.nth(4)).toHaveValue('1');
+  await expect(cells.nth(5)).toHaveValue('');
+});
