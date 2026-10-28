@@ -1,1 +1,4 @@
-.at-affix{align-self:flex-start}
+.at-affix { display: block; }
+.at-affix__content { display: block; }
+.at-affix--fixed > .at-affix__content { animation: at-affix-pin var(--at-motion-base) var(--at-ease-emphasized) both; }
+@keyframes at-affix-pin { from { opacity: .6; transform: translateY(-4px); } to { opacity: 1; transform: none; } }

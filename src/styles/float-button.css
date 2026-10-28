@@ -1,1 +1,48 @@
-.at-float-button{position:fixed;right:28px;bottom:28px;z-index:20;display:flex;align-items:center;justify-content:center;gap:6px;width:52px;height:52px;border:0;border-radius:50%;background:var(--at-color-primary);color:#fff;box-shadow:var(--at-shadow-modal);font-size:22px}.at-float-button--square{border-radius:14px}.at-float-button small{font-size:12px}.at-float-button:focus-visible{outline:3px solid rgb(104 92 246 / 35%);outline-offset:3px}@media(max-width:700px){.at-float-button{right:16px;bottom:16px}}
+.at-float-button {
+  position: fixed; right: 28px; bottom: 28px; z-index: 20;
+  display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; padding: 0;
+  border: 1px solid var(--at-color-border); border-radius: 50%; background: var(--at-color-surface); color: var(--at-color-text);
+  box-shadow: 0 10px 28px rgb(28 30 57 / 14%), 0 2px 6px rgb(28 30 57 / 6%); text-decoration: none; font-size: 20px;
+  transition: transform var(--at-motion-fast) var(--at-ease-emphasized), box-shadow var(--at-motion-fast), background-color var(--at-motion-fast), color var(--at-motion-fast);
+}
+.at-float-button:hover { background: var(--at-color-surface-muted); box-shadow: 0 14px 32px rgb(28 30 57 / 18%), 0 2px 6px rgb(28 30 57 / 8%); }
+.at-float-button:active { transform: scale(.96); }
+.at-float-button:focus-visible { outline: 3px solid rgb(104 92 246 / 35%); outline-offset: 3px; }
+.at-float-button--square { border-radius: 14px; }
+.at-float-button--primary { border-color: transparent; background: var(--at-color-primary); color: #fff; box-shadow: 0 12px 28px rgb(104 92 246 / 35%); }
+.at-float-button--primary:hover { background: var(--at-color-primary-hover); }
+.at-float-button--inline { position: static; }
+.at-float-button--with-description { width: auto; min-width: 48px; min-height: 48px; padding: 6px 10px; border-radius: 14px; }
+.at-float-button--circle.at-float-button--with-description { width: 56px; height: 56px; padding: 4px; border-radius: 50%; }
+.at-float-button__body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.at-float-button__icon { display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
+.at-float-button__description { font-size: 11px; font-weight: 600; line-height: 1.2; }
+.at-float-button__badge { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 5px; border: 2px solid var(--at-color-surface); border-radius: 999px; background: var(--at-color-danger); color: #fff; font-size: 11px; font-weight: 700; line-height: 14px; text-align: center; }
+.at-float-button__badge--dot { min-width: 0; width: 10px; height: 10px; padding: 0; }
+.at-float-button--inline, .at-float-button-group .at-float-button { position: relative; right: auto; bottom: auto; }
+
+.at-float-button-group { position: fixed; right: 28px; bottom: 28px; z-index: 20; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.at-float-button-group--inline { position: relative; right: auto; bottom: auto; }
+.at-float-button-group--bottom { flex-direction: column-reverse; }
+.at-float-button-group--left { flex-direction: row; }
+.at-float-button-group--right { flex-direction: row-reverse; }
+.at-float-button-group__items { display: flex; flex-direction: inherit; align-items: center; gap: inherit; }
+.at-float-button-group__items .at-float-button { box-shadow: 0 6px 18px rgb(28 30 57 / 12%); }
+.at-float-button-group--square .at-float-button-group__items { gap: 0; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 28px rgb(28 30 57 / 14%); }
+.at-float-button-group--square .at-float-button-group__items .at-float-button { border-radius: 0; box-shadow: none; border-width: 0 0 1px; }
+.at-float-button-group--square .at-float-button-group__items .at-float-button:last-child { border-bottom-width: 0; }
+
+/* Collapsible menu: items stay mounted but fold toward the trigger. */
+.at-float-button-group--menu .at-float-button-group__items { transition: opacity var(--at-motion-base) var(--at-ease-emphasized), transform var(--at-motion-base) var(--at-ease-emphasized), visibility 0s var(--at-motion-base); }
+.at-float-button-group--menu:not(.at-float-button-group--open) .at-float-button-group__items { opacity: 0; visibility: hidden; transform: translateY(12px) scale(.9); pointer-events: none; }
+.at-float-button-group--menu.at-float-button-group--bottom:not(.at-float-button-group--open) .at-float-button-group__items { transform: translateY(-12px) scale(.9); }
+.at-float-button-group--menu.at-float-button-group--open .at-float-button-group__items { transition-delay: 0s; }
+.at-float-button-group__trigger .at-float-button__icon svg { transition: transform var(--at-motion-base) var(--at-ease-emphasized); }
+.at-float-button-group--open .at-float-button-group__trigger .at-float-button__icon svg { transform: rotate(90deg); }
+
+.at-back-top { opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity var(--at-motion-base) var(--at-ease-standard), transform var(--at-motion-base) var(--at-ease-emphasized), visibility 0s var(--at-motion-base); }
+.at-back-top--visible { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+
+@media (max-width: 700px) {
+  .at-float-button:not(.at-float-button--inline), .at-float-button-group:not(.at-float-button-group--inline) { right: 16px; bottom: 16px; }
+}

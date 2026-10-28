@@ -1,1 +1,20 @@
-.at-anchor{display:flex;flex-direction:column;gap:8px;border-left:2px solid var(--at-color-border);padding:4px 0 4px 14px}.at-anchor a{color:var(--at-color-subtle);font-size:14px;text-decoration:none}.at-anchor a:hover,.at-anchor a:focus-visible{color:var(--at-color-primary)}
+.at-anchor { position: relative; display: inline-block; font-size: 14px; }
+.at-anchor--affix { position: sticky; }
+.at-anchor--vertical { padding-left: 2px; }
+.at-anchor--vertical::before { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 2px; border-radius: 2px; background: var(--at-color-border); }
+.at-anchor__list { margin: 0; padding: 0; list-style: none; }
+.at-anchor--vertical .at-anchor__list { display: flex; flex-direction: column; }
+.at-anchor__item { display: flex; flex-direction: column; }
+.at-anchor__link { display: block; padding: 6px 12px 6px 14px; border-radius: 0 var(--at-radius-sm) var(--at-radius-sm) 0; color: var(--at-color-subtle); line-height: 1.5; text-decoration: none; white-space: nowrap; transition: color var(--at-motion-fast) var(--at-ease-standard), background-color var(--at-motion-fast) var(--at-ease-standard); }
+.at-anchor__link:hover { color: var(--at-color-text); }
+.at-anchor__link--active { color: var(--at-color-primary); font-weight: 600; }
+.at-anchor__link:focus-visible { outline: 2px solid color-mix(in srgb, var(--at-color-primary) 55%, transparent); outline-offset: -2px; }
+.at-anchor__ink { position: absolute; left: 0; width: 2px; border-radius: 2px; background: var(--at-color-primary); opacity: 0; transition: top var(--at-motion-base) var(--at-ease-emphasized), height var(--at-motion-base) var(--at-ease-emphasized), left var(--at-motion-base) var(--at-ease-emphasized), width var(--at-motion-base) var(--at-ease-emphasized), opacity var(--at-motion-fast); }
+.at-anchor__ink--visible { opacity: 1; }
+
+.at-anchor--horizontal { display: flex; padding: 0 0 2px; }
+.at-anchor--horizontal::before { content: ''; position: absolute; right: 0; bottom: 0; left: 0; height: 2px; border-radius: 2px; background: var(--at-color-border); }
+.at-anchor--horizontal .at-anchor__list { display: flex; gap: 4px; }
+.at-anchor--horizontal .at-anchor__item .at-anchor__list { display: none; }
+.at-anchor--horizontal .at-anchor__link { padding: 8px 12px; border-radius: var(--at-radius-sm) var(--at-radius-sm) 0 0; }
+.at-anchor--horizontal .at-anchor__ink { top: auto; bottom: 0; left: auto; width: auto; height: 2px; }

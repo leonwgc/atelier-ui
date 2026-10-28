@@ -1,2 +1,2 @@
-export { FloatButton } from '../FloatButton';
-export type { FloatButtonProps } from '../FloatButton';
+export { BackTop, FloatButton, FloatButtonGroup } from '../FloatButton';
+export type { BackTopProps, FloatButtonGroupProps, FloatButtonProps, FloatButtonShape, FloatButtonType } from '../FloatButton';

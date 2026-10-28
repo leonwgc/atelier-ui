@@ -1,13 +1,13 @@
 import { useState, type ReactNode } from 'react';
 import { highlightCode } from './shared';
 import {
-  Affix, Anchor, App, BorderBeam, Button, Calendar, Carousel, ConfigProvider, Dropdown, Flex, FloatButton, Grid, GridCol, Icon, Image, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, List, Listy, Masonry, Menu, Message, Notification, Popconfirm, Popover, QRCode, Result, Space, Splitter, Statistic, Tour, Tree, Typography, Util, Watermark,
+  App, BorderBeam, Button, Calendar, Carousel, ConfigProvider, Flex, Grid, GridCol, Icon, Image, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, List, Listy, Masonry, Message, Notification, QRCode, Result, Space, Splitter, Statistic, Tree, Typography, Util, Watermark,
 } from '../src';
 
 export type AdditionalPageId =
-  | 'affix' | 'anchor' | 'dropdown' | 'floatButton' | 'flex' | 'grid' | 'icon' | 'image' | 'inputOTP' | 'layout' | 'popover' | 'popconfirm' | 'result'
+ | 'flex' | 'grid' | 'icon' | 'image' | 'inputOTP' | 'layout' | 'result'
   | 'space' | 'statistic' | 'typography' | 'calendar' | 'carousel' | 'list' | 'listy'
-  | 'masonry' | 'qrcode' | 'menu' | 'tree' | 'tour' | 'watermark' | 'splitter' | 'message' | 'notification'
+  | 'masonry' | 'qrcode' | 'tree' | 'watermark' | 'splitter' | 'message' | 'notification'
   | 'app' | 'configProvider' | 'borderBeam' | 'util';
 
 type ApiRow = [string, string, string];
@@ -25,16 +25,6 @@ interface ComponentPageMeta {
 const imageSource = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="420" height="240" viewBox="0 0 420 240"%3E%3Crect width="420" height="240" fill="%23ecebff"/%3E%3Ccircle cx="320" cy="80" r="48" fill="%23b6b0ff"/%3E%3Cpath d="M0 190 115 92l84 75 68-54 153 127H0Z" fill="%23685cf6"/%3E%3C/svg%3E';
 
 export const additionalComponents: ComponentPageMeta[] = [
-  {
-    id: 'floatButton', title: 'FloatButton 悬浮按钮', icon: '↗', group: '基础组件', description: '将常用快捷操作固定在视口边缘，滚动页面时仍可访问。',
-    code: `import { FloatButton } from 'atelier-ui/float-button';
-
-export function HelpShortcut() {
-  return <FloatButton icon="?" aria-label="获取帮助" onClick={() => window.alert('帮助中心')} />;
-}`,
-    rows: [['icon', 'ReactNode', '↑'], ['description', 'ReactNode', '—'], ['shape', "'circle' | 'square'", 'circle'], ['onClick', 'MouseEventHandler', '—']],
-    preview: <div className="additional-float-preview"><span>页面内容区域</span><FloatButton icon="?" aria-label="打开帮助" onClick={() => window.alert('帮助中心')} /></div>,
-  },
   {
     id: 'icon', title: 'Icon 图标', icon: '✦', group: '基础组件', description: '使用轻量的内联 SVG 图标表达清晰、可访问的操作含义。',
     code: `import { Icon } from 'atelier-ui/icon';
@@ -124,58 +114,6 @@ export function ProjectGrid() {
     preview: <Grid columns={24}><GridCol span={12}>项目名称</GridCol><GridCol span={12}>负责人</GridCol><GridCol span={24}>最近更新 · 今天</GridCol></Grid>,
   },
   {
-    id: 'affix', title: 'Affix 固钉', icon: '⌖', group: '布局组件', description: '滚动时将操作区保持在可视区域的指定位置。',
-    code: `import { Button } from 'atelier-ui/button';
-import { Affix } from 'atelier-ui/affix';
-
-export function StickyAction() {
-  return <Affix top={12}><Button variant="primary">创建项目</Button></Affix>;
-}`,
-    rows: [['top', 'number', '16'], ['children', 'ReactNode', 'required']],
-    preview: <div className="additional-affix-preview"><span>页面内容</span><Affix top={8}><Button variant="primary">固定操作</Button></Affix></div>,
-  },
-  {
-    id: 'anchor', title: 'Anchor 锚点', icon: '⚓', group: '导航组件', description: '通过页内链接快速定位到长页面中的内容区块。',
-    code: `import { Anchor } from 'atelier-ui/anchor';
-
-export function PageNavigation() {
-  return (
-    <>
-      <Anchor
-        items={[
-          { href: '#overview', title: '概览' },
-          { href: '#members', title: '成员' },
-        ]}
-      />
-      <section id="overview">项目概览</section>
-      <section id="members">项目成员</section>
-    </>
-  );
-}`,
-    rows: [['items', 'AnchorItem[]', 'required'], ['AnchorItem.href', 'string', 'required'], ['AnchorItem.title', 'ReactNode', 'required']],
-    preview: <Anchor items={[{ href: '#overview', title: '项目概览' }, { href: '#members', title: '项目成员' }, { href: '#activity', title: '最近动态' }]} />,
-  },
-  {
-    id: 'dropdown', title: 'Dropdown 下拉菜单', icon: '⌄', group: '导航组件', description: '在触发器旁展示一组相关操作或导航选项。',
-    code: `import { Button } from 'atelier-ui/button';
-import { Dropdown } from 'atelier-ui/dropdown';
-
-export function ProjectActions() {
-  return (
-    <Dropdown
-      items={[
-        { key: 'edit', label: '编辑项目' },
-        { key: 'archive', label: '归档项目' },
-      ]}
-    >
-      <Button>更多操作</Button>
-    </Dropdown>
-  );
-}`,
-    rows: [['items', 'DropdownItem[]', 'required'], ['placement', "'bottom-start' | 'bottom-end'", 'bottom-start'], ['DropdownItem.onClick', '() => void', '—']],
-    preview: <Dropdown items={[{ key: 'edit', label: '编辑项目', onClick: () => window.alert('编辑项目') }, { key: 'archive', label: '归档项目' }]}><Button>更多操作</Button></Dropdown>,
-  },
-  {
     id: 'inputOTP', title: 'InputOTP 验证码输入', icon: '▦', group: '数据录入', description: '将一次性验证码拆分为易于输入和校验的独立数字格。',
     code: `import { useState } from 'react';
 import { InputOTP } from 'atelier-ui/input-otp';
@@ -214,49 +152,6 @@ export function CoverImage() {
 }`,
     rows: [['src', 'string', 'required'], ['alt', 'string', "''"], ['preview', 'boolean', 'true'], ['width / height', 'number | string', '—']],
     preview: <Image src={imageSource} alt="紫色山峦风格的项目封面" width={420} />,
-  },
-  {
-    id: 'popover', title: 'Popover 气泡卡片', icon: '▱', group: '反馈组件', description: '在触发元素附近展示可包含标题和复杂内容的浮层。',
-    code: `import { Popover } from 'atelier-ui/popover';
-
-export function ShareDetails() {
-  return (
-    <Popover
-      title="分享项目"
-      content={<span>复制链接并邀请团队成员加入。</span>}
-      placement="bottom"
-    >
-      <span>分享说明</span>
-    </Popover>
-  );
-}`,
-    rows: [['content', 'ReactNode', 'required'], ['title', 'ReactNode', '—'], ['trigger', "'click' | 'hover'", 'click'], ['placement', "'top' | 'bottom' | 'left' | 'right'", 'bottom'], ['children', 'ReactNode', 'required']],
-    preview: <Popover title="分享项目" content="复制链接并邀请团队成员加入。"><span>分享说明</span></Popover>,
-  },
-  {
-    id: 'popconfirm', title: 'Popconfirm 气泡确认框', icon: '✓', group: '反馈组件', description: '在执行小型、可撤销操作前就地请求用户确认。',
-    code: `import type { MouseEvent } from 'react';
-import { Popconfirm } from 'atelier-ui/popconfirm';
-
-export function ArchiveProject() {
-  async function archiveProject(event: MouseEvent<HTMLButtonElement>) {
-    event.preventDefault();
-    await Promise.resolve();
-    console.log('已归档');
-  }
-
-  return (
-    <Popconfirm
-      title="归档这个项目？"
-      description="你之后仍可以从归档列表恢复。"
-      onConfirm={archiveProject}
-    >
-      <span>归档项目</span>
-    </Popconfirm>
-  );
-}`,
-    rows: [['title', 'ReactNode', 'required'], ['description', 'ReactNode', '—'], ['onConfirm', '(event: MouseEvent<HTMLButtonElement>) => void | Promise<void>', '—'], ['onCancel', '(event: MouseEvent<HTMLButtonElement>) => void', '—'], ['placement', "'top' | 'bottom' | 'left' | 'right'", 'bottom'], ['children', 'ReactNode', 'required']],
-    preview: <Popconfirm title="归档这个项目？" description="你之后仍可以从归档列表恢复。" onConfirm={() => window.alert('项目已归档')}><span>归档项目</span></Popconfirm>,
   },
   {
     id: 'result', title: 'Result 结果', icon: '✓', group: '反馈组件', description: '在独立页面或任务结束后呈现清晰的状态与下一步操作。',
@@ -366,27 +261,6 @@ export function InviteCode() {
     preview: <QRCode value="https://example.com/invite/team-aurora" size={144} title="团队邀请链接" />,
   },
   {
-    id: 'menu', title: 'Menu 导航菜单', icon: '☰', group: '导航组件', description: '在垂直或水平菜单中切换页面或触发操作。',
-    code: `import { useState } from 'react';
-import { Menu } from 'atelier-ui/menu';
-
-export function WorkspaceMenu() {
-  const [selectedKey, setSelectedKey] = useState('projects');
-  return (
-    <Menu
-      selectedKey={selectedKey}
-      onSelect={setSelectedKey}
-      items={[
-        { key: 'projects', label: '项目' },
-        { key: 'members', label: '成员' },
-      ]}
-    />
-  );
-}`,
-    rows: [['items', 'MenuItem[]', 'required'], ['selectedKey', 'string', '—'], ['orientation', "'vertical' | 'horizontal'", 'vertical'], ['onSelect', '(key: string) => void', '—']],
-    preview: <Menu selectedKey="projects" items={[{ key: 'projects', label: '项目' }, { key: 'members', label: '成员' }, { key: 'settings', label: '设置' }]} />,
-  },
-  {
     id: 'tree', title: 'Tree 树形控件', icon: '⋮', group: '数据展示', description: '以可展开层级结构呈现目录、组织或分类数据。',
     code: `import { Tree } from 'atelier-ui/tree';
 
@@ -406,24 +280,6 @@ export function FolderTree() {
 }`,
     rows: [['options', 'CascaderOption[]', 'required'], ['onSelect', '(option: CascaderOption) => void', '—'], ['CascaderOption.children', 'CascaderOption[]', '—']],
     preview: <Tree options={[{ label: '设计部', value: 'design', children: [{ label: '品牌项目', value: 'brand' }, { label: '体验规范', value: 'ux' }] }, { label: '工程部', value: 'engineering' }]} />,
-  },
-  {
-    id: 'tour', title: 'Tour 漫游式引导', icon: '✧', group: '反馈组件', description: '通过分步卡片介绍新功能，并让用户前进、返回或跳过。',
-    code: `import { Tour } from 'atelier-ui/tour';
-
-export function ProductOnboarding() {
-  return (
-    <Tour
-      steps={[
-        { title: '创建项目', description: '从空白工作区开始。' },
-        { title: '邀请成员', description: '与团队一起协作。' },
-      ]}
-      onClose={() => console.log('引导结束')}
-    />
-  );
-}`,
-    rows: [['steps', 'Array<{ title, description? }>', 'required'], ['open', 'boolean', 'true'], ['onClose', '() => void', '—']],
-    preview: <Tour steps={[{ title: '创建项目', description: '先为项目取一个清晰的名称。' }, { title: '邀请成员', description: '和团队一起完成设置。' }]} />,
   },
   {
     id: 'watermark', title: 'Watermark 水印', icon: '▧', group: '反馈组件', description: '在内容容器上平铺轻量文字水印，提示内容归属。',

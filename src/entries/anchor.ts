@@ -1,2 +1,2 @@
 export { Anchor } from '../Anchor';
-export type { AnchorItem } from '../Anchor';
+export type { AnchorItem, AnchorProps } from '../Anchor';

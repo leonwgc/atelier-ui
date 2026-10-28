@@ -1,1 +1,18 @@
-.at-popover{position:relative;display:inline-flex}.at-popover__trigger{border:0;background:transparent;color:var(--at-color-primary);font:inherit;cursor:pointer}.at-popover__panel{position:fixed;z-index:1100;display:flex;width:max-content;min-width:200px;max-width:min(300px,calc(100vw - 24px));flex-direction:column;gap:7px;padding:14px;border:1px solid var(--at-color-border);border-radius:var(--at-radius-md);background:var(--at-color-surface);box-shadow:var(--at-shadow-modal);color:var(--at-color-subtle);font-size:14px;animation:at-popover-enter var(--at-motion-fast) var(--at-ease-emphasized) both}.at-popover__panel strong{color:var(--at-color-text);font-size:15px}@keyframes at-popover-enter{from{opacity:0;scale:.97}to{opacity:1;scale:1}}
+.at-popover__trigger { display: inline-flex; align-items: center; color: var(--at-color-primary); cursor: pointer; border-radius: 4px; }
+.at-popup.at-popover__panel { display: flex; flex-direction: column; gap: 6px; min-width: 200px; max-width: min(320px, calc(100vw - 24px)); padding: 14px 16px; color: var(--at-color-subtle); font-size: 14px; line-height: 1.6; }
+.at-popover__title { color: var(--at-color-text); font-size: 15px; font-weight: 600; }
+.at-popover__content { color: inherit; }
+
+/* Arrow: a rotated square inheriting the panel surface and border. */
+.at-popover__panel--arrow::before {
+  content: ''; position: absolute; width: 10px; height: 10px;
+  border: 1px solid var(--at-color-border); background: var(--at-color-surface); transform: rotate(45deg);
+}
+.at-popover__panel--arrow[data-placement^='bottom']::before { top: -6px; border-right: 0; border-bottom: 0; }
+.at-popover__panel--arrow[data-placement^='top']::before { bottom: -6px; border-left: 0; border-top: 0; }
+.at-popover__panel--arrow[data-placement^='left']::before { right: -6px; border-left: 0; border-bottom: 0; }
+.at-popover__panel--arrow[data-placement^='right']::before { left: -6px; border-right: 0; border-top: 0; }
+.at-popover__panel--arrow[data-placement='bottom']::before, .at-popover__panel--arrow[data-placement='top']::before { left: calc(50% - 5px); }
+.at-popover__panel--arrow[data-placement='left']::before, .at-popover__panel--arrow[data-placement='right']::before { top: calc(50% - 5px); }
+.at-popover__panel--arrow[data-placement$='-start']::before { left: 18px; }
+.at-popover__panel--arrow[data-placement$='-end']::before { right: 18px; }

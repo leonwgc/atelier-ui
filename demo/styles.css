@@ -198,3 +198,35 @@ button:focus-visible, a:focus-visible { outline: 3px solid rgb(104 92 246 / 22%)
 .demo-member__body strong { font-weight: 600; }
 .demo-member__body small { color: rgb(255 255 255 / 55%); font-size: 12px; }
 .demo-member--active .demo-member__avatar { transform: scale(1.06); }
+
+/* Navigation / feedback demo helpers */
+.demo-link-trigger { color: var(--at-color-primary); font-weight: 500; }
+.demo-context-area { display: flex; align-items: center; justify-content: center; min-width: 200px; min-height: 64px; padding: 12px 18px; border: 1px dashed var(--at-color-border-strong); border-radius: var(--at-radius-md); color: var(--at-color-muted); font-size: 13px; user-select: none; }
+.demo-menu-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 24px; }
+.demo-menu-frame { border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface); }
+.demo-menu-side { display: flex; flex-direction: column; gap: 10px; padding-top: 6px; }
+.demo-menu-bar { display: flex; width: 100%; padding: 4px 8px; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface); }
+.demo-anchor-layout { display: flex; gap: 28px; width: 100%; max-width: 720px; }
+.demo-anchor-scroll { flex: 1; height: 300px; padding: 0 18px; overflow: auto; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface); scroll-padding-top: 12px; }
+.demo-anchor-section { min-height: 180px; padding: 18px 0; border-bottom: 1px dashed var(--at-color-border); }
+.demo-anchor-section:last-child { min-height: 290px; border-bottom: 0; }
+.demo-anchor-section h4 { margin: 0 0 6px; font-size: 15px; }
+.demo-anchor-section p { margin: 0; color: var(--at-color-subtle); font-size: 13px; line-height: 1.6; }
+.demo-affix-scroll { position: relative; width: min(100%, 560px); height: 260px; padding: 0 16px; overflow: auto; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface); }
+.demo-affix-filler { margin: 0; padding: 18px 0; color: var(--at-color-subtle); font-size: 14px; border-bottom: 1px dashed var(--at-color-border); }
+.demo-affix-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-sm); background: var(--at-color-surface); transition: box-shadow var(--at-motion-base), border-color var(--at-motion-base); }
+.demo-affix-bar--pinned { border-color: color-mix(in srgb, var(--at-color-primary) 40%, transparent); box-shadow: 0 10px 24px rgb(28 30 57 / 12%); }
+.demo-tour-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 16px; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface); }
+.demo-tour-search { flex: 1; min-width: 200px; padding: 10px 14px; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-sm); background: var(--at-color-surface-muted); color: var(--at-color-muted); font-size: 14px; }
+.demo-tour-members { display: flex; align-items: center; }
+.demo-tour-members span, .demo-tour-members em { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; margin-left: -8px; border: 2px solid var(--at-color-surface); border-radius: 50%; background: var(--at-color-primary-soft); color: var(--at-color-primary); font-size: 12px; font-style: normal; font-weight: 600; }
+.demo-tour-members span:first-child { margin-left: 0; }
+.demo-tour-members em { background: var(--at-color-surface-muted); color: var(--at-color-subtle); }
+.demo-float-stage { display: flex; flex-wrap: wrap; gap: 20px; width: 100%; }
+.demo-float-cell { display: flex; flex: 1 1 150px; flex-direction: column; align-items: center; justify-content: flex-end; gap: 14px; min-height: 150px; padding: 18px; border: 1px dashed var(--at-color-border); border-radius: var(--at-radius-md); }
+.demo-float-cell--tall { min-height: 260px; }
+.demo-plain-input { height: 38px; padding: 0 12px; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-sm); font-size: 14px; }
+.demo-plain-input:focus { border-color: var(--at-color-primary); outline: 0; box-shadow: 0 0 0 3px rgb(104 92 246 / 12%); }
+.demo-popover-body p { margin: 0 0 10px; }
+.demo-anchor-layout--horizontal { flex-direction: column; gap: 14px; }
+.demo-anchor-layout--horizontal .demo-anchor-scroll { height: 220px; }

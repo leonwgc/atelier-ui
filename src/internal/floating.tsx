@@ -5,7 +5,7 @@ import '../styles/floating.css';
 import { cx } from '../utils';
 
 export type FloatingPlacement = 'top' | 'bottom' | 'left' | 'right';
-export type PopupPlacement = FloatingPlacement | 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
+export type PopupPlacement = FloatingPlacement | 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end' | 'right-start' | 'right-end' | 'left-start' | 'left-end';
 export interface FloatingPosition { top: number; left: number; width?: number; placement: PopupPlacement }
 
 const GAP = 6;
@@ -18,8 +18,12 @@ function splitPlacement(placement: PopupPlacement): { side: FloatingPlacement; a
 const oppositeSide: Record<FloatingPlacement, FloatingPlacement> = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' };
 
 export function getFloatingPosition(anchor: HTMLElement, floating: HTMLElement, preferred: PopupPlacement, gap = GAP): FloatingPosition {
-  const a = anchor.getBoundingClientRect();
-  const f = floating.getBoundingClientRect();
+  return positionForRects(anchor.getBoundingClientRect(), floating.getBoundingClientRect(), preferred, gap);
+}
+
+export interface RectLike { top: number; left: number; width: number; height: number; right: number; bottom: number }
+
+export function positionForRects(a: RectLike, f: RectLike, preferred: PopupPlacement, gap = GAP): FloatingPosition {
   const { side: preferredSide, align } = splitPlacement(preferred);
   const spaces: Record<FloatingPlacement, number> = {
     top: a.top - EDGE,
@@ -122,12 +126,20 @@ export interface PopupProps {
   children: ReactNode;
   'aria-label'?: string;
   'aria-labelledby'?: string;
+  'aria-describedby'?: string;
   'aria-multiselectable'?: boolean;
+  'aria-modal'?: boolean;
+  tabIndex?: number;
   onMouseDown?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onMouseEnter?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onMouseLeave?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  /** Listbox-style panels keep focus on the trigger; dialogs let focus move inside. */
+  keepTriggerFocus?: boolean;
 }
 
 /** Portal-rendered floating surface shared by every dropdown-style component. */
-export function Popup({ open, panelRef, position, placement, className, style, children, onMouseDown, ...rest }: PopupProps) {
+export function Popup({ open, panelRef, position, placement, className, style, children, onMouseDown, keepTriggerFocus = true, ...rest }: PopupProps) {
   if (!open || typeof document === 'undefined') return null;
   const resolved = position?.placement ?? placement;
   return createPortal(
@@ -139,7 +151,7 @@ export function Popup({ open, panelRef, position, placement, className, style, c
       style={{ top: position?.top ?? -9999, left: position?.left ?? -9999, width: position?.width, visibility: position ? undefined : 'hidden', ...style }}
       onMouseDown={(event) => {
         const tag = (event.target as HTMLElement).tagName;
-        if (tag !== 'INPUT' && tag !== 'TEXTAREA') event.preventDefault();
+        if (keepTriggerFocus && tag !== 'INPUT' && tag !== 'TEXTAREA') event.preventDefault();
         onMouseDown?.(event);
       }}
     >
