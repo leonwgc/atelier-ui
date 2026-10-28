@@ -18,6 +18,8 @@ Atelier UI 是一个从零实现的 React 组件库与配套 Demo 站点。项�
 
 你好，欢迎来到 Atelier UI。你可以先在在线手册里试试组件交互，再查看完整示例代码，把合适的组件带进自己的项目；无论是搭建界面，还是查找某个组件的用法，都可以从下面的分类目录开始。
 
+设计 token 与跨框架组件契约见设计系统规范：[中文](./DESIGN_SYSTEM.zh-CN.md) · [English](./DESIGN_SYSTEM.md)；机器可读 token 见[`design-tokens.json`](./design-tokens.json)。
+
 项目采用单一 npm 工程，不使用 npm workspaces：
 
 - `src/`：组件库源码、表单 Hooks 与组件样式。
@@ -26,32 +28,28 @@ Atelier UI 是一个从零实现的 React 组件库与配套 Demo 站点。项�
 
 ## 组件目录
 
-### 基础组件
+目录与 `src/index.ts` 的公开导出保持一致。
 
-| 组件 | 说明 |
-| --- | --- |
-| Button 按钮 | 操作按钮、视觉类型、尺寸及加载状态 |
-| FloatButton 悬浮按钮 | 固定在视口边缘的快捷操作 |
-| Icon 图标 | 轻量内联 SVG 图标 |
-| Typography 排版 | 统一标题、正文与辅助文本层级 |
-
-### 布局组件
+### 基础与布局
 
 | 组件 | 说明 |
 | --- | --- |
 | Affix 固钉 | 滚动时保持内容在视口内可见 |
 | Divider 分割线 | 分隔相关内容 |
 | Flex 弹性布局 | 以 Flexbox 属性排列内容 |
-| Grid 栅格 | 基于列数的网格布局 |
-| Layout 布局 | 组合页头、侧栏、内容区与页脚 |
-| Masonry 瀑布流 | 多列排列不同高度的卡片 |
+| FloatButton 悬浮按钮 | 视口快捷操作，包含 `FloatButtonGroup` 按钮组和 `BackTop` 回到顶部 |
+| Grid 栅格 | 基于列数的网格布局，包含 GridCol |
+| Icon 图标 | 轻量内联 SVG 图标 |
+| Layout 布局 | 组合 `LayoutHeader`、`LayoutSider`、`LayoutContent` 与 `LayoutFooter` |
 | Space 间距 | 为相邻元素设置一致间距 |
-| Splitter 分隔面板 | 拖动调整相邻面板空间 |
+| Splitter 分隔面板 | 拖动调整相邻 `SplitterPanel` 空间 |
+| Typography 排版 | 统一标题、正文、段落与链接层级，包含 `Title`、`Text`、`Paragraph` 和 `Link` |
 
-### 导航组件
+### 操作与导航
 
 | 组件 | 说明 |
 | --- | --- |
+| Button 按钮 | 操作按钮、视觉类型、尺寸及加载状态 |
 | Anchor 锚点 | 跳转到页面内指定区块 |
 | Breadcrumb 面包屑 | 展示层级路径 |
 | Dropdown 下拉菜单 | 展示关联操作或导航选项 |
@@ -66,14 +64,16 @@ Atelier UI 是一个从零实现的 React 组件库与配套 Demo 站点。项�
 | --- | --- |
 | AutoComplete 自动完成 | 输入时提供匹配建议 |
 | Cascader 级联选择 | 按层级选择路径 |
-| Checkbox 复选框 | 单项及复选框组 |
+| Checkbox 复选框 | 单项及 `CheckboxGroup` 复选框组 |
 | ColorPicker 颜色选择器 | 选择并读取颜色值 |
 | DatePicker 日期选择 | 选择日期 |
 | Input 输入框 | 单行文本输入 |
 | InputNumber 数字输入框 | 按范围和步长录入数值 |
+| InputOTP 验证码输入 | 输入分段验证码 |
 | Mentions 提及 | 在文本中输入成员提及 |
-| Radio 单选框 | 单项及单选框组 |
+| Radio 单选框 | 单项及 `RadioGroup` 单选框组 |
 | Rate 评分 | 通过星级收集评分 |
+| Segmented 分段控制器 | 在互斥选项间切换 |
 | Select 选择器 | 从下拉选项中选择 |
 | Slider 滑动输入条 | 在数值范围内拖动选择 |
 | Switch 开关 | 切换两种状态 |
@@ -95,44 +95,67 @@ Atelier UI 是一个从零实现的 React 组件库与配套 Demo 站点。项�
 | Collapse 折叠面板 | 按需展开和收起内容 |
 | Descriptions 描述列表 | 展示结构化属性 |
 | Empty 空状态 | 展示无数据占位 |
-| Image 图片 | 展示图片并支持预览 |
-| List 列表 | 展示自定义数据行 |
+| Image 图片 | 展示图片并支持 `ImagePreviewGroup` 预览组 |
+| List 列表 | 展示自定义数据行及 `ListItem`、`ListItemMeta` 元数据 |
 | Listy 虚拟列表 | 高效展示长列表 |
-| Popover 气泡卡片 | 展示带标题或内容的浮层 |
+| Masonry 瀑布流 | 多列排列不同高度的内容 |
+| Progress 进度条 | 展示任务进度 |
 | QRCode 二维码 | 将文本或链接编码成可扫描二维码 |
-| Segmented 分段控制器 | 在互斥选项间切换 |
-| Statistic 统计数值 | 突出展示关键数值 |
+| Skeleton 骨架屏 | 内容加载占位 |
+| Statistic 统计数值 | 突出展示关键数值，包含倒计时 |
 | Table 表格 | 数据表格、分页、排序、筛选与行选择 |
 | Tag 标签 | 状态与分类标记 |
 | Timeline 时间轴 | 按时间顺序展示事件 |
-| Tooltip 文字提示 | 悬停或聚焦时显示说明 |
 | Tree 树形控件 | 展示可展开的层级结构 |
+| Watermark 水印 | 在内容区域平铺归属标记 |
 
-### 反馈组件
+### 反馈与浮层
 
 | 组件 | 说明 |
 | --- | --- |
 | Alert 提示 | 页面内状态提示 |
 | Drawer 抽屉 | 侧边抽屉面板 |
-| Message 全局提示 | 显示轻量操作结果 |
+| Message 全局提示 | 显示轻量操作结果，并提供 `message` 全局调用方法 |
 | Modal 弹窗 | 对话框及确认交互 |
-| Notification 通知 | 展示带标题和描述的通知卡片 |
+| Notification 通知 | 展示带标题和描述的通知卡片，并提供 `notification` 全局调用方法 |
 | Popconfirm 气泡确认框 | 就地确认轻量操作 |
-| Progress 进度条 | 展示任务进度 |
+| Popover 气泡卡片 | 展示带标题或内容的浮层 |
 | Result 结果 | 展示任务状态和后续操作 |
-| Skeleton 骨架屏 | 内容加载占位 |
 | Spin 加载中 | 局部或页面加载状态 |
+| Tooltip 文字提示 | 悬停或聚焦时显示说明 |
 | Tour 漫游式引导 | 分步介绍产品功能 |
-| Watermark 水印 | 在内容区域平铺归属标记 |
 
-### 其他组件与工具
+### 动效与特效
 
 | 组件 | 说明 |
 | --- | --- |
-| App 应用容器 | 为应用内容提供统一容器 |
+| AnimatedList 列表渐入 | 为列表项添加渐入动画，支持自定义列表项 |
+| BlurFade 模糊渐入 | 以模糊渐入方式显示内容 |
 | BorderBeam 边框流光 | 为重点内容添加动态边框 |
-| ConfigProvider 全局化配置 | 配置组件前缀、方向和主题变量 |
-| Util 常用工具 | 数字范围、格式化与类名拼接 |
+| Confetti 彩纸效果 | 展示庆祝反馈动画 |
+| Expand 平滑展开 | 平滑展开或收起内容 |
+| FadeIn 淡入 | 为内容添加淡入效果 |
+| FlipCard 翻转卡片 | 通过翻转展示卡片背面内容 |
+| FlipIn 翻转进入 | 以翻转动画显示内容 |
+| Glow 发光 | 添加强调性发光效果 |
+| HoverLift 悬停浮起 | 悬停时抬升内容 |
+| Marquee 跑马灯 | 循环滚动展示内容 |
+| NumberTicker 数字滚动 | 动画展示数值变化 |
+| Press 按压反馈 | 为交互内容添加按压效果 |
+| Pulse 脉冲 | 循环强调内容 |
+| ScaleIn 缩放进入 | 以缩放动画显示内容 |
+| ScrollReveal 滚动显现 | 滚动到视口时显示内容 |
+| Shake 摇晃 | 通过摇晃提供反馈 |
+| Shimmer 流光 | 展示流动高光效果 |
+| SlideIn 滑入 | 从指定方向滑入内容 |
+| Stagger 交错动画 | 为子项依次添加动画 |
+| Transition / TransitionGroup 过渡 | 为元素或列表管理进入、离开状态 |
+| TypingAnimation 打字动画 | 逐字显示文本 |
+| Wobble 摆动 | 添加轻量摆动效果 |
+
+### 全局配置与工具
+
+`ConfigProvider` 用于配置组件前缀、方向、尺寸、语言和主题变量；`useConfig` 用于读取配置。公开工具函数包括 `formatTime`、`parseTime`、`formatCountdown`、`formatStatistic`、`hsvToRgb`、`parseColor`、`rgbToHsv` 和 `toHex`。
 
 ### 表单 Hooks
 

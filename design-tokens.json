@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "source": "src/styles/theme.css",
+  "tokens": {
+    "color": {
+      "primary": {
+        "cssVariable": "--at-color-primary",
+        "type": "color",
+        "value": "#685cf6"
+      },
+      "primaryHover": {
+        "cssVariable": "--at-color-primary-hover",
+        "type": "color",
+        "value": "#5749e5"
+      },
+      "primarySoft": {
+        "cssVariable": "--at-color-primary-soft",
+        "type": "color",
+        "value": "#f0efff"
+      },
+      "text": {
+        "cssVariable": "--at-color-text",
+        "type": "color",
+        "value": "#222438"
+      },
+      "subtle": {
+        "cssVariable": "--at-color-subtle",
+        "type": "color",
+        "value": "#697087"
+      },
+      "muted": {
+        "cssVariable": "--at-color-muted",
+        "type": "color",
+        "value": "#9298aa"
+      },
+      "border": {
+        "cssVariable": "--at-color-border",
+        "type": "color",
+        "value": "#e4e6ef"
+      },
+      "borderStrong": {
+        "cssVariable": "--at-color-border-strong",
+        "type": "color",
+        "value": "#d1d4e1"
+      },
+      "surface": {
+        "cssVariable": "--at-color-surface",
+        "type": "color",
+        "value": "#ffffff"
+      },
+      "surfaceMuted": {
+        "cssVariable": "--at-color-surface-muted",
+        "type": "color",
+        "value": "#f7f8fb"
+      },
+      "danger": {
+        "cssVariable": "--at-color-danger",
+        "type": "color",
+        "value": "#d94d64"
+      },
+      "success": {
+        "cssVariable": "--at-color-success",
+        "type": "color",
+        "value": "#2f9472"
+      },
+      "warning": {
+        "cssVariable": "--at-color-warning",
+        "type": "color",
+        "value": "#c98a29"
+      }
+    },
+    "radius": {
+      "small": {
+        "cssVariable": "--at-radius-sm",
+        "type": "dimension",
+        "value": "8px"
+      },
+      "medium": {
+        "cssVariable": "--at-radius-md",
+        "type": "dimension",
+        "value": "11px"
+      },
+      "large": {
+        "cssVariable": "--at-radius-lg",
+        "type": "dimension",
+        "value": "16px"
+      }
+    },
+    "shadow": {
+      "small": {
+        "cssVariable": "--at-shadow-sm",
+        "type": "shadow",
+        "value": "0 2px 8px rgb(38 42 75 / 5%)"
+      },
+      "modal": {
+        "cssVariable": "--at-shadow-modal",
+        "type": "shadow",
+        "value": "0 24px 80px rgb(28 30 57 / 22%)"
+      }
+    },
+    "typography": {
+      "font": {
+        "cssVariable": "--at-font",
+        "type": "fontFamily",
+        "value": "'DM Sans', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+      }
+    },
+    "motion": {
+      "durationFast": {
+        "cssVariable": "--at-motion-fast",
+        "type": "duration",
+        "value": "140ms"
+      },
+      "durationBase": {
+        "cssVariable": "--at-motion-base",
+        "type": "duration",
+        "value": "200ms"
+      },
+      "durationSlow": {
+        "cssVariable": "--at-motion-slow",
+        "type": "duration",
+        "value": "280ms"
+      },
+      "easingStandard": {
+        "cssVariable": "--at-ease-standard",
+        "type": "cubicBezier",
+        "value": [0.2, 0.7, 0.2, 1]
+      },
+      "easingEmphasized": {
+        "cssVariable": "--at-ease-emphasized",
+        "type": "cubicBezier",
+        "value": [0.2, 0.85, 0.25, 1]
+      },
+      "transition": {
+        "cssVariable": "--at-transition",
+        "type": "transition",
+        "value": "var(--at-motion-base) var(--at-ease-standard)"
+      }
+    }
+  }
+}
