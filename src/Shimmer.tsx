@@ -10,7 +10,7 @@ export interface ShimmerProps extends HTMLAttributes<HTMLDivElement> {
 
 export function Shimmer({ children, duration = 1800, highlight = 'rgb(255 255 255 / 62%)', className = '', style, ...props }: ShimmerProps) {
   const shimmerStyle = {
-    '--at-shimmer-duration': `${Math.max(0.5, duration)}s`,
+    '--at-shimmer-duration': `${Math.max(0, duration)}ms`,
     '--at-shimmer-highlight': highlight,
     ...style,
   } as CSSProperties;
