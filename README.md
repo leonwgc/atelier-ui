@@ -149,6 +149,15 @@ npm run dev
 
 开发服务器启动后，终端会显示本地访问地址。
 
+首次运行 UI 测试前，安装 Playwright Chromium 浏览器：
+
+```bash
+npx playwright install chromium
+npm run test:ui
+```
+
+UI 测试会构建生产版 Demo，并检查全部组件样式、导航页面，以及 Rate 和 Transfer 的关键交互。
+
 ## 构建与检查
 
 ```bash
@@ -164,6 +173,7 @@ npm run build
 | --- | --- |
 | `npm run dev` | 启动 Demo 开发服务器 |
 | `npm run typecheck` | TypeScript 类型检查 |
+| `npm run test:ui` | 运行 Playwright UI 回归测试 |
 | `npm run build:lib` | 构建组件库 |
 | `npm run build:demo` | 构建 Demo 到 `docs/` |
 | `npm run build` | 构建组件库和 Demo |
