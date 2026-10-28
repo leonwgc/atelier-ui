@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/dropdown.css';
 import { Popup } from './internal/floating';
@@ -45,16 +45,20 @@ export function Dropdown({ items, onSelect, showArrow = false, matchTriggerWidth
   const enabledIndexes = actionable.map((item, index) => (item.disabled ? -1 : index)).filter((index) => index >= 0);
 
   const wasOpen = useRef(false);
+  const menuHadFocus = useRef(false);
+  const suppressTriggerFocus = useRef(false);
   useEffect(() => {
     if (!overlay.open) {
       setActiveIndex(-1);
-      // Focus was inside the unmounted menu; hand it back to the trigger.
-      if (wasOpen.current && document.activeElement === document.body) (overlay.anchorRef.current as HTMLElement | null)?.focus({ preventScroll: true });
+      if (wasOpen.current && menuHadFocus.current && document.activeElement === document.body) {
+        suppressTriggerFocus.current = true;
+        (overlay.anchorRef.current as HTMLElement | null)?.focus({ preventScroll: true });
+      }
+      menuHadFocus.current = false;
       wasOpen.current = false;
       return;
     }
     wasOpen.current = true;
-    requestAnimationFrame(() => menuRef.current?.focus());
   }, [overlay.open, overlay.anchorRef]);
 
   const select = (item: DropdownItem) => {
@@ -62,7 +66,11 @@ export function Dropdown({ items, onSelect, showArrow = false, matchTriggerWidth
     item.onClick?.(item);
     onSelect?.(item.key, item);
     overlay.setOpen(false);
-    (overlay.anchorRef.current as HTMLElement | null)?.focus();
+    if (menuHadFocus.current) {
+      suppressTriggerFocus.current = true;
+      (overlay.anchorRef.current as HTMLElement | null)?.focus();
+    }
+    menuHadFocus.current = false;
   };
 
   const move = (direction: 1 | -1) => {
@@ -76,7 +84,11 @@ export function Dropdown({ items, onSelect, showArrow = false, matchTriggerWidth
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp' || ((event.key === 'Enter' || event.key === ' ') && !overlay.open)) {
       event.preventDefault();
       overlay.setOpen(true);
-      requestAnimationFrame(() => setActiveIndex(event.key === 'ArrowUp' ? enabledIndexes[enabledIndexes.length - 1] ?? -1 : enabledIndexes[0] ?? -1));
+      requestAnimationFrame(() => {
+        menuRef.current?.focus();
+        menuHadFocus.current = menuRef.current !== null;
+        setActiveIndex(event.key === 'ArrowUp' ? enabledIndexes[enabledIndexes.length - 1] ?? -1 : enabledIndexes[0] ?? -1);
+      });
     }
   };
   const onMenuKeyDown = (event: KeyboardEvent<HTMLUListElement>) => {
@@ -123,9 +135,23 @@ export function Dropdown({ items, onSelect, showArrow = false, matchTriggerWidth
   const triggerNode = showArrow
     ? <span className={cx('at-dropdown__trigger-arrow', overlay.open && 'at-dropdown__trigger-arrow--open')}>{children}<ChevronDown size={14} /></span>
     : children;
+  const triggerProps = {
+    ...overlay.triggerProps,
+    onFocus: () => {
+      if (suppressTriggerFocus.current) {
+        suppressTriggerFocus.current = false;
+        return;
+      }
+      overlay.triggerProps.onFocus?.();
+    },
+    onBlur: (event: FocusEvent<HTMLElement>) => {
+      if (event.relatedTarget instanceof Node && overlay.panelRef.current?.contains(event.relatedTarget)) return;
+      overlay.triggerProps.onBlur?.();
+    },
+  };
 
   return <>
-    {renderTrigger(triggerNode, { ...overlay.triggerProps, 'aria-haspopup': 'menu', className: cx('at-dropdown__trigger', className), onKeyDown: onTriggerKeyDown }, overlay.anchorRef, 'at-dropdown__trigger-wrap')}
+    {renderTrigger(triggerNode, { ...triggerProps, 'aria-haspopup': 'menu', className: cx('at-dropdown__trigger', className), onKeyDown: onTriggerKeyDown }, overlay.anchorRef, 'at-dropdown__trigger-wrap')}
     <Popup
       open={overlay.open}
       panelRef={overlay.panelRef}
@@ -142,6 +168,7 @@ export function Dropdown({ items, onSelect, showArrow = false, matchTriggerWidth
         tabIndex={-1}
         aria-activedescendant={activeIndex >= 0 ? `${overlay.id}-item-${activeIndex}` : undefined}
         className={cx('at-dropdown__menu', menuClassName)}
+        onFocus={() => { menuHadFocus.current = true; }}
         onKeyDown={onMenuKeyDown}
       >
         {items.map(renderItem)}

@@ -5,7 +5,7 @@ export default defineConfig({
   fullyParallel: false,
   reporter: 'list',
   use: {
-    baseURL: 'http://127.0.0.1:4000/ui-design/',
+    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL ?? 'http://127.0.0.1:4000/ui-design/',
     browserName: 'chromium',
     headless: true,
     launchOptions: {

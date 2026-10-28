@@ -13,11 +13,13 @@ const componentClasses = readdirSync(stylesDirectory)
   });
 
 test.beforeEach(async ({ page }) => {
-  await page.route('**/ui-design/**', async (route) => {
-    const url = new URL(route.request().url());
-    url.pathname = url.pathname.replace('/ui-design/', '/');
-    await route.continue({ url: url.toString() });
-  });
+  if (!process.env.PLAYWRIGHT_TEST_BASE_URL || new URL(process.env.PLAYWRIGHT_TEST_BASE_URL).pathname.startsWith('/ui-design/')) {
+    await page.route('**/ui-design/**', async (route) => {
+      const url = new URL(route.request().url());
+      url.pathname = url.pathname.replace('/ui-design/', '/');
+      await route.continue({ url: url.toString() });
+    });
+  }
   await page.goto('');
 });
 
@@ -106,4 +108,18 @@ test('InputOTP exposes styled numeric cells and accepts pasted verification code
   await expect(cells.nth(3)).toHaveValue('3');
   await expect(cells.nth(4)).toHaveValue('1');
   await expect(cells.nth(5)).toHaveValue('');
+});
+
+test('hover Dropdown closes when the pointer moves to a sibling trigger', async ({ page }) => {
+  await page.getByRole('button', { name: 'Dropdown 下拉菜单' }).click();
+
+  const hoverTrigger = page.getByRole('button', { name: '悬停展开', exact: true });
+  const moreTrigger = page.getByRole('button', { name: '更多操作', exact: true });
+
+  await hoverTrigger.hover();
+  await expect(hoverTrigger).toHaveAttribute('aria-expanded', 'true');
+
+  await moreTrigger.hover();
+  await expect(hoverTrigger).toHaveAttribute('aria-expanded', 'false');
+  await expect(page.getByRole('menu')).toHaveCount(0);
 });
