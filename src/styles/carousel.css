@@ -1,1 +1,37 @@
-.at-carousel{overflow:hidden;border:1px solid var(--at-color-border);border-radius:var(--at-radius-md);background:#fff}.at-carousel__slide{display:grid;min-height:150px;place-items:center;padding:20px;background:var(--at-color-primary-soft);color:var(--at-color-primary);font-size:20px;font-weight:600;animation:at-carousel-slide-in var(--at-motion-base) var(--at-ease-emphasized) both}.at-carousel__controls{display:flex;align-items:center;justify-content:center;gap:18px;padding:8px;color:var(--at-color-muted)}.at-carousel__controls button{width:30px;height:30px;border:1px solid var(--at-color-border);border-radius:50%;background:#fff;color:var(--at-color-primary);font-size:19px}@keyframes at-carousel-slide-in{from{opacity:.45;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+.at-carousel { position: relative; overflow: hidden; border-radius: var(--at-radius-md); background: var(--at-color-surface); outline: 0; }
+.at-carousel:focus-visible { box-shadow: 0 0 0 3px rgb(104 92 246 / 25%); }
+.at-carousel__viewport { position: relative; overflow: hidden; touch-action: pan-y; }
+.at-carousel--vertical .at-carousel__viewport { touch-action: pan-x; }
+.at-carousel[style*='--at-carousel-ratio'] .at-carousel__viewport { aspect-ratio: var(--at-carousel-ratio); }
+.at-carousel__track { display: flex; width: 100%; height: 100%; will-change: transform; }
+.at-carousel--vertical .at-carousel__track { flex-direction: column; }
+.at-carousel__slide { position: relative; flex: 0 0 100%; width: 100%; min-width: 100%; height: 100%; user-select: none; }
+.at-carousel__slide > img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.at-carousel--dragging .at-carousel__slide { cursor: grabbing; }
+.at-carousel--slide .at-carousel__viewport { cursor: grab; }
+
+.at-carousel--fade .at-carousel__track { display: grid; }
+.at-carousel--fade .at-carousel__slide { grid-area: 1 / 1; opacity: 0; pointer-events: none; }
+.at-carousel--fade .at-carousel__slide--active { opacity: 1; pointer-events: auto; }
+
+.at-carousel__arrow { position: absolute; top: 50%; z-index: 2; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgb(255 255 255 / 85%); color: var(--at-color-text); box-shadow: var(--at-shadow-sm); opacity: 0; transform: translateY(-50%); transition: opacity var(--at-motion-base), background-color var(--at-motion-fast), transform var(--at-motion-fast) var(--at-ease-emphasized); }
+.at-carousel:hover .at-carousel__arrow, .at-carousel:focus-within .at-carousel__arrow { opacity: 1; }
+.at-carousel__arrow:hover:not(:disabled) { background: #fff; }
+.at-carousel__arrow:disabled { opacity: 0 !important; }
+.at-carousel__arrow--prev { left: 12px; }
+.at-carousel__arrow--next { right: 12px; }
+
+.at-carousel__dots { position: absolute; z-index: 2; display: flex; gap: 6px; padding: 6px; }
+.at-carousel--dots-bottom .at-carousel__dots { bottom: 10px; left: 50%; transform: translateX(-50%); }
+.at-carousel--dots-top .at-carousel__dots { top: 10px; left: 50%; transform: translateX(-50%); }
+.at-carousel--dots-left .at-carousel__dots, .at-carousel--dots-right .at-carousel__dots { top: 50%; flex-direction: column; transform: translateY(-50%); }
+.at-carousel--dots-left .at-carousel__dots { left: 10px; }
+.at-carousel--dots-right .at-carousel__dots { right: 10px; }
+.at-carousel__dot { position: relative; width: 8px; height: 8px; padding: 0; overflow: hidden; border: 0; border-radius: 999px; background: rgb(255 255 255 / 55%); box-shadow: 0 0 0 1px rgb(28 30 57 / 10%); transition: width var(--at-motion-base) var(--at-ease-emphasized), height var(--at-motion-base) var(--at-ease-emphasized), background-color var(--at-motion-base); }
+.at-carousel__dot--active { width: 24px; background: rgb(255 255 255 / 75%); }
+.at-carousel--vertical .at-carousel__dot--active { width: 8px; height: 24px; }
+.at-carousel__dot:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.at-carousel__progress { position: absolute; inset: 0; transform-origin: left center; background: var(--at-color-primary); animation: at-carousel-progress linear forwards; }
+.at-carousel--vertical .at-carousel__progress { transform-origin: center top; animation-name: at-carousel-progress-vertical; }
+@keyframes at-carousel-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes at-carousel-progress-vertical { from { transform: scaleY(0); } to { transform: scaleY(1); } }

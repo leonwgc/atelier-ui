@@ -1,1 +1,36 @@
-.at-typography{margin:0;color:var(--at-color-text)}.at-typography--display{font-size:36px;font-weight:700;letter-spacing:-.04em}.at-typography--title{font-size:24px;font-weight:650}.at-typography--body{font-size:16px;line-height:1.7}.at-typography--secondary{color:var(--at-color-subtle)}.at-typography--caption{font-size:13px;color:var(--at-color-muted)}
+.at-typography-root { color: var(--at-color-text); font-family: var(--at-font); line-height: 1.6; }
+.at-typography-root > * + * { margin-top: .6em; }
+.at-typography { position: relative; margin: 0; color: var(--at-color-text); overflow-wrap: break-word; }
+.at-typography--title { margin: 0; font-weight: 650; letter-spacing: -.02em; line-height: 1.25; }
+.at-typography--h1 { font-size: 36px; letter-spacing: -.035em; font-weight: 700; }
+.at-typography--h2 { font-size: 30px; }
+.at-typography--h3 { font-size: 24px; }
+.at-typography--h4 { font-size: 20px; }
+.at-typography--h5 { font-size: 16px; }
+.at-typography--paragraph { display: flex; align-items: flex-start; gap: 6px; font-size: 16px; line-height: 1.7; }
+.at-typography__paragraph-text { flex: 1; min-width: 0; margin: 0; }
+.at-typography--paragraph .at-typography__actions { margin-left: 0; margin-top: .35em; }
+.at-typography--secondary { color: var(--at-color-subtle); }
+.at-typography--success { color: var(--at-color-success); }
+.at-typography--warning { color: var(--at-color-warning); }
+.at-typography--danger { color: var(--at-color-danger); }
+.at-typography--disabled { color: var(--at-color-muted); cursor: not-allowed; user-select: none; }
+.at-typography--link { color: var(--at-color-primary); text-decoration: none; cursor: pointer; transition: color var(--at-motion-fast); }
+.at-typography--link:hover { color: var(--at-color-primary-hover); text-decoration: underline; text-underline-offset: 3px; }
+.at-typography--link[aria-disabled='true'] { color: var(--at-color-muted); cursor: not-allowed; text-decoration: none; }
+.at-typography__code { padding: 2px 6px; border: 1px solid var(--at-color-border); border-radius: 6px; background: var(--at-color-surface-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .88em; }
+.at-typography__kbd { padding: 2px 7px; border: 1px solid var(--at-color-border-strong); border-bottom-width: 2px; border-radius: 6px; background: var(--at-color-surface); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85em; }
+.at-typography__mark { padding: 0 3px; border-radius: 3px; background: #fde8a6; color: inherit; }
+.at-typography--ellipsis { display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; }
+.at-typography--clamp, .at-typography--paragraph .at-typography--clamp, .at-typography__paragraph-text.at-typography--clamp { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+.at-typography--paragraph.at-typography--clamp { display: flex; overflow: visible; }
+.at-typography--paragraph.at-typography--clamp .at-typography__paragraph-text { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
+.at-typography__expand { margin-left: 4px; padding: 0; border: 0; background: transparent; color: var(--at-color-primary); font: inherit; font-size: .92em; }
+.at-typography__expand:hover { text-decoration: underline; }
+.at-typography__actions { display: inline-flex; align-items: center; gap: 2px; margin-left: 6px; vertical-align: middle; }
+.at-typography__action { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--at-color-primary); opacity: .75; transition: background-color var(--at-motion-fast), opacity var(--at-motion-fast), color var(--at-motion-fast); }
+.at-typography__action:hover { background: var(--at-color-primary-soft); opacity: 1; }
+.at-typography__action--done { color: var(--at-color-success); opacity: 1; animation: at-typography-pop var(--at-motion-base) var(--at-ease-emphasized); }
+.at-typography--editing { display: block; }
+.at-typography__editor { display: block; width: 100%; min-height: 1.6em; padding: 4px 8px; border: 1px solid var(--at-color-primary); border-radius: var(--at-radius-sm); background: var(--at-color-surface); color: inherit; font: inherit; line-height: inherit; outline: 0; box-shadow: 0 0 0 3px rgb(104 92 246 / 12%); resize: none; }
+@keyframes at-typography-pop { 50% { transform: scale(1.25); } }

@@ -230,3 +230,17 @@ button:focus-visible, a:focus-visible { outline: 3px solid rgb(104 92 246 / 22%)
 .demo-popover-body p { margin: 0 0 10px; }
 .demo-anchor-layout--horizontal { flex-direction: column; gap: 14px; }
 .demo-anchor-layout--horizontal .demo-anchor-scroll { height: 220px; }
+
+/* Data display demo helpers */
+.demo-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 24px 32px; width: 100%; }
+.demo-carousel-row { display: flex; flex-wrap: wrap; gap: 18px; }
+.demo-slide { display: grid; height: 100%; min-height: 160px; place-items: center; background: linear-gradient(135deg, var(--at-color-primary-soft), #dcd8ff); color: var(--at-color-primary); font-size: 18px; font-weight: 600; }
+.demo-slide--alt { background: linear-gradient(135deg, #e6f6ef, #bfe8d3); color: var(--at-color-success); }
+.demo-calendar-events { margin: 0; padding: 0; list-style: none; }
+.demo-calendar-events li { overflow: hidden; margin-top: 2px; padding: 1px 6px; border-radius: 4px; background: var(--at-color-primary-soft); color: var(--at-color-primary); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.demo-tree-row { display: flex; flex-wrap: wrap; gap: 24px; width: 100%; }
+.demo-tree-frame { display: flex; flex: 1 1 280px; flex-direction: column; gap: 10px; padding: 8px 10px; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface); }
+.demo-listy-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 8px 0; }
+.demo-listy-row strong { font-weight: 600; }
+.demo-masonry-card { display: flex; align-items: flex-end; padding: 12px; border-radius: var(--at-radius-md); background-size: cover; background-position: center; color: #fff; font-weight: 600; text-shadow: 0 1px 4px rgb(0 0 0 / 35%); box-shadow: var(--at-shadow-sm); }
+.demo-watermark-body { display: grid; gap: 12px; min-height: 220px; padding: 20px; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface); }

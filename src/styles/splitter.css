@@ -1,1 +1,22 @@
-.at-splitter{display:grid;min-height:150px;gap:0;overflow:hidden;border:1px solid var(--at-color-border);border-radius:var(--at-radius-md);background:#fff}.at-splitter>div:first-child,.at-splitter>div:last-child{padding:14px;overflow:auto}.at-splitter__bar{display:grid;place-items:center;background:var(--at-color-border);cursor:col-resize;touch-action:none}.at-splitter__bar:hover,.at-splitter__bar:focus-visible{background:var(--at-color-primary);outline:0}
+.at-splitter { display: flex; width: 100%; min-height: 160px; overflow: hidden; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface); }
+.at-splitter--horizontal { flex-direction: row; }
+.at-splitter--vertical { flex-direction: column; }
+.at-splitter--resizing { user-select: none; cursor: col-resize; }
+.at-splitter--vertical.at-splitter--resizing { cursor: row-resize; }
+.at-splitter__panel { position: relative; min-width: 0; min-height: 0; overflow: auto; padding: 14px; box-sizing: border-box; transition: flex-basis var(--at-motion-fast) linear, width var(--at-motion-fast) linear, height var(--at-motion-fast) linear; }
+.at-splitter--resizing .at-splitter__panel { transition: none; }
+.at-splitter__panel--collapsed { padding: 0; overflow: hidden; }
+.at-splitter__bar { position: relative; z-index: 1; display: flex; flex: 0 0 8px; align-items: center; justify-content: center; background: var(--at-color-surface-muted); outline: 0; transition: background-color var(--at-motion-fast); touch-action: none; }
+.at-splitter--horizontal .at-splitter__bar { width: 8px; cursor: col-resize; border-left: 1px solid var(--at-color-border); border-right: 1px solid var(--at-color-border); }
+.at-splitter--vertical .at-splitter__bar { height: 8px; cursor: row-resize; border-top: 1px solid var(--at-color-border); border-bottom: 1px solid var(--at-color-border); }
+.at-splitter__bar:hover, .at-splitter__bar--active, .at-splitter__bar:focus-visible { background: var(--at-color-primary-soft); border-color: color-mix(in srgb, var(--at-color-primary) 40%, transparent); }
+.at-splitter__bar--static { cursor: default; }
+.at-splitter__bar--static:hover { background: var(--at-color-surface-muted); border-color: var(--at-color-border); }
+.at-splitter__grip { width: 2px; height: 22px; border-radius: 2px; background: var(--at-color-border-strong); transition: background-color var(--at-motion-fast); }
+.at-splitter--vertical .at-splitter__grip { width: 22px; height: 2px; }
+.at-splitter__bar:hover .at-splitter__grip, .at-splitter__bar--active .at-splitter__grip { background: var(--at-color-primary); }
+.at-splitter__collapse { position: absolute; display: flex; gap: 2px; }
+.at-splitter--horizontal .at-splitter__collapse { flex-direction: column; }
+.at-splitter__collapse-button { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; padding: 0; border: 1px solid var(--at-color-border); border-radius: 5px; background: var(--at-color-surface); color: var(--at-color-subtle); box-shadow: var(--at-shadow-sm); opacity: 0; transition: opacity var(--at-motion-fast), color var(--at-motion-fast), border-color var(--at-motion-fast); }
+.at-splitter__bar:hover .at-splitter__collapse-button, .at-splitter__bar:focus-within .at-splitter__collapse-button { opacity: 1; }
+.at-splitter__collapse-button:hover { border-color: var(--at-color-primary); color: var(--at-color-primary); }

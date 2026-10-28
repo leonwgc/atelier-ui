@@ -1,13 +1,12 @@
 import { useState, type ReactNode } from 'react';
 import { highlightCode } from './shared';
 import {
-  App, BorderBeam, Button, Calendar, Carousel, ConfigProvider, Flex, Grid, GridCol, Icon, Image, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, List, Listy, Masonry, Message, Notification, QRCode, Result, Space, Splitter, Statistic, Tree, Typography, Util, Watermark,
+  App, BorderBeam, Button, ConfigProvider, Flex, Grid, GridCol, Icon, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, Message, Notification, Result, Space, Util,
 } from '../src';
 
 export type AdditionalPageId =
- | 'flex' | 'grid' | 'icon' | 'image' | 'inputOTP' | 'layout' | 'result'
-  | 'space' | 'statistic' | 'typography' | 'calendar' | 'carousel' | 'list' | 'listy'
-  | 'masonry' | 'qrcode' | 'tree' | 'watermark' | 'splitter' | 'message' | 'notification'
+ | 'flex' | 'grid' | 'icon' | 'inputOTP' | 'layout' | 'result'
+  | 'space' | 'message' | 'notification'
   | 'app' | 'configProvider' | 'borderBeam' | 'util';
 
 type ApiRow = [string, string, string];
@@ -22,7 +21,6 @@ interface ComponentPageMeta {
   preview: ReactNode;
 }
 
-const imageSource = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="420" height="240" viewBox="0 0 420 240"%3E%3Crect width="420" height="240" fill="%23ecebff"/%3E%3Ccircle cx="320" cy="80" r="48" fill="%23b6b0ff"/%3E%3Cpath d="M0 190 115 92l84 75 68-54 153 127H0Z" fill="%23685cf6"/%3E%3C/svg%3E';
 
 export const additionalComponents: ComponentPageMeta[] = [
   {
@@ -34,22 +32,6 @@ export function ActionIcons() {
 }`,
     rows: [['name', "'plus' | 'search' | 'check' | 'close' | 'arrow-right' | 'info' | 'more'", 'required'], ['size', 'number', '20'], ['title', 'string', '—']],
     preview: <div className="additional-icon-preview"><Icon name="search" title="搜索" /><Icon name="plus" size={24} /><Icon name="check" size={24} /><Icon name="arrow-right" size={24} /></div>,
-  },
-  {
-    id: 'typography', title: 'Typography 排版', icon: 'T', group: '基础组件', description: '通过一致的字号层级和文本颜色组织内容结构。',
-    code: `import { Typography } from 'atelier-ui/typography';
-
-export function TextHierarchy() {
-  return (
-    <>
-      <Typography as="h2" variant="title">项目概览</Typography>
-      <Typography variant="body">查看团队的最新进展。</Typography>
-      <Typography variant="caption">最近更新 · 3 分钟前</Typography>
-    </>
-  );
-}`,
-    rows: [['as', 'ElementType', 'p'], ['variant', "'display' | 'title' | 'body' | 'secondary' | 'caption'", 'body'], ['children', 'ReactNode', 'required']],
-    preview: <div className="additional-type-preview"><Typography as="h2" variant="title">项目概览</Typography><Typography variant="body">查看团队的最新进展。</Typography><Typography variant="caption">最近更新 · 3 分钟前</Typography></div>,
   },
   {
     id: 'flex', title: 'Flex 弹性布局', icon: '↔', group: '布局组件', description: '使用常见的 Flexbox 属性快速对齐和排列内容。',
@@ -134,26 +116,6 @@ export function VerificationCode() {
     preview: <InputOTP defaultValue="482" ariaLabel="演示验证码" />,
   },
   {
-    id: 'statistic', title: 'Statistic 统计数值', icon: '↗', group: '数据展示', description: '突出展示关键数值，并支持前缀、后缀与精度配置。',
-    code: `import { Statistic } from 'atelier-ui/statistic';
-
-export function ActiveMembers() {
-  return <Statistic title="活跃成员" value={1284} suffix="人" />;
-}`,
-    rows: [['title', 'ReactNode', 'required'], ['value', 'number | string', 'required'], ['prefix / suffix', 'ReactNode', '—'], ['precision', 'number', '0']],
-    preview: <div className="additional-statistics"><Statistic title="本月新增项目" value={248} prefix="+" /><Statistic title="活跃成员" value={1284} suffix="人" /></div>,
-  },
-  {
-    id: 'image', title: 'Image 图片', icon: '▧', group: '数据展示', description: '展示图片，并提供点击放大的预览层。',
-    code: `import { Image } from 'atelier-ui/image';
-
-export function CoverImage() {
-  return <Image src="/images/project-cover.png" alt="项目封面" width={420} preview />;
-}`,
-    rows: [['src', 'string', 'required'], ['alt', 'string', "''"], ['preview', 'boolean', 'true'], ['width / height', 'number | string', '—']],
-    preview: <Image src={imageSource} alt="紫色山峦风格的项目封面" width={420} />,
-  },
-  {
     id: 'result', title: 'Result 结果', icon: '✓', group: '反馈组件', description: '在独立页面或任务结束后呈现清晰的状态与下一步操作。',
     code: `import { Button } from 'atelier-ui/button';
 import { Result } from 'atelier-ui/result';
@@ -170,140 +132,6 @@ export function SaveResult() {
 }`,
     rows: [['status', "'success' | 'error' | 'info' | 'warning' | '404' | '500'", 'info'], ['title', 'ReactNode', 'required'], ['subTitle', 'ReactNode', '—'], ['extra', 'ReactNode', '—']],
     preview: <Result status="success" title="保存成功" subTitle="项目设置已更新。" extra={<Button variant="primary">返回项目</Button>} />,
-  },
-  {
-    id: 'calendar', title: 'Calendar 日历', icon: '▦', group: '数据展示', description: '按月浏览日期并通过键盘可访问的日历按钮选择日期。',
-    code: `import { useState } from 'react';
-import { Calendar } from 'atelier-ui/calendar';
-
-export function ProjectCalendar() {
-  const [date, setDate] = useState(new Date(2026, 9, 27));
-  return <Calendar value={date} onChange={setDate} />;
-}`,
-    rows: [['value / defaultValue', 'Date', '— / 当前日期'], ['onChange', '(date: Date) => void', '—']],
-    preview: <Calendar defaultValue={new Date(2026, 9, 27)} />,
-  },
-  {
-    id: 'carousel', title: 'Carousel 走马灯', icon: '◁', group: '数据展示', description: '通过前后控件轮换一组展示内容，可选自动播放。',
-    code: `import { Carousel } from 'atelier-ui/carousel';
-
-export function FeatureCarousel() {
-  return (
-    <Carousel
-      autoplay
-      interval={5000}
-      items={[
-        <span key="one">灵活的表单 Hooks</span>,
-        <span key="two">按需加载组件</span>,
-      ]}
-    />
-  );
-}`,
-    rows: [['items', 'ReactNode[]', 'required'], ['autoplay', 'boolean', 'false'], ['interval', 'number', '4000 ms']],
-    preview: <Carousel items={[<span key="one">灵活的表单 Hooks</span>, <span key="two">按需加载组件</span>, <span key="three">独立组件样式</span>]} />,
-  },
-  {
-    id: 'list', title: 'List 列表', icon: '☷', group: '数据展示', description: '以一致的行间距展示一组文本或自定义内容。',
-    code: `import { List } from 'atelier-ui/list';
-
-const tasks = ['更新产品视觉', '检查成员权限', '整理发布记录'];
-
-export function TaskList() {
-  return <List bordered dataSource={tasks} renderItem={(task) => <span>{task}</span>} />;
-}`,
-    rows: [['dataSource', 'T[]', 'required'], ['renderItem', '(item: T, index: number) => ReactNode', 'required'], ['bordered', 'boolean', 'false']],
-    preview: <List bordered dataSource={['更新产品视觉', '检查成员权限', '整理发布记录']} renderItem={(task) => <span>{task}</span>} />,
-  },
-  {
-    id: 'listy', title: 'Listy 虚拟列表', icon: '☷', group: '数据展示', description: '只渲染可视区域附近的固定高度行，适合较长列表。',
-    code: `import { Listy } from 'atelier-ui/listy';
-
-const records = Array.from({ length: 500 }, (_, index) => ` + '`成员 ${index + 1}`' + `);
-
-export function VirtualMembers() {
-  return <Listy items={records} itemHeight={44} height={220} />;
-}`,
-    rows: [['items', 'ReactNode[]', 'required'], ['itemHeight', 'number', '44'], ['height', 'number', '220']],
-    preview: <Listy items={Array.from({ length: 120 }, (_, index) => `成员 ${index + 1} · 项目协作者`)} />,
-  },
-  {
-    id: 'masonry', title: 'Masonry 瀑布流', icon: '▥', group: '布局组件', description: '以 CSS 多列流式排列不同高度的卡片内容。',
-    code: `import { Masonry } from 'atelier-ui/masonry';
-
-export function ProjectGallery() {
-  return (
-    <Masonry
-      columns={3}
-      gap={14}
-      items={[
-        <article key="a">品牌升级</article>,
-        <article key="b">
-          移动端体验改版
-          <br />
-          新增设计规范
-        </article>,
-        <article key="c">数据看板</article>,
-      ]}
-    />
-  );
-}`,
-    rows: [['items', 'ReactNode[]', 'required'], ['columns', 'number', '3'], ['gap', 'number', '16']],
-    preview: <Masonry columns={3} items={[<span key="a">品牌升级</span>, <span key="b">移动端体验改版<br />新增设计规范</span>, <span key="c">数据看板</span>, <span key="d">设计系统</span>]} />,
-  },
-  {
-    id: 'qrcode', title: 'QRCode 二维码', icon: '▦', group: '数据展示', description: '将文本或链接编码为可扫描的二维码图像。',
-    code: `import { QRCode } from 'atelier-ui/qrcode';
-
-export function InviteCode() {
-  return <QRCode value="https://example.com/invite/team-aurora" size={160} title="团队邀请链接" />;
-}`,
-    rows: [['value', 'string', 'required'], ['size', 'number', '144'], ['title', 'string', '二维码']],
-    preview: <QRCode value="https://example.com/invite/team-aurora" size={144} title="团队邀请链接" />,
-  },
-  {
-    id: 'tree', title: 'Tree 树形控件', icon: '⋮', group: '数据展示', description: '以可展开层级结构呈现目录、组织或分类数据。',
-    code: `import { Tree } from 'atelier-ui/tree';
-
-const folders = [
-  {
-    label: '设计部',
-    value: 'design',
-    children: [
-      { label: '品牌项目', value: 'brand' },
-      { label: '体验规范', value: 'ux' },
-    ],
-  },
-];
-
-export function FolderTree() {
-  return <Tree options={folders} onSelect={(node) => console.log(node.value)} />;
-}`,
-    rows: [['options', 'CascaderOption[]', 'required'], ['onSelect', '(option: CascaderOption) => void', '—'], ['CascaderOption.children', 'CascaderOption[]', '—']],
-    preview: <Tree options={[{ label: '设计部', value: 'design', children: [{ label: '品牌项目', value: 'brand' }, { label: '体验规范', value: 'ux' }] }, { label: '工程部', value: 'engineering' }]} />,
-  },
-  {
-    id: 'watermark', title: 'Watermark 水印', icon: '▧', group: '反馈组件', description: '在内容容器上平铺轻量文字水印，提示内容归属。',
-    code: `import { Watermark } from 'atelier-ui/watermark';
-
-export function ProtectedPreview() {
-  return (
-    <Watermark content="Atelier · 内部预览">
-      <div style={{ minHeight: 120 }}>工作区内容</div>
-    </Watermark>
-  );
-}`,
-    rows: [['content', 'string', 'required'], ['rotate', 'number', '-20'], ['opacity', 'number', '0.1'], ['children', 'ReactNode', 'required']],
-    preview: <Watermark content="Atelier · 内部预览"><div>工作区内容 · 仅供团队查看</div></Watermark>,
-  },
-  {
-    id: 'splitter', title: 'Splitter 分隔面板', icon: '◫', group: '布局组件', description: '拖动分隔条调整两个相邻内容面板的空间比例。',
-    code: `import { Splitter } from 'atelier-ui/splitter';
-
-export function ResizablePanels() {
-  return <Splitter first={<strong>项目导航</strong>} second={<p>项目详情与最近动态</p>} defaultSize={36} />;
-}`,
-    rows: [['first / second', 'ReactNode', 'required'], ['defaultSize', 'number', '50%'], ['separator', '键盘左右方向键', '可调整']],
-    preview: <Splitter first={<strong>项目导航</strong>} second={<p>项目详情与最近动态</p>} defaultSize={36} />,
   },
   {
     id: 'message', title: 'Message 全局提示', icon: '·', group: '反馈组件', description: '在页面顶部短暂展示轻量级的操作结果提示。',

@@ -8,10 +8,11 @@ import {
 import { additionalComponents, AdditionalComponentPage, isAdditionalPageId, type AdditionalPageId } from './AdditionalPages';
 import { dataEntryPages, DataEntryPage, isDataEntryPageId, type DataEntryPageId } from './DataEntryPages';
 import { navigationPages, NavigationPage, isNavigationPageId, type NavigationPageId } from './NavigationPages';
+import { dataDisplayPages, DataDisplayPage, isDataDisplayPageId, type DataDisplayPageId } from './DataDisplayPages';
 import { ApiTable, ExampleCard, PageHeading } from './shared';
 import './styles.css';
 
-type PageId = 'overview' | 'form' | 'buttons' | 'inputs' | 'selection' | 'feedback' | 'table' | 'alert' | 'tag' | 'avatar' | 'tooltip' | 'badge' | 'breadcrumb' | 'divider' | 'empty' | 'pagination' | 'progress' | 'skeleton' | 'spin' | 'tabs' | 'card' | 'descriptions' | 'steps' | 'timeline' | 'collapse' | 'datePicker' | 'upload' | 'drawer' | DataEntryPageId | NavigationPageId | AdditionalPageId;
+type PageId = 'overview' | 'form' | 'buttons' | 'inputs' | 'selection' | 'feedback' | 'table' | 'alert' | 'tag' | 'avatar' | 'tooltip' | 'badge' | 'breadcrumb' | 'divider' | 'empty' | 'pagination' | 'progress' | 'skeleton' | 'spin' | 'tabs' | 'card' | 'descriptions' | 'steps' | 'timeline' | 'collapse' | 'datePicker' | 'upload' | 'drawer' | DataEntryPageId | NavigationPageId | DataDisplayPageId | AdditionalPageId;
 
 const navigation: Array<{ id: PageId; title: string; icon: string; group: string }> = [
   { id: 'overview', title: '组件总览', icon: '◫', group: '开始使用' },
@@ -44,6 +45,7 @@ const navigation: Array<{ id: PageId; title: string; icon: string; group: string
   { id: 'collapse', title: 'Collapse 折叠面板', icon: '⌄', group: '数据展示' },
   { id: 'divider', title: 'Divider 分割线', icon: '―', group: '基础组件' },
   ...navigationPages.map(({ id, title, icon, group }) => ({ id, title, icon, group })),
+  ...dataDisplayPages.map(({ id, title, icon, group }) => ({ id, title, icon, group })),
   ...additionalComponents.map(({ id, title, icon, group }) => ({ id, title, icon, group })),
 ];
 
@@ -148,6 +150,7 @@ function App() {
         {page === 'drawer' && <DrawerPage />}
         {isDataEntryPageId(page) && <DataEntryPage id={page} />}
         {isNavigationPageId(page) && <NavigationPage id={page} />}
+        {isDataDisplayPageId(page) && <DataDisplayPage id={page} />}
         {isAdditionalPageId(page) && <AdditionalComponentPage id={page} />}
         <footer className="site-footer"><span>Atelier UI · 让界面细节自然发生</span><span>React 18 · TypeScript</span></footer>
       </div>

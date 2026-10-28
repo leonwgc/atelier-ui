@@ -1,1 +1,5 @@
-.at-masonry{width:100%}.at-masonry__item{break-inside:avoid;margin-bottom:var(--at-masonry-gap,16px);padding:14px;border:1px solid var(--at-color-border);border-radius:var(--at-radius-md);background:#fff}
+.at-masonry { position: relative; width: 100%; min-height: 40px; transition: height var(--at-motion-slow) var(--at-ease-emphasized); }
+.at-masonry__item { position: absolute; top: 0; left: 0; box-sizing: border-box; will-change: transform; }
+.at-masonry--ready .at-masonry__item { animation: at-masonry-in var(--at-motion-slow) var(--at-ease-emphasized) both; transition: transform var(--at-motion-slow) var(--at-ease-emphasized), width var(--at-motion-slow) var(--at-ease-emphasized); }
+.at-masonry__item > * { box-sizing: border-box; max-width: 100%; }
+@keyframes at-masonry-in { from { opacity: 0; } to { opacity: 1; } }

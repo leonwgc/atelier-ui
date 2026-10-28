@@ -1,1 +1,11 @@
-.at-qrcode{display:block;padding:8px;border:1px solid var(--at-color-border);border-radius:var(--at-radius-sm);background:#fff}.at-qrcode__loading{color:var(--at-color-muted);font-size:13px}
+.at-qrcode { position: relative; display: inline-flex; align-items: center; justify-content: center; overflow: hidden; border-radius: var(--at-radius-md); }
+.at-qrcode--bordered { box-shadow: inset 0 0 0 1px var(--at-color-border); }
+.at-qrcode__svg, .at-qrcode__canvas { display: block; }
+.at-qrcode--masked .at-qrcode__svg, .at-qrcode--masked .at-qrcode__canvas { filter: blur(3px); opacity: .35; }
+.at-qrcode__status { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--at-color-text); font-size: 13px; font-weight: 600; text-align: center; animation: at-motion-enter var(--at-motion-base) var(--at-ease-emphasized) both; }
+.at-qrcode__refresh { padding: 4px 10px; border: 0; border-radius: 6px; background: var(--at-color-primary); color: #fff; font-size: 12px; font-weight: 600; }
+.at-qrcode__refresh:hover { background: var(--at-color-primary-hover); }
+.at-qrcode__check { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--at-color-success); color: #fff; font-size: 16px; }
+.at-qrcode__spinner { width: 22px; height: 22px; border: 2.5px solid var(--at-color-border); border-top-color: var(--at-color-primary); border-radius: 50%; animation: at-qrcode-spin .8s linear infinite; }
+.at-qrcode__error { padding: 12px; color: var(--at-color-danger); font-size: 12px; text-align: center; }
+@keyframes at-qrcode-spin { to { transform: rotate(360deg); } }
