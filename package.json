@@ -419,6 +419,71 @@
       "import": "./dist/slide-in.js",
       "require": "./dist/slide-in.cjs"
     },
+    "./scroll-reveal": {
+      "types": "./dist/entries/scroll-reveal.d.ts",
+      "import": "./dist/scroll-reveal.js",
+      "require": "./dist/scroll-reveal.cjs"
+    },
+    "./scale-in": {
+      "types": "./dist/entries/scale-in.d.ts",
+      "import": "./dist/scale-in.js",
+      "require": "./dist/scale-in.cjs"
+    },
+    "./stagger": {
+      "types": "./dist/entries/stagger.d.ts",
+      "import": "./dist/stagger.js",
+      "require": "./dist/stagger.cjs"
+    },
+    "./expand": {
+      "types": "./dist/entries/expand.d.ts",
+      "import": "./dist/expand.js",
+      "require": "./dist/expand.cjs"
+    },
+    "./pulse": {
+      "types": "./dist/entries/pulse.d.ts",
+      "import": "./dist/pulse.js",
+      "require": "./dist/pulse.cjs"
+    },
+    "./glow": {
+      "types": "./dist/entries/glow.d.ts",
+      "import": "./dist/glow.js",
+      "require": "./dist/glow.cjs"
+    },
+    "./shake": {
+      "types": "./dist/entries/shake.d.ts",
+      "import": "./dist/shake.js",
+      "require": "./dist/shake.cjs"
+    },
+    "./wobble": {
+      "types": "./dist/entries/wobble.d.ts",
+      "import": "./dist/wobble.js",
+      "require": "./dist/wobble.cjs"
+    },
+    "./hover-lift": {
+      "types": "./dist/entries/hover-lift.d.ts",
+      "import": "./dist/hover-lift.js",
+      "require": "./dist/hover-lift.cjs"
+    },
+    "./press": {
+      "types": "./dist/entries/press.d.ts",
+      "import": "./dist/press.js",
+      "require": "./dist/press.cjs"
+    },
+    "./flip-in": {
+      "types": "./dist/entries/flip-in.d.ts",
+      "import": "./dist/flip-in.js",
+      "require": "./dist/flip-in.cjs"
+    },
+    "./flip-card": {
+      "types": "./dist/entries/flip-card.d.ts",
+      "import": "./dist/flip-card.js",
+      "require": "./dist/flip-card.cjs"
+    },
+    "./confetti": {
+      "types": "./dist/entries/confetti.d.ts",
+      "import": "./dist/confetti.js",
+      "require": "./dist/confetti.cjs"
+    },
     "./shimmer": {
       "types": "./dist/entries/shimmer.d.ts",
       "import": "./dist/shimmer.js",

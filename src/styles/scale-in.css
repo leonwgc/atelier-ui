@@ -1,0 +1,3 @@
+.at-scale-in { animation: at-scale-in-enter var(--at-scale-in-duration, 450ms) var(--at-ease-emphasized) var(--at-scale-in-delay, 0ms) both; }
+@keyframes at-scale-in-enter { from { opacity: 0; transform: scale(var(--at-scale-in-start, .88)); } to { opacity: 1; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .at-scale-in { animation: none; } }

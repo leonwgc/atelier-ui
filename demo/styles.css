@@ -189,6 +189,14 @@ button:focus-visible, a:focus-visible { outline: 3px solid rgb(104 92 246 / 22%)
 .animation-typing-preview { min-height: 34px; color: var(--at-color-primary); font-size: 22px; font-weight: 600; }
 .animation-fade-preview { display: grid; min-height: 88px; place-items: center; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface-muted); color: var(--at-color-text); }
 .animation-shimmer-preview { display: grid; min-height: 88px; place-items: center; border-radius: var(--at-radius-md); background: #2f9472; color: #fff; }
+.animation-stagger-preview { display: flex; flex-wrap: wrap; gap: 8px; }
+.animation-expand-demo { display: grid; width: 100%; justify-items: start; gap: 8px; }
+.animation-expand-preview { margin-top: 8px; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface-muted); color: var(--at-color-subtle); }
+.animation-expand-preview p { margin: 0; padding: 12px; }
+.animation-interaction-preview,.animation-flip-card,.animation-confetti-preview { display: grid; min-height: 88px; place-items: center; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface); color: var(--at-color-text); cursor: pointer; }
+.animation-flip-card { width: min(100%, 300px); height: 120px; min-height: 0; }
+.animation-flip-card .at-flip-card__face { display: grid; place-items: center; border-radius: var(--at-radius-md); background: var(--at-color-surface-muted); }
+.animation-confetti-preview { position: relative; }
 .animation-list-preview { width: min(100%, 460px); }
 .animation-list-preview .at-animated-list__item { border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); padding: 10px 12px; background: var(--at-color-surface); color: var(--at-color-text); }
 .animation-list-preview__item { display: flex; align-items: center; gap: 10px; }

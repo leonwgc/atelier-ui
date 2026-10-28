@@ -1,0 +1,12 @@
+.at-pulse {
+  animation: at-pulse var(--at-pulse-duration, 1400ms) ease-in-out infinite;
+}
+
+@keyframes at-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.88; transform: scale(1.035); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .at-pulse { animation: none; }
+}

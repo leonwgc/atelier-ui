@@ -1,0 +1,12 @@
+.at-glow {
+  animation: at-glow var(--at-glow-duration, 1800ms) ease-in-out infinite;
+}
+
+@keyframes at-glow {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 18px 3px var(--at-glow-color, #8b7dff); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .at-glow { animation: none; }
+}

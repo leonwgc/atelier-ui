@@ -1,0 +1,3 @@
+.at-stagger__item { animation: at-stagger-enter var(--at-stagger-duration, 420ms) var(--at-ease-emphasized) var(--at-stagger-delay, 0ms) both; }
+@keyframes at-stagger-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .at-stagger__item { animation: none; } }

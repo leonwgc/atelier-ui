@@ -1,0 +1,27 @@
+.at-flip-card {
+  perspective: 1000px;
+}
+
+.at-flip-card__inner {
+  display: grid;
+  min-height: inherit;
+  transform-style: preserve-3d;
+  transition: transform 600ms var(--at-ease-emphasized);
+}
+
+.at-flip-card--flipped .at-flip-card__inner {
+  transform: var(--at-flip-card-rotation, rotateY(180deg));
+}
+
+.at-flip-card__face {
+  grid-area: 1 / 1;
+  min-width: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.at-flip-card__face--back { transform: var(--at-flip-card-rotation, rotateY(180deg)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .at-flip-card__inner { transition: none; }
+}

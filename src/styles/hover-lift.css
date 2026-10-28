@@ -1,0 +1,12 @@
+.at-hover-lift {
+  transition: transform var(--at-hover-lift-duration, 500ms) var(--at-ease-emphasized, ease);
+}
+
+.at-hover-lift:hover {
+  transform: translateY(calc(-1 * var(--at-hover-lift-distance, 6px)));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .at-hover-lift { transition: none; }
+  .at-hover-lift:hover { transform: none; }
+}

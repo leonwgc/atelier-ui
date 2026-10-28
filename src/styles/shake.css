@@ -1,0 +1,13 @@
+.at-shake--active {
+  animation: at-shake var(--at-shake-duration, 650ms) ease-in-out both;
+}
+
+@keyframes at-shake {
+  0%, 100% { transform: translateX(0); }
+  15%, 45%, 75% { transform: translateX(-6px); }
+  30%, 60%, 90% { transform: translateX(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .at-shake--active { animation: none; }
+}

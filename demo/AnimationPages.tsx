@@ -1,8 +1,8 @@
 import { useState, type ReactNode } from 'react';
 import { highlightCode } from './shared';
-import { AnimatedList, BlurFade, BorderBeam, Button, FadeIn, Input, Marquee, NumberTicker, Shimmer, SlideIn, Transition, TransitionGroup, TypingAnimation, useFieldArray, useForm } from '../src';
+import { AnimatedList, BlurFade, BorderBeam, Button, Confetti, Expand, FadeIn, FlipCard, FlipIn, Glow, HoverLift, Input, Marquee, NumberTicker, Press, Pulse, ScaleIn, ScrollReveal, Shake, Shimmer, SlideIn, Stagger, Transition, TransitionGroup, TypingAnimation, Wobble, useFieldArray, useForm } from '../src';
 
-export type AnimationPageId = 'marquee' | 'numberTicker' | 'typingAnimation' | 'blurFade' | 'fadeIn' | 'slideIn' | 'shimmer' | 'animatedList' | 'transition' | 'transitionGroup' | 'borderBeam';
+export type AnimationPageId = 'marquee' | 'numberTicker' | 'typingAnimation' | 'blurFade' | 'fadeIn' | 'slideIn' | 'scrollReveal' | 'scaleIn' | 'stagger' | 'expand' | 'pulse' | 'glow' | 'shake' | 'wobble' | 'hoverLift' | 'press' | 'flipIn' | 'flipCard' | 'confetti' | 'shimmer' | 'animatedList' | 'transition' | 'transitionGroup' | 'borderBeam';
 type ApiRow = [string, string, string];
 
 interface AnimationPageMeta {
@@ -20,6 +20,21 @@ const activityItems = [
   { id: 'review', initials: 'D', title: 'Design review completed', description: 'All 8 comments were resolved', time: '18 min ago' },
   { id: 'release', initials: 'R', title: 'Release published', description: 'Version 2.4.0 is now live', time: '1 hr ago' },
 ];
+
+function ExpandPreview() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="animation-expand-demo">
+      <Button size="sm" aria-expanded={open} aria-controls="animation-expand-demo-panel" onClick={() => setOpen((value) => !value)}>
+        {open ? '收起内容' : '展开内容'}
+      </Button>
+      <Expand id="animation-expand-demo-panel" open={open} className="animation-expand-preview">
+        <p>Additional details are revealed here.</p>
+      </Expand>
+    </div>
+  );
+}
 
 export const animationPages: AnimationPageMeta[] = [
   {
@@ -105,6 +120,192 @@ export function Intro() {
 }`,
     rows: [['children', 'ReactNode', 'required'], ['direction', "'left' | 'right' | 'up' | 'down'", 'up'], ['distance', 'number', '16 px'], ['delay', 'number', '0 ms'], ['duration', 'number', '500 ms'], ['HTML attributes', 'HTMLAttributes<HTMLDivElement>', '—']],
     preview: <SlideIn key="slide-in-demo" className="animation-fade-preview" direction="left" distance={24} delay={80} duration={850}><strong>Every detail finds its place.</strong></SlideIn>,
+  },
+  {
+    id: 'scrollReveal', title: 'ScrollReveal 滚动显现', icon: '⌄', description: '元素进入视口时渐入，可选择方向、距离及是否重复触发。',
+    code: `import { ScrollReveal } from 'atelier-ui/scroll-reveal';
+
+export function FeatureCard() {
+  return (
+    <ScrollReveal direction="up" distance={20} once>
+      <article>
+        <h2>Reveal on scroll</h2>
+        <p>Content appears as it enters the viewport.</p>
+      </article>
+    </ScrollReveal>
+  );
+}`,
+    rows: [['children', 'ReactNode', 'required'], ['direction', "'left' | 'right' | 'up' | 'down'", 'up'], ['distance', 'number', '16 px'], ['delay / duration', 'number', '0 / 600 ms'], ['threshold', 'number', '0.1'], ['rootMargin', 'string', '0px'], ['once', 'boolean', 'true']],
+    preview: <ScrollReveal key="scroll-reveal-demo" className="animation-fade-preview" direction="up"><strong>Reveal on scroll</strong></ScrollReveal>,
+  },
+  {
+    id: 'scaleIn', title: 'ScaleIn 缩放弹入', icon: '⊙', description: '内容从较小比例平滑放大并淡入，适用于卡片、弹窗和菜单。',
+    code: `import { ScaleIn } from 'atelier-ui/scale-in';
+
+export function WelcomeCard() {
+  return (
+    <ScaleIn startScale={0.85} duration={450}>
+      <article>Welcome back</article>
+    </ScaleIn>
+  );
+}`,
+    rows: [['children', 'ReactNode', 'required'], ['startScale', 'number', '0.88'], ['delay', 'number', '0 ms'], ['duration', 'number', '450 ms']],
+    preview: <ScaleIn key="scale-in-demo" className="animation-fade-preview"><strong>Welcome back</strong></ScaleIn>,
+  },
+  {
+    id: 'stagger', title: 'Stagger 错峰动画', icon: '☷', description: '以错峰顺序呈现任意子元素，适合标签、卡片和列表内容。',
+    code: `import { Stagger } from 'atelier-ui/stagger';
+
+export function FeatureTags() {
+  return (
+    <Stagger staggerDelay={90}>
+      <span>Fast setup</span>
+      <span>Accessible</span>
+      <span>Customizable</span>
+    </Stagger>
+  );
+}`,
+    rows: [['children', 'ReactNode', 'required'], ['staggerDelay', 'number', '70 ms'], ['duration', 'number', '420 ms'], ['itemClassName', 'string', '—'], ['HTML attributes', 'HTMLAttributes<HTMLDivElement>', '—']],
+    preview: <Stagger key="stagger-demo" className="animation-stagger-preview" staggerDelay={100}><span className="animation-pill">Fast setup</span><span className="animation-pill">Accessible</span><span className="animation-pill">Customizable</span></Stagger>,
+  },
+  {
+    id: 'expand', title: 'Expand 平滑展开', icon: '⌄', description: '对受控内容进行平滑展开与收起，并隐藏折叠内容的辅助技术焦点。',
+    code: `import { useState } from 'react';
+import { Button } from 'atelier-ui/button';
+import { Expand } from 'atelier-ui/expand';
+
+export function Details() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setOpen((value) => !value)}>
+        {open ? 'Hide details' : 'Show details'}
+      </Button>
+      <Expand open={open}>
+        <p>Additional details are revealed here.</p>
+      </Expand>
+    </>
+  );
+}`,
+    rows: [['children', 'ReactNode', 'required'], ['open', 'boolean', 'required'], ['duration', 'number', '300 ms'], ['HTML attributes', 'HTMLAttributes<HTMLDivElement>', '—']],
+    preview: <ExpandPreview />,
+  },
+  {
+    id: 'pulse', title: 'Pulse 呼吸', icon: '◉', description: '以柔和的循环缩放和透明度变化强调需要关注的内容。',
+    code: `import { Pulse } from 'atelier-ui/pulse';
+
+export function LiveStatus() {
+  return <Pulse duration={1400}><span>● Live now</span></Pulse>;
+}`,
+    rows: [['children', 'ReactNode', 'required'], ['duration', 'number', '1400 ms'], ['HTML attributes', 'HTMLAttributes<HTMLDivElement>', '—']],
+    preview: <Pulse className="animation-fade-preview"><strong>● Live now</strong></Pulse>,
+  },
+  {
+    id: 'glow', title: 'Glow 柔光', icon: '✧', description: '在内容周围循环显示柔和光晕，可自定义颜色与速度。',
+    code: `import { Glow } from 'atelier-ui/glow';
+
+export function Highlight() {
+  return <Glow color="#8b7dff" duration={1800}>Featured</Glow>;
+}`,
+    rows: [['children', 'ReactNode', 'required'], ['color', 'string', '#8b7dff'], ['duration', 'number', '1800 ms']],
+    preview: <Glow className="animation-fade-preview"><strong>Featured</strong></Glow>,
+  },
+  {
+    id: 'shake', title: 'Shake 震动反馈', icon: '↔', description: '通过短促的水平抖动反馈错误或无效操作，可用 active 重新触发。',
+    code: `import { Shake } from 'atelier-ui/shake';
+
+export function InvalidField() {
+  return <Shake active><span role="alert">Please check this field.</span></Shake>;
+}`,
+    rows: [['children', 'ReactNode', 'required'], ['active', 'boolean', 'true'], ['duration', 'number', '650 ms']],
+    preview: <Shake key="shake-demo" className="animation-fade-preview"><strong>Invalid input</strong></Shake>,
+  },
+  {
+    id: 'wobble', title: 'Wobble 摇摆反馈', icon: '↝', description: '以轻微旋转摆动吸引注意，可用 active 控制播放与重播。',
+    code: `import { Wobble } from 'atelier-ui/wobble';
+
+export function NewFeature() {
+  return <Wobble active><span>New feature</span></Wobble>;
+}`,
+    rows: [['children', 'ReactNode', 'required'], ['active', 'boolean', 'true'], ['duration', 'number', '900 ms']],
+    preview: <Wobble key="wobble-demo" className="animation-fade-preview"><strong>New feature</strong></Wobble>,
+  },
+  {
+    id: 'hoverLift', title: 'HoverLift 悬停抬升', icon: '⌃', description: '鼠标悬停时轻微上浮，常用于卡片和可点击内容。',
+    code: `import { HoverLift } from 'atelier-ui/hover-lift';
+
+export function ProjectCard() {
+  return (
+    <HoverLift lift={6}>
+      <article>Explore the latest projects</article>
+    </HoverLift>
+  );
+}`,
+    rows: [['children', 'ReactNode', 'required'], ['lift', 'number', '6 px'], ['duration', 'number', '500 ms']],
+    preview: <HoverLift className="animation-interaction-preview"><strong>Hover to lift</strong></HoverLift>,
+  },
+  {
+    id: 'press', title: 'Press 按压反馈', icon: '●', description: '指针按下时轻微缩小，提供即时的交互反馈。',
+    code: `import { Press } from 'atelier-ui/press';
+
+export function PressableCard() {
+  return (
+    <Press>
+      <button type="button">Press and hold</button>
+    </Press>
+  );
+}`,
+    rows: [['children', 'ReactNode', 'required'], ['duration', 'number', '500 ms']],
+    preview: <Press className="animation-interaction-preview"><strong>Press and hold</strong></Press>,
+  },
+  {
+    id: 'flipIn', title: 'FlipIn 翻转进入', icon: '⟳', description: '内容以 3D 翻转并淡入，可选择绕 X 或 Y 轴旋转。',
+    code: `import { FlipIn } from 'atelier-ui/flip-in';
+
+export function RevealCard() {
+  return <FlipIn direction="y" duration={600}><article>Just revealed</article></FlipIn>;
+}`,
+    rows: [['children', 'ReactNode', 'required'], ['direction', "'x' | 'y'", 'y'], ['delay', 'number', '0 ms'], ['duration', 'number', '600 ms']],
+    preview: <FlipIn key="flip-in-demo" className="animation-fade-preview"><strong>Just revealed</strong></FlipIn>,
+  },
+  {
+    id: 'flipCard', title: 'FlipCard 翻转卡片', icon: '▣', description: '通过外部状态控制卡片正反面翻转。',
+    code: `import { useState } from 'react';
+import { FlipCard } from 'atelier-ui/flip-card';
+
+export function MemberCard() {
+  const [flipped, setFlipped] = useState(false);
+
+  return (
+    <div>
+      <button type="button" onClick={() => setFlipped((value) => !value)}>
+        Flip card
+      </button>
+      <FlipCard
+        flipped={flipped}
+        front={<strong>Alex Morgan</strong>}
+        back={<span>Product designer</span>}
+      />
+    </div>
+  );
+}`,
+    rows: [['front / back', 'ReactNode', 'required'], ['flipped', 'boolean', 'false'], ['direction', "'horizontal' | 'vertical'", 'horizontal'], ['HTML attributes', 'HTMLAttributes<HTMLDivElement>', '—']],
+    preview: <FlipCard className="animation-flip-card" front={<strong>Alex Morgan</strong>} back={<span>Product designer</span>} />,
+  },
+  {
+    id: 'confetti', title: 'Confetti 庆祝粒子', icon: '✳', description: '在内容周围播放轻量庆祝粒子，支持数量、颜色与时长。',
+    code: `import { Confetti } from 'atelier-ui/confetti';
+
+export function SuccessMessage() {
+  return (
+    <Confetti count={24} colors={['#7c3aed', '#06b6d4', '#f59e0b']}>
+      <strong>Payment complete!</strong>
+    </Confetti>
+  );
+}`,
+    rows: [['children', 'ReactNode', 'optional'], ['active', 'boolean', 'true'], ['count', 'number', '24'], ['duration', 'number', '1800 ms'], ['colors', 'string[]', '内置配色']],
+    preview: <div className="animation-confetti-preview"><Confetti><strong>Payment complete!</strong></Confetti></div>,
   },
   {
     id: 'shimmer', title: 'Shimmer 流光', icon: '✧', description: '为内容表面添加柔和的掠光效果，可自定义高光颜色。',

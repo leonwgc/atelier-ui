@@ -1,0 +1,25 @@
+.at-flip-in {
+  animation-duration: var(--at-flip-in-duration, 600ms);
+  animation-timing-function: var(--at-ease-emphasized);
+  animation-delay: var(--at-flip-in-delay, 0ms);
+  animation-fill-mode: both;
+  transform-origin: center;
+  transform-style: preserve-3d;
+}
+
+.at-flip-in--y { animation-name: at-flip-in-enter-y; }
+.at-flip-in--x { animation-name: at-flip-in-enter-x; }
+
+@keyframes at-flip-in-enter-y {
+  from { opacity: 0; transform: perspective(800px) rotateY(-90deg); }
+  to { opacity: 1; transform: perspective(800px) rotateY(0); }
+}
+
+@keyframes at-flip-in-enter-x {
+  from { opacity: 0; transform: perspective(800px) rotateX(-90deg); }
+  to { opacity: 1; transform: perspective(800px) rotateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .at-flip-in { animation: none; }
+}

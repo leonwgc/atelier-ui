@@ -1,0 +1,3 @@
+.at-scroll-reveal { opacity: 0; transform: translate(var(--at-scroll-reveal-x, 0), var(--at-scroll-reveal-y, 16px)); transition: opacity var(--at-scroll-reveal-duration, 600ms) var(--at-ease-emphasized) var(--at-scroll-reveal-delay, 0ms), transform var(--at-scroll-reveal-duration, 600ms) var(--at-ease-emphasized) var(--at-scroll-reveal-delay, 0ms); }
+.at-scroll-reveal[data-visible='true'] { opacity: 1; transform: translate(0, 0); }
+@media (prefers-reduced-motion: reduce) { .at-scroll-reveal { opacity: 1; transform: none; transition: none; } }

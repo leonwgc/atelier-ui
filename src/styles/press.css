@@ -1,0 +1,12 @@
+.at-press {
+  transition: transform var(--at-press-duration, 500ms) var(--at-ease-emphasized, ease);
+}
+
+.at-press:active {
+  transform: scale(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .at-press { transition: none; }
+  .at-press:active { transform: none; }
+}

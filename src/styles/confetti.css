@@ -1,0 +1,30 @@
+.at-confetti {
+  position: relative;
+  display: inline-block;
+}
+
+.at-confetti__particle {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: var(--at-confetti-size, 8px);
+  height: calc(var(--at-confetti-size, 8px) * 0.65);
+  border-radius: 2px;
+  background: var(--at-confetti-color, #7c3aed);
+  opacity: 0;
+  pointer-events: none;
+  animation: at-confetti-burst var(--at-confetti-duration, 1800ms) cubic-bezier(0.16, 1, 0.3, 1) var(--at-confetti-delay, 0ms) both;
+}
+
+@keyframes at-confetti-burst {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.4) rotate(0); }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--at-confetti-x)), calc(-50% + var(--at-confetti-y) - 48px)) rotate(var(--at-confetti-rotate)) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .at-confetti__particle { display: none; animation: none; }
+}

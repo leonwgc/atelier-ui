@@ -8,3 +8,4 @@
 .at-collapse__trigger[aria-expanded="true"] .at-collapse__chevron { transform: rotate(180deg); }
 .at-collapse__panel { border-top: 1px solid #f0f1f5; padding: 13px 14px; color: #777c90; font-size: 13px; line-height: 1.6; animation: at-collapse-enter var(--at-motion-base) var(--at-ease-emphasized) both; }
 @keyframes at-collapse-enter { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .at-collapse__panel,.at-collapse__chevron { animation: none; transition: none; } }
