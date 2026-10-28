@@ -183,6 +183,14 @@ button:focus-visible, a:focus-visible { outline: 3px solid rgb(104 92 246 / 22%)
 .demo-option__body strong { font-weight: 600; }
 .demo-option__body small { color: var(--at-color-muted); font-size: 12px; }
 .demo-option__mark { color: var(--at-color-primary); font-weight: 700; }
+
+.animation-pill { display: inline-flex; min-height: 36px; align-items: center; border: 1px solid var(--at-color-border); border-radius: 999px; padding: 0 14px; background: var(--at-color-surface); color: var(--at-color-subtle); font-size: 13px; white-space: nowrap; }
+.animation-number-preview { color: var(--at-color-text); font-size: 36px; font-weight: 650; }
+.animation-typing-preview { min-height: 34px; color: var(--at-color-primary); font-size: 22px; font-weight: 600; }
+.animation-fade-preview { display: grid; min-height: 88px; place-items: center; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface-muted); color: var(--at-color-text); }
+.animation-shimmer-preview { display: grid; min-height: 88px; place-items: center; border-radius: var(--at-radius-md); background: #2f9472; color: #fff; }
+.animation-list-preview { width: min(100%, 460px); }
+.animation-list-preview .at-animated-list__item { border-left: 2px solid var(--at-color-primary); padding: 9px 12px; background: var(--at-color-surface-muted); color: var(--at-color-subtle); }
 .demo-popup-footer { font-size: 13px; color: var(--at-color-subtle); }
 .demo-popup-footer button { padding: 4px 10px; border: 0; border-radius: 6px; background: var(--at-color-primary-soft); color: var(--at-color-primary); font-size: 13px; font-weight: 600; }
 .demo-dark-popup { padding: 8px; border-color: transparent; background: #1d1f33; color: #f4f4fb; box-shadow: 0 24px 60px rgb(20 22 45 / 45%); }

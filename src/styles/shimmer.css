@@ -1,0 +1,4 @@
+.at-shimmer { position: relative; isolation: isolate; overflow: hidden; }
+.at-shimmer::after { position: absolute; z-index: 1; inset: 0; background: linear-gradient(110deg, transparent 30%, var(--at-shimmer-highlight, rgb(255 255 255 / 62%)) 48%, transparent 66%); content: ''; pointer-events: none; transform: translateX(-110%); animation: at-shimmer-sweep var(--at-shimmer-duration, 1800ms) ease-in-out infinite; }
+@keyframes at-shimmer-sweep { to { transform: translateX(110%); } }
+@media (prefers-reduced-motion: reduce) { .at-shimmer::after { animation: none; display: none; } }

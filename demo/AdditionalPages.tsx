@@ -1,13 +1,13 @@
 import { useState, type ReactNode } from 'react';
 import { highlightCode } from './shared';
 import {
-  App, BorderBeam, Button, ConfigProvider, Flex, Grid, GridCol, Icon, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, message, notification, Result, Space, Util,
+  App, Button, ConfigProvider, Flex, Grid, GridCol, Icon, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, message, notification, Result, Space, Util,
 } from '../src';
 
 export type AdditionalPageId =
  | 'flex' | 'grid' | 'icon' | 'inputOTP' | 'layout' | 'result'
-  | 'space' | 'message' | 'notification'
-  | 'app' | 'configProvider' | 'borderBeam' | 'util';
+   | 'space' | 'message' | 'notification'
+    | 'app' | 'configProvider' | 'util';
 
 type ApiRow = [string, string, string];
 interface ComponentPageMeta {
@@ -188,16 +188,6 @@ export function BrandedSection() {
 }`,
     rows: [['prefixCls', 'string', 'at'], ['direction', "'ltr' | 'rtl'", 'ltr'], ['size', "'small' | 'middle' | 'large'", 'middle'], ['locale', "'zh-CN' | 'en-US'", 'zh-CN'], ['theme.primaryColor', 'string', '—'], ['theme.borderRadius', 'string', '—'], ['useConfig()', 'UIConfig', '读取上下文']],
     preview: <ConfigProvider size="large" locale="zh-CN" theme={{ primaryColor: '#2f9472' }}><Button variant="primary">保存更改</Button></ConfigProvider>,
-  },
-  {
-    id: 'borderBeam', title: 'BorderBeam 边框流光', icon: '✧', group: '其他组件', description: '为重点卡片添加可自定义颜色和速度的流动边框。',
-    code: `import { BorderBeam } from 'atelier-ui/border-beam';
-
-export function HighlightCard() {
-  return <BorderBeam color="#685cf6" duration={5}><strong>为新项目准备好了吗？</strong></BorderBeam>;
-}`,
-    rows: [['children', 'ReactNode', 'required'], ['color', 'string', '#8b7dff'], ['duration', 'number', '5 秒']],
-    preview: <BorderBeam><strong>为新项目准备好了吗？</strong></BorderBeam>,
   },
   {
     id: 'util', title: 'Util 常用工具', icon: '⌘', group: '通用组件', description: '提供数字范围、数字格式和类名拼接等小型工具函数。',

@@ -1,0 +1,10 @@
+.at-marquee { position: relative; overflow: hidden; width: 100%; }
+.at-marquee__track { display: flex; width: max-content; min-width: 200%; animation: at-marquee-scroll var(--at-marquee-duration, 28s) linear infinite; }
+.at-marquee--right .at-marquee__track { animation-direction: reverse; }
+.at-marquee--pause-on-hover:hover .at-marquee__track { animation-play-state: paused; }
+.at-marquee__group { display: flex; flex: 0 0 50%; align-items: center; gap: 20px; }
+.at-marquee--gradient::before, .at-marquee--gradient::after { position: absolute; z-index: 1; top: 0; bottom: 0; width: 48px; content: ''; pointer-events: none; }
+.at-marquee--gradient::before { left: 0; background: linear-gradient(90deg, var(--at-color-surface, #fff), transparent); }
+.at-marquee--gradient::after { right: 0; background: linear-gradient(270deg, var(--at-color-surface, #fff), transparent); }
+@keyframes at-marquee-scroll { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .at-marquee__track { animation: none; } .at-marquee__group[aria-hidden='true'] { display: none; } }

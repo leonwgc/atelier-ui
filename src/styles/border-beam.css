@@ -1,1 +1,6 @@
-.at-border-beam{position:relative;padding:1px;overflow:hidden;border-radius:var(--at-radius-lg);background:conic-gradient(from var(--at-beam-angle,0deg),transparent 0 65%,var(--at-beam-color,#8b7dff) 76%,transparent 88%);animation:at-border-beam-spin var(--at-beam-duration,5s) linear infinite}.at-border-beam>div{position:relative;z-index:1;padding:18px;border-radius:calc(var(--at-radius-lg) - 1px);background:#fff}@keyframes at-border-beam-spin{to{--at-beam-angle:360deg}}@property --at-beam-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+.at-border-beam { position: relative; padding: 1px; overflow: hidden; border-radius: var(--at-radius-lg); background: conic-gradient(from var(--at-beam-angle, 0deg), transparent 0 65%, var(--at-beam-color, #8b7dff) 76%, transparent 88%); animation: at-border-beam-spin var(--at-beam-duration, 5s) linear infinite; }
+.at-border-beam--paused { animation-play-state: paused; }
+.at-border-beam > div { position: relative; z-index: 1; padding: 18px; border-radius: calc(var(--at-radius-lg) - 1px); background: var(--at-color-surface, #fff); }
+@keyframes at-border-beam-spin { to { --at-beam-angle: 360deg; } }
+@property --at-beam-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+@media (prefers-reduced-motion: reduce) { .at-border-beam { animation: none; } }

@@ -9,10 +9,11 @@ import { additionalComponents, AdditionalComponentPage, isAdditionalPageId, type
 import { dataEntryPages, DataEntryPage, isDataEntryPageId, type DataEntryPageId } from './DataEntryPages';
 import { navigationPages, NavigationPage, isNavigationPageId, type NavigationPageId } from './NavigationPages';
 import { dataDisplayPages, DataDisplayPage, isDataDisplayPageId, type DataDisplayPageId } from './DataDisplayPages';
+import { animationPages, AnimationPage, isAnimationPageId, type AnimationPageId } from './AnimationPages';
 import { ApiTable, ExampleCard, PageHeading } from './shared';
 import './styles.css';
 
-type PageId = 'overview' | 'form' | 'buttons' | 'inputs' | 'selection' | 'feedback' | 'table' | 'alert' | 'tag' | 'avatar' | 'tooltip' | 'badge' | 'breadcrumb' | 'divider' | 'empty' | 'pagination' | 'progress' | 'skeleton' | 'spin' | 'tabs' | 'card' | 'descriptions' | 'steps' | 'timeline' | 'collapse' | 'datePicker' | 'upload' | 'drawer' | DataEntryPageId | NavigationPageId | DataDisplayPageId | AdditionalPageId;
+type PageId = 'overview' | 'form' | 'buttons' | 'inputs' | 'selection' | 'feedback' | 'table' | 'alert' | 'tag' | 'avatar' | 'tooltip' | 'badge' | 'breadcrumb' | 'divider' | 'empty' | 'pagination' | 'progress' | 'skeleton' | 'spin' | 'tabs' | 'card' | 'descriptions' | 'steps' | 'timeline' | 'collapse' | 'datePicker' | 'upload' | 'drawer' | DataEntryPageId | NavigationPageId | DataDisplayPageId | AdditionalPageId | AnimationPageId;
 
 const navigation: Array<{ id: PageId; title: string; icon: string; group: string }> = [
   { id: 'overview', title: '组件总览', icon: '◫', group: '开始使用' },
@@ -47,6 +48,7 @@ const navigation: Array<{ id: PageId; title: string; icon: string; group: string
   ...navigationPages.map(({ id, title, icon, group }) => ({ id, title, icon, group })),
   ...dataDisplayPages.map(({ id, title, icon, group }) => ({ id, title, icon, group })),
   ...additionalComponents.map(({ id, title, icon, group }) => ({ id, title, icon, group })),
+  ...animationPages.map(({ id, title, icon }) => ({ id, title, icon, group: '动画' })),
 ];
 
 function App() {
@@ -152,6 +154,7 @@ function App() {
         {isNavigationPageId(page) && <NavigationPage id={page} />}
         {isDataDisplayPageId(page) && <DataDisplayPage id={page} />}
         {isAdditionalPageId(page) && <AdditionalComponentPage id={page} />}
+        {isAnimationPageId(page) && <AnimationPage id={page} />}
         <footer className="site-footer"><span>Atelier UI · 让界面细节自然发生</span><span>React 18 · TypeScript</span></footer>
       </div>
     </main>

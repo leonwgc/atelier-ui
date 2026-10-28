@@ -394,6 +394,36 @@
       "import": "./dist/border-beam.js",
       "require": "./dist/border-beam.cjs"
     },
+    "./marquee": {
+      "types": "./dist/entries/marquee.d.ts",
+      "import": "./dist/marquee.js",
+      "require": "./dist/marquee.cjs"
+    },
+    "./number-ticker": {
+      "types": "./dist/entries/number-ticker.d.ts",
+      "import": "./dist/number-ticker.js",
+      "require": "./dist/number-ticker.cjs"
+    },
+    "./typing-animation": {
+      "types": "./dist/entries/typing-animation.d.ts",
+      "import": "./dist/typing-animation.js",
+      "require": "./dist/typing-animation.cjs"
+    },
+    "./blur-fade": {
+      "types": "./dist/entries/blur-fade.d.ts",
+      "import": "./dist/blur-fade.js",
+      "require": "./dist/blur-fade.cjs"
+    },
+    "./shimmer": {
+      "types": "./dist/entries/shimmer.d.ts",
+      "import": "./dist/shimmer.js",
+      "require": "./dist/shimmer.cjs"
+    },
+    "./animated-list": {
+      "types": "./dist/entries/animated-list.d.ts",
+      "import": "./dist/animated-list.js",
+      "require": "./dist/animated-list.cjs"
+    },
     "./util": {
       "types": "./dist/entries/util.d.ts",
       "import": "./dist/util.js",

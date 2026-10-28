@@ -1,0 +1,4 @@
+.at-animated-list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.at-animated-list__item { animation: at-animated-list-enter var(--at-animated-list-duration, 420ms) var(--at-ease-emphasized) var(--at-animated-list-delay, 0ms) both; }
+@keyframes at-animated-list-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .at-animated-list__item { animation: none; } }

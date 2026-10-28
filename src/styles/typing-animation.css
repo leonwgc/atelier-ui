@@ -1,0 +1,4 @@
+.at-typing-animation { display: inline-block; min-height: 1em; white-space: pre-wrap; }
+.at-typing-animation--cursor::after { display: inline-block; width: 1px; height: 1em; margin-left: 3px; background: currentColor; content: ''; vertical-align: -.12em; animation: at-typing-cursor 900ms steps(2, start) infinite; }
+@keyframes at-typing-cursor { to { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { .at-typing-animation--cursor::after { animation: none; } }

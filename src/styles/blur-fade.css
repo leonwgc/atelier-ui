@@ -1,0 +1,3 @@
+.at-blur-fade { animation: at-blur-fade-in var(--at-blur-fade-duration, 500ms) var(--at-ease-emphasized) var(--at-blur-fade-delay, 0ms) both; }
+@keyframes at-blur-fade-in { from { opacity: 0; filter: blur(var(--at-blur-fade-blur, 6px)); transform: translateY(var(--at-blur-fade-y, 8px)); } to { opacity: 1; filter: blur(0); transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .at-blur-fade { animation: none; } }
