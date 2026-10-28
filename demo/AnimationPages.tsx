@@ -15,6 +15,12 @@ interface AnimationPageMeta {
   preview: ReactNode;
 }
 
+const activityItems = [
+  { id: 'workspace', initials: 'W', title: 'Workspace created', description: 'Studio One is ready to use', time: '2 min ago' },
+  { id: 'review', initials: 'D', title: 'Design review completed', description: 'All 8 comments were resolved', time: '18 min ago' },
+  { id: 'release', initials: 'R', title: 'Release published', description: 'Version 2.4.0 is now live', time: '1 hr ago' },
+];
+
 export const animationPages: AnimationPageMeta[] = [
   {
     id: 'marquee', title: 'Marquee 滚动展示', icon: '⇢', description: '以连续循环的轨道展示标签、动态或品牌内容。',
@@ -91,15 +97,31 @@ export function Highlight() {
     code: `import { AnimatedList } from 'atelier-ui/animated-list';
 
 export function ActivityFeed() {
+  const activities = [
+    { id: 'workspace', initials: 'W', title: 'Workspace created', detail: 'Studio One is ready to use', time: '2 min ago' },
+    { id: 'review', initials: 'D', title: 'Design review completed', detail: 'All 8 comments were resolved', time: '18 min ago' },
+    { id: 'release', initials: 'R', title: 'Release published', detail: 'Version 2.4.0 is now live', time: '1 hr ago' },
+  ];
+
   return (
     <AnimatedList
-      items={['Workspace created', 'Design review completed', 'Release published']}
-      staggerDelay={90}
+      items={activities}
+      getItemKey={(activity) => activity.id}
+      renderItem={(activity) => (
+        <article className="activity-item">
+          <span className="activity-item__avatar">{activity.initials}</span>
+          <span className="activity-item__content">
+            <strong>{activity.title}</strong>
+            <small>{activity.detail}</small>
+          </span>
+          <time>{activity.time}</time>
+        </article>
+      )}
     />
   );
 }`,
-    rows: [['items', 'ReactNode[]', 'required'], ['staggerDelay', 'number', '70 ms'], ['duration', 'number', '420 ms'], ['itemClassName', 'string', '—'], ['HTML attributes', 'HTMLAttributes<HTMLUListElement>', '—']],
-    preview: <AnimatedList key="activity-list-demo" className="animation-list-preview" items={['Workspace created', 'Design review completed', 'Release published']} staggerDelay={120} />,
+    rows: [['items', 'ReactNode[] | T[]', 'required'], ['renderItem', '(item: T, index: number) => ReactNode', '自定义结构化数据的列表项'], ['getItemKey', '(item: T, index: number) => Key', '—'], ['staggerDelay', 'number', '70 ms'], ['duration', 'number', '420 ms'], ['itemClassName', 'string', '—'], ['HTML attributes', 'HTMLAttributes<HTMLUListElement>', '—']],
+    preview: <AnimatedList key="activity-list-demo" className="animation-list-preview" items={activityItems} getItemKey={(item) => item.id} renderItem={(item) => <article className="animation-list-preview__item"><span className="animation-list-preview__avatar">{item.initials}</span><span className="animation-list-preview__body"><strong>{item.title}</strong><small>{item.description}</small></span><time>{item.time}</time></article>} staggerDelay={120} />,
   },
   {
     id: 'transition', title: 'Transition 单项过渡', icon: '↕', description: '为条件显示的面板或内容提供统一的进入、退出生命周期。',
