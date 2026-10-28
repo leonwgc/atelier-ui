@@ -5,7 +5,7 @@ export default defineConfig({
   fullyParallel: false,
   reporter: 'list',
   use: {
-    baseURL: 'http://127.0.0.1:4174/ui-design/',
+    baseURL: 'http://127.0.0.1:4000/ui-design/',
     browserName: 'chromium',
     headless: true,
     launchOptions: {
@@ -14,8 +14,8 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: 'npm run preview -- --host 127.0.0.1 --port 4174 --strictPort',
-    url: 'http://127.0.0.1:4174/ui-design/',
+    command: 'npm run preview -- --host 127.0.0.1 --port 4000 --strictPort',
+    url: 'http://127.0.0.1:4000/ui-design/',
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,
   },
