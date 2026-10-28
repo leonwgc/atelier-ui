@@ -379,11 +379,6 @@
       "import": "./dist/notification.js",
       "require": "./dist/notification.cjs"
     },
-    "./app": {
-      "types": "./dist/entries/app.d.ts",
-      "import": "./dist/app.js",
-      "require": "./dist/app.cjs"
-    },
     "./config-provider": {
       "types": "./dist/entries/config-provider.d.ts",
       "import": "./dist/config-provider.js",
@@ -433,11 +428,6 @@
       "types": "./dist/entries/transition-group.d.ts",
       "import": "./dist/transition-group.js",
       "require": "./dist/transition-group.cjs"
-    },
-    "./util": {
-      "types": "./dist/entries/util.d.ts",
-      "import": "./dist/util.js",
-      "require": "./dist/util.cjs"
     }
   },
   "files": [

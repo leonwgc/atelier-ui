@@ -1,13 +1,13 @@
 import { useState, type ReactNode } from 'react';
 import { highlightCode } from './shared';
 import {
-  App, Button, ConfigProvider, Flex, Grid, GridCol, Icon, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, message, notification, Result, Space, Util,
+  Button, ConfigProvider, Flex, Grid, GridCol, Icon, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, message, notification, Result, Space,
 } from '../src';
 
 export type AdditionalPageId =
  | 'flex' | 'grid' | 'icon' | 'inputOTP' | 'layout' | 'result'
-   | 'space' | 'message' | 'notification'
-    | 'app' | 'configProvider' | 'util';
+  | 'space' | 'message' | 'notification'
+  | 'configProvider';
 
 type ApiRow = [string, string, string];
 interface ComponentPageMeta {
@@ -159,18 +159,6 @@ export function ProjectNotice() {
     preview: <Button onClick={() => notification.success({ title: '成员已加入', description: '林知夏已加入 Aurora workspace。' })}>查看通知</Button>,
   },
   {
-    id: 'app', title: 'App 应用容器', icon: '▣', group: '通用组件', description: '为应用内容提供统一的组件容器和样式边界。',
-    code: `import { App } from 'atelier-ui/app';
-import { Button } from 'atelier-ui/button';
-import { message } from 'atelier-ui/message';
-
-export function AppRoot() {
-  return <App><Button variant="primary" onClick={() => message.success('工作区已创建')}>创建工作区</Button></App>;
-}`,
-    rows: [['children', 'ReactNode', 'required'], ['className', 'string', '—'], ['HTML attributes', 'HTMLAttributes<HTMLDivElement>', '—']],
-    preview: <App><Button variant="primary" onClick={() => message.success('工作区已创建')}>创建工作区</Button></App>,
-  },
-  {
     id: 'configProvider', title: 'ConfigProvider 全局化配置', icon: '⚙', group: '通用组件', description: '在子树范围统一配置前缀、方向、尺寸、语言和主题变量。',
     code: `import { ConfigProvider } from 'atelier-ui/config-provider';
 import { Button } from 'atelier-ui/button';
@@ -189,23 +177,6 @@ export function BrandedSection() {
     rows: [['prefixCls', 'string', 'at'], ['direction', "'ltr' | 'rtl'", 'ltr'], ['size', "'small' | 'middle' | 'large'", 'middle'], ['locale', "'zh-CN' | 'en-US'", 'zh-CN'], ['theme.primaryColor', 'string', '—'], ['theme.borderRadius', 'string', '—'], ['useConfig()', 'UIConfig', '读取上下文']],
     preview: <ConfigProvider size="large" locale="zh-CN" theme={{ primaryColor: '#2f9472' }}><Button variant="primary">保存更改</Button></ConfigProvider>,
   },
-  {
-    id: 'util', title: 'Util 常用工具', icon: '⌘', group: '通用组件', description: '提供数字范围、数字格式和类名拼接等小型工具函数。',
-    code: `import { Util } from 'atelier-ui/util';
-
-export function CapacityLabel() {
-  const value = Util.clamp(128, 0, 100);
-  return (
-    <span>
-      {Util.formatNumber(value)} 位成员 ·{' '}
-      {Util.classNames('capacity', value === 100 && 'capacity--full')}
-    </span>
-  );
-}`,
-    rows: [['Util.clamp(value, min, max)', '(number, number, number) => number', '—'], ['Util.formatNumber(value, locale?)', '(number, string?) => string', 'zh-CN'], ['Util.classNames(...names)', '(...string[]) => string', '—']],
-    preview: <span>{Util.formatNumber(1284)} 位活跃成员 · {Util.classNames('capacity', 'capacity--active')}</span>,
-  },
-
 ];
 
 function TagLike({ children }: { children: ReactNode }) { return <span className="additional-tag-like">{children}</span>; }
