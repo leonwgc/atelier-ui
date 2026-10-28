@@ -191,6 +191,12 @@ button:focus-visible, a:focus-visible { outline: 3px solid rgb(104 92 246 / 22%)
 .animation-shimmer-preview { display: grid; min-height: 88px; place-items: center; border-radius: var(--at-radius-md); background: #2f9472; color: #fff; }
 .animation-list-preview { width: min(100%, 460px); }
 .animation-list-preview .at-animated-list__item { border-left: 2px solid var(--at-color-primary); padding: 9px 12px; background: var(--at-color-surface-muted); color: var(--at-color-subtle); }
+.animation-transition-demo { display: grid; width: min(100%, 520px); justify-items: start; gap: 12px; }
+.animation-transition-panel { width: 100%; padding: 14px; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface-muted); color: var(--at-color-subtle); }
+.animation-transition-list { width: 100%; }
+.animation-transition-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; }
+.animation-transition-remove { width: 32px; height: 32px; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-sm); background: var(--at-color-surface); color: var(--at-color-danger); font-size: 19px; line-height: 1; }
+.animation-transition-exit { min-height: 36px; border-left: 2px solid var(--at-color-danger); padding: 8px 10px; background: color-mix(in srgb, var(--at-color-danger) 8%, white); color: var(--at-color-subtle); font-size: 13px; }
 .demo-popup-footer { font-size: 13px; color: var(--at-color-subtle); }
 .demo-popup-footer button { padding: 4px 10px; border: 0; border-radius: 6px; background: var(--at-color-primary-soft); color: var(--at-color-primary); font-size: 13px; font-weight: 600; }
 .demo-dark-popup { padding: 8px; border-color: transparent; background: #1d1f33; color: #f4f4fb; box-shadow: 0 24px 60px rgb(20 22 45 / 45%); }

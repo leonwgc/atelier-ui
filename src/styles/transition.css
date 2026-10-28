@@ -1,0 +1,15 @@
+.at-transition-group { display: contents; }
+.at-transition { --at-transition-duration: 200ms; }
+.at-transition--fade.at-transition--entering { animation: at-transition-fade-in var(--at-transition-duration) var(--at-ease-emphasized) both; }
+.at-transition--fade.at-transition--exiting { animation: at-transition-fade-out var(--at-transition-duration) var(--at-ease-emphasized) both; }
+.at-transition--slide-up.at-transition--entering { animation: at-transition-slide-in var(--at-transition-duration) var(--at-ease-emphasized) both; }
+.at-transition--slide-up.at-transition--exiting { animation: at-transition-slide-out var(--at-transition-duration) var(--at-ease-emphasized) both; }
+.at-transition--collapse.at-transition--entering { overflow: hidden; animation: at-transition-collapse-in var(--at-transition-duration) var(--at-ease-emphasized) both; }
+.at-transition--collapse.at-transition--exiting { overflow: hidden; animation: at-transition-collapse-out var(--at-transition-duration) var(--at-ease-emphasized) both; }
+@keyframes at-transition-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes at-transition-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes at-transition-slide-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes at-transition-slide-out { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-8px); } }
+@keyframes at-transition-collapse-in { from { max-height: 0; opacity: 0; } to { max-height: 1000px; opacity: 1; } }
+@keyframes at-transition-collapse-out { from { max-height: 1000px; opacity: 1; } to { max-height: 0; opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .at-transition--entering, .at-transition--exiting { animation: none; } }

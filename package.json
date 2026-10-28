@@ -424,6 +424,16 @@
       "import": "./dist/animated-list.js",
       "require": "./dist/animated-list.cjs"
     },
+    "./transition": {
+      "types": "./dist/entries/transition.d.ts",
+      "import": "./dist/transition.js",
+      "require": "./dist/transition.cjs"
+    },
+    "./transition-group": {
+      "types": "./dist/entries/transition-group.d.ts",
+      "import": "./dist/transition-group.js",
+      "require": "./dist/transition-group.cjs"
+    },
     "./util": {
       "types": "./dist/entries/util.d.ts",
       "import": "./dist/util.js",

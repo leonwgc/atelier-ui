@@ -1,8 +1,8 @@
 import { useState, type ReactNode } from 'react';
 import { highlightCode } from './shared';
-import { AnimatedList, BlurFade, BorderBeam, Marquee, NumberTicker, Shimmer, TypingAnimation } from '../src';
+import { AnimatedList, BlurFade, BorderBeam, Button, Input, Marquee, NumberTicker, Shimmer, Transition, TransitionGroup, TypingAnimation, useFieldArray, useForm } from '../src';
 
-export type AnimationPageId = 'marquee' | 'numberTicker' | 'typingAnimation' | 'blurFade' | 'shimmer' | 'animatedList' | 'borderBeam';
+export type AnimationPageId = 'marquee' | 'numberTicker' | 'typingAnimation' | 'blurFade' | 'shimmer' | 'animatedList' | 'transition' | 'transitionGroup' | 'borderBeam';
 type ApiRow = [string, string, string];
 
 interface AnimationPageMeta {
@@ -102,6 +102,57 @@ export function ActivityFeed() {
     preview: <AnimatedList key="activity-list-demo" className="animation-list-preview" items={['Workspace created', 'Design review completed', 'Release published']} staggerDelay={120} />,
   },
   {
+    id: 'transition', title: 'Transition 单项过渡', icon: '↕', description: '为条件显示的面板或内容提供统一的进入、退出生命周期。',
+    code: `import { useState } from 'react';
+import { Button } from 'atelier-ui/button';
+import { Transition } from 'atelier-ui/transition';
+
+export function FilterPanel() {
+  const [open, setOpen] = useState(true);
+  return (
+    <>
+      <Button onClick={() => setOpen((value) => !value)}>切换筛选面板</Button>
+      <Transition in={open} animation="collapse" timeout={200}>
+        <div>筛选条件与结果设置</div>
+      </Transition>
+    </>
+  );
+}`,
+    rows: [['in', 'boolean', 'true'], ['animation', "'fade' | 'slide-up' | 'collapse' | 'none'", 'fade'], ['timeout', 'number', '200 ms'], ['appear', 'boolean', 'false'], ['mountOnEnter / unmountOnExit', 'boolean', 'true'], ['exit', 'ReactNode', 'children'], ['classNames', 'string | Partial<Record<TransitionStatus, string>>', '—'], ['onEnter / onEntered', '(node: HTMLDivElement) => void', '—'], ['onExit / onExited', '(node: HTMLDivElement) => void', '—']],
+    preview: <SingleTransitionDemo />,
+  },
+  {
+    id: 'transitionGroup', title: 'TransitionGroup 动态项过渡', icon: '⇅', description: '按稳定 key 管理子项增删；表单数据立即变化，退场项仅保留视觉快照。',
+    code: `import { Button } from 'atelier-ui/button';
+import { Input } from 'atelier-ui/input';
+import { Transition } from 'atelier-ui/transition';
+import { TransitionGroup } from 'atelier-ui/transition-group';
+import { useFieldArray, useForm } from 'atelier-ui/form';
+
+export function TeamMembers() {
+  const form = useForm({ defaultValues: { members: [{ name: 'Alex Chen' }] } });
+  const members = useFieldArray({ control: form.control, name: 'members' });
+  return (
+    <>
+      <Button onClick={() => members.append({ name: '' })}>添加成员</Button>
+      <TransitionGroup>
+        {members.fields.map((member, index) => (
+          <Transition key={member.id} animation="slide-up" timeout={200}
+            exit={<div>{member.name || '未命名成员'} 已移除</div>}>
+            <div>
+              <Input aria-label={'成员 ' + (index + 1) + ' 姓名'} {...form.register('members.' + index + '.name')} />
+              <button type="button" onClick={() => members.remove(index)}>移除</button>
+            </div>
+          </Transition>
+        ))}
+      </TransitionGroup>
+    </>
+  );
+}`,
+    rows: [['children', 'keyed Transition elements', 'required'], ['className', 'string', '—'], ['exit snapshot', 'Transition.exit: ReactNode', 'optional'], ['removal', 'data is removed immediately', '—']],
+    preview: <TransitionGroupDemo />,
+  },
+  {
     id: 'borderBeam', title: 'BorderBeam 边框流光', icon: '✧', description: '为重点内容添加可控颜色和速度的流动边框。',
     code: `import { BorderBeam } from 'atelier-ui/border-beam';
 
@@ -116,6 +167,17 @@ export function HighlightCard() {
     preview: <BorderBeam color="#2f9472"><strong>Ready for the next release</strong></BorderBeam>,
   },
 ];
+
+function SingleTransitionDemo() {
+  const [open, setOpen] = useState(true);
+  return <div className="animation-transition-demo"><Button size="sm" onClick={() => setOpen((value) => !value)}>切换筛选面板</Button><Transition in={open} animation="collapse" timeout={200}><div className="animation-transition-panel">筛选条件与结果设置</div></Transition></div>;
+}
+
+function TransitionGroupDemo() {
+  const form = useForm<{ members: Array<{ name: string }> }>({ defaultValues: { members: [{ name: 'Alex Chen' }, { name: 'Morgan Lee' }] } });
+  const members = useFieldArray<{ members: Array<{ name: string }> }, { name: string }>({ control: form.control, name: 'members' });
+  return <div className="animation-transition-demo"><Button size="sm" onClick={() => members.append({ name: '' })}>＋ 添加成员</Button><TransitionGroup className="animation-transition-list">{members.fields.map((member, index) => <Transition key={member.id} animation="slide-up" timeout={200} exit={<div className="animation-transition-exit">{member.name || `成员 ${index + 1}`} 已移除</div>}><div className="animation-transition-row"><Input aria-label={`成员 ${index + 1} 姓名`} placeholder="成员姓名" {...form.register(`members.${index}.name`)} /><button type="button" className="animation-transition-remove" aria-label={`移除成员 ${index + 1}`} onClick={() => members.remove(index)}>×</button></div></Transition>)}</TransitionGroup></div>;
+}
 
 export function isAnimationPageId(id: string): id is AnimationPageId {
   return animationPages.some((item) => item.id === id);

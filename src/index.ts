@@ -160,4 +160,6 @@ export { Shimmer } from './Shimmer';
 export type { ShimmerProps } from './Shimmer';
 export { AnimatedList } from './AnimatedList';
 export type { AnimatedListProps } from './AnimatedList';
+export { Transition, TransitionGroup } from './Transition';
+export type { TransitionAnimation, TransitionClassNames, TransitionGroupProps, TransitionProps, TransitionStatus } from './Transition';
 export { Util } from './Util';

@@ -116,6 +116,8 @@ export default defineConfig({
         'blur-fade': resolve(process.cwd(), 'src/entries/blur-fade.ts'),
         'shimmer': resolve(process.cwd(), 'src/entries/shimmer.ts'),
         'animated-list': resolve(process.cwd(), 'src/entries/animated-list.ts'),
+        'transition': resolve(process.cwd(), 'src/entries/transition.ts'),
+        'transition-group': resolve(process.cwd(), 'src/entries/transition-group.ts'),
         'util': resolve(process.cwd(), 'src/entries/util.ts'),
         form: resolve(process.cwd(), 'src/entries/form.ts'),
         zodResolver: resolve(process.cwd(), 'src/entries/zodResolver.ts'),
