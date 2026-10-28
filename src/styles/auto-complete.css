@@ -1,1 +1,8 @@
-.at-autocomplete{display:flex;min-width:220px;flex-direction:column;gap:7px;color:var(--at-color-subtle);font-size:14px}.at-autocomplete input{height:42px;padding:0 12px;border:1px solid var(--at-color-border-strong);border-radius:var(--at-radius-sm);color:var(--at-color-text);background:var(--at-color-surface)}.at-autocomplete input:focus{outline:3px solid rgb(104 92 246 / 17%);border-color:var(--at-color-primary)}
+.at-autocomplete { cursor: text; }
+.at-autocomplete--open { border-color: var(--at-color-primary); box-shadow: 0 0 0 3px rgb(104 92 246 / 10%); }
+.at-input-wrap--warning { border-color: var(--at-color-warning); }
+.at-autocomplete__clear { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; padding: 0; border-radius: 50%; background: var(--at-color-border); color: var(--at-color-surface); opacity: 0; transition: opacity var(--at-motion-fast), background-color var(--at-motion-fast); }
+.at-autocomplete:hover .at-autocomplete__clear, .at-autocomplete:focus-within .at-autocomplete__clear { opacity: 1; }
+.at-autocomplete__clear:hover { background: var(--at-color-muted); }
+.at-autocomplete__popup { padding: 6px; }
+.at-autocomplete__list .at-option { min-height: 40px; }

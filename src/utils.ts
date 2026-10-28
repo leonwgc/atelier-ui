@@ -1,9 +1,32 @@
-import type { ReactNode, Ref } from 'react';
+import { useCallback, useRef, useState, type ReactNode, type Ref } from 'react';
 
 export type Size = 'sm' | 'md' | 'lg';
+export type Status = 'error' | 'warning';
 
 export function cx(...values: Array<string | false | null | undefined>) {
   return values.filter(Boolean).join(' ');
+}
+
+export function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+/** Controlled/uncontrolled state pair; `onChange` only fires on user-driven updates. */
+export function useControllableState<T>(value: T | undefined, defaultValue: T, onChange?: (next: T) => void) {
+  const [internal, setInternal] = useState<T>(defaultValue);
+  const isControlled = value !== undefined;
+  const current = isControlled ? (value as T) : internal;
+  const currentRef = useRef(current);
+  currentRef.current = current;
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
+  const setValue = useCallback((next: T | ((previous: T) => T)) => {
+    const resolved = typeof next === 'function' ? (next as (previous: T) => T)(currentRef.current) : next;
+    if (Object.is(resolved, currentRef.current)) return;
+    if (!isControlled) setInternal(resolved);
+    onChangeRef.current?.(resolved);
+  }, [isControlled]);
+  return [current, setValue] as const;
 }
 
 export function getPathValue<T = unknown>(source: unknown, path: string): T | undefined {

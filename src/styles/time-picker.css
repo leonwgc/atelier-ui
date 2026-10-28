@@ -1,1 +1,18 @@
-.at-time-picker{display:flex;flex-direction:column;gap:7px;color:var(--at-color-subtle);font-size:14px}.at-time-picker input{height:42px;padding:0 11px;border:1px solid var(--at-color-border-strong);border-radius:var(--at-radius-sm);background:var(--at-color-surface);color:var(--at-color-text)}
+.at-time-picker { width: 100%; min-width: 160px; }
+.at-time-picker .at-selector__value { font-variant-numeric: tabular-nums; }
+.at-time-picker__popup { min-width: 0; padding: 6px 6px 8px; }
+.at-time-picker__columns { display: flex; }
+.at-time-picker__column { position: relative; width: 64px; max-height: 232px; margin: 0; padding: 4px 4px 196px; overflow-y: auto; list-style: none; scroll-behavior: smooth; overscroll-behavior: contain; scrollbar-width: none; }
+.at-time-picker__column::-webkit-scrollbar { display: none; }
+.at-time-picker__column + .at-time-picker__column { border-left: 1px solid var(--at-color-border); }
+.at-time-picker__column:focus-visible { outline: 2px solid color-mix(in srgb, var(--at-color-primary) 55%, transparent); outline-offset: -2px; border-radius: 8px; }
+.at-time-picker__cell { display: flex; align-items: center; justify-content: center; height: 32px; margin-bottom: 2px; border-radius: 7px; color: var(--at-color-text); font-size: 14px; font-variant-numeric: tabular-nums; cursor: pointer; user-select: none; transition: background-color var(--at-motion-fast), color var(--at-motion-fast); }
+.at-time-picker__cell:hover:not(.at-time-picker__cell--disabled) { background: var(--at-color-surface-muted); }
+.at-time-picker__cell--selected, .at-time-picker__cell--selected:hover { background: var(--at-color-primary-soft); color: var(--at-color-primary); font-weight: 600; }
+.at-time-picker__cell--disabled { color: var(--at-color-border-strong); cursor: not-allowed; }
+.at-time-picker__footer { margin-top: 4px; }
+.at-time-picker__link { padding: 4px 6px; border: 0; border-radius: 6px; background: transparent; color: var(--at-color-primary); font-size: 14px; font-weight: 500; }
+.at-time-picker__link:hover { background: var(--at-color-primary-soft); }
+.at-time-picker__ok { padding: 5px 14px; border: 0; border-radius: 7px; background: var(--at-color-primary); color: #fff; font-size: 14px; font-weight: 600; }
+.at-time-picker__ok:hover { background: var(--at-color-primary-hover); }
+@media (prefers-reduced-motion: reduce) { .at-time-picker__column { scroll-behavior: auto; } }

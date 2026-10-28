@@ -1,1 +1,16 @@
-.at-input-number{display:flex;min-width:150px;flex-direction:column;gap:7px;color:var(--at-color-subtle);font-size:14px}.at-input-number input{height:42px;padding:0 11px;border:1px solid var(--at-color-border-strong);border-radius:var(--at-radius-sm);background:var(--at-color-surface);color:var(--at-color-text)}
+.at-input-number { padding-right: 0; }
+.at-input-number--inline { padding-left: 0; }
+.at-input-number__input { font-variant-numeric: tabular-nums; }
+.at-input-number__handlers { display: flex; flex: 0 0 auto; flex-direction: column; align-self: stretch; width: 30px; border-left: 1px solid var(--at-color-border); opacity: 0; transition: opacity var(--at-motion-fast); }
+.at-input-number:hover .at-input-number__handlers, .at-input-number:focus-within .at-input-number__handlers { opacity: 1; }
+.at-input-number__step { display: inline-flex; flex: 1; align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; color: var(--at-color-muted); transition: color var(--at-motion-fast), background-color var(--at-motion-fast); }
+.at-input-number__handlers .at-input-number__step + .at-input-number__step { border-top: 1px solid var(--at-color-border); }
+.at-input-number__step:hover:not(:disabled) { background: var(--at-color-primary-soft); color: var(--at-color-primary); }
+.at-input-number__step:disabled { color: var(--at-color-border-strong); cursor: not-allowed; }
+.at-input-number__step--inline { flex: 0 0 auto; align-self: stretch; width: 36px; color: var(--at-color-subtle); }
+.at-input-number__step--inline:first-child { border-right: 1px solid var(--at-color-border); border-radius: var(--at-radius-sm) 0 0 var(--at-radius-sm); }
+.at-input-number__step--inline:last-child { border-left: 1px solid var(--at-color-border); border-radius: 0 var(--at-radius-sm) var(--at-radius-sm) 0; }
+.at-input-number--inline .at-input-number__input { text-align: center; }
+.at-input-number--inline .at-input-wrap__adornment:first-of-type { margin-left: 10px; }
+.at-input-wrap--sm .at-input-number__handlers { width: 26px; }
+.at-input-wrap--sm .at-input-number__step--inline { width: 30px; }

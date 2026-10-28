@@ -1,5 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useId, useLayoutEffect, useRef, useState, type ButtonHTMLAttributes, type CSSProperties, type ElementType, type HTMLAttributes, type ImgHTMLAttributes, type InputHTMLAttributes, type MouseEvent as ReactMouseEvent, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useId, useRef, useState, type ButtonHTMLAttributes, type CSSProperties, type ElementType, type HTMLAttributes, type ImgHTMLAttributes, type MouseEvent as ReactMouseEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { useFloatingPanel, type FloatingPlacement } from './internal/floating';
+import type { CascaderOption } from './Cascader';
 import QRCodeEncoder from 'qrcode';
 
 export interface FloatButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> { icon?: ReactNode; description?: ReactNode; shape?: 'circle' | 'square' }
@@ -54,33 +56,6 @@ export function Dropdown({ items, children, placement = 'bottom-start' }: { item
   return <details className={`at-dropdown at-dropdown--${placement}`}><summary>{children}<span aria-hidden="true">⌄</span></summary><div className="at-dropdown__menu" role="menu">{items.map((item) => <button key={item.key} type="button" role="menuitem" disabled={item.disabled} onClick={() => { item.onClick?.(); const details = document.activeElement?.closest('details'); details?.removeAttribute('open'); }}>{item.label}</button>)}</div></details>;
 }
 
-export function AutoComplete({ options, value, defaultValue, onChange, placeholder = '输入以搜索…', label, className = '' }: { options: string[]; value?: string; defaultValue?: string; onChange?: (value: string) => void; placeholder?: string; label?: string; className?: string }) {
-  const listId = useId();
-  return <label className={`at-autocomplete ${className}`}>{label && <span>{label}</span>}<input list={listId} value={value} defaultValue={defaultValue} placeholder={placeholder} onChange={(event) => onChange?.(event.target.value)} /><datalist id={listId}>{options.map((option) => <option key={option} value={option} />)}</datalist></label>;
-}
-export function InputNumber(props: Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & { label?: string; onValueChange?: (value: number | null) => void }) {
-  const { label, onValueChange, className = '', ...inputProps } = props;
-  return <label className="at-input-number">{label && <span>{label}</span>}<input {...inputProps} className={className} type="number" onChange={(event) => { inputProps.onChange?.(event); onValueChange?.(event.target.value === '' ? null : Number(event.target.value)); }} /></label>;
-}
-export function Rate({ value, defaultValue = 0, count = 5, allowClear = true, onChange, label = '评分' }: { value?: number; defaultValue?: number; count?: number; allowClear?: boolean; onChange?: (value: number) => void; label?: string }) {
-  const [current, setCurrent] = useState(defaultValue);
-  const selected = value ?? current;
-  return <div className="at-rate" role="group" aria-label={label}>{Array.from({ length: count }, (_, index) => <button key={index} type="button" aria-label={`${index + 1} 星`} aria-pressed={selected > index} className={selected > index ? 'at-rate__star at-rate__star--active' : 'at-rate__star'} onClick={() => { const next = allowClear && selected === index + 1 ? 0 : index + 1; setCurrent(next); onChange?.(next); }}>★</button>)}</div>;
-}
-export function Slider({ value, defaultValue = 40, min = 0, max = 100, step = 1, onChange, label = '数值' }: { value?: number; defaultValue?: number; min?: number; max?: number; step?: number; onChange?: (value: number) => void; label?: string }) {
-  const [current, setCurrent] = useState(defaultValue);
-  const resolved = value ?? current;
-  return <label className="at-slider"><span>{label}<output>{resolved}</output></span><input aria-label={label} type="range" min={min} max={max} step={step} value={resolved} onChange={(event) => { const next = Number(event.target.value); setCurrent(next); onChange?.(next); }} /></label>;
-}
-export function TimePicker({ label, value, defaultValue, className = '', ...props }: InputHTMLAttributes<HTMLInputElement> & { label?: string }) {
-  return <label className="at-time-picker">{label && <span>{label}</span>}<input {...props} className={className} type="time" value={value} defaultValue={defaultValue} /></label>;
-}
-
-export function Segmented<T extends string>({ options, value, defaultValue, onChange, ariaLabel = '视图切换' }: { options: Array<{ label: ReactNode; value: T; disabled?: boolean }>; value?: T; defaultValue?: T; onChange?: (value: T) => void; ariaLabel?: string }) {
-  const [current, setCurrent] = useState<T | undefined>(defaultValue ?? options[0]?.value);
-  const selected = value ?? current;
-  return <div className="at-segmented" role="group" aria-label={ariaLabel}>{options.map((option) => <button key={option.value} type="button" disabled={option.disabled} aria-pressed={selected === option.value} className={selected === option.value ? 'at-segmented__option at-segmented__option--active' : 'at-segmented__option'} onClick={() => { setCurrent(option.value); onChange?.(option.value); }}>{option.label}</button>)}</div>;
-}
 export function Statistic({ title, value, prefix, suffix, precision = 0 }: { title: ReactNode; value: number | string; prefix?: ReactNode; suffix?: ReactNode; precision?: number }) {
   const formatted = typeof value === 'number' ? value.toLocaleString(undefined, { minimumFractionDigits: precision, maximumFractionDigits: precision }) : value;
   return <div className="at-statistic"><div className="at-statistic__title">{title}</div><div className="at-statistic__value">{prefix && <span>{prefix}</span>}{formatted}{suffix && <span>{suffix}</span>}</div></div>;
@@ -90,75 +65,7 @@ export function Image({ src, alt = '', preview = true, className = '', ...props 
   const [open, setOpen] = useState(false);
   return <><img {...props} src={src} alt={alt} className={`at-image ${preview ? 'at-image--previewable' : ''} ${className}`} onClick={(event) => { props.onClick?.(event); if (preview) setOpen(true); }} />{open && <div className="at-image-preview" role="dialog" aria-label="图片预览" onClick={() => setOpen(false)}><button type="button" aria-label="关闭预览" onClick={() => setOpen(false)}>×</button><img src={src} alt={alt} /></div>}</>;
 }
-export type FloatingPlacement = 'top' | 'bottom' | 'left' | 'right';
-interface FloatingPosition { top: number; left: number; placement: FloatingPlacement }
-const oppositePlacement: Record<FloatingPlacement, FloatingPlacement> = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' };
-
-function getFloatingPosition(anchor: HTMLElement, floating: HTMLElement, preferred: FloatingPlacement): FloatingPosition {
-  const anchorRect = anchor.getBoundingClientRect();
-  const floatingRect = floating.getBoundingClientRect();
-  const gap = 10;
-  const edge = 12;
-  const spaces: Record<FloatingPlacement, number> = {
-    top: anchorRect.top - edge,
-    bottom: window.innerHeight - anchorRect.bottom - edge,
-    left: anchorRect.left - edge,
-    right: window.innerWidth - anchorRect.right - edge,
-  };
-  const required: Record<FloatingPlacement, number> = {
-    top: floatingRect.height + gap,
-    bottom: floatingRect.height + gap,
-    left: floatingRect.width + gap,
-    right: floatingRect.width + gap,
-  };
-  const alternate = oppositePlacement[preferred];
-  const placement = spaces[preferred] >= required[preferred]
-    ? preferred
-    : spaces[alternate] >= required[alternate]
-      ? alternate
-      : spaces[preferred] >= spaces[alternate] ? preferred : alternate;
-  const centeredLeft = anchorRect.left + (anchorRect.width - floatingRect.width) / 2;
-  const centeredTop = anchorRect.top + (anchorRect.height - floatingRect.height) / 2;
-  const top = placement === 'top' ? anchorRect.top - floatingRect.height - gap
-    : placement === 'bottom' ? anchorRect.bottom + gap : centeredTop;
-  const left = placement === 'left' ? anchorRect.left - floatingRect.width - gap
-    : placement === 'right' ? anchorRect.right + gap : centeredLeft;
-  return {
-    top: Math.max(edge, Math.min(top, window.innerHeight - floatingRect.height - edge)),
-    left: Math.max(edge, Math.min(left, window.innerWidth - floatingRect.width - edge)),
-    placement,
-  };
-}
-
-function useFloatingPanel<TAnchor extends HTMLElement = HTMLElement>(open: boolean, placement: FloatingPlacement) {
-  const anchorRef = useRef<TAnchor | null>(null);
-  const panelRef = useRef<HTMLSpanElement>(null);
-  const [position, setPosition] = useState<FloatingPosition | null>(null);
-  const updatePosition = useCallback(() => {
-    if (!anchorRef.current || !panelRef.current) return;
-    setPosition(getFloatingPosition(anchorRef.current, panelRef.current, placement));
-  }, [placement]);
-
-  useLayoutEffect(() => {
-    if (!open) {
-      setPosition(null);
-      return;
-    }
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition, true);
-    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(updatePosition);
-    if (anchorRef.current) observer?.observe(anchorRef.current);
-    if (panelRef.current) observer?.observe(panelRef.current);
-    return () => {
-      window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition, true);
-      observer?.disconnect();
-    };
-  }, [open, updatePosition]);
-
-  return { anchorRef, panelRef, position };
-}
+export type { FloatingPlacement } from './internal/floating';
 
 export interface PopoverProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'content' | 'title'> {
   content: ReactNode;
@@ -171,7 +78,7 @@ export interface PopoverProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'con
 export function Popover({ content, children, title, trigger = 'click', placement = 'bottom', className = '', ...props }: PopoverProps) {
   const id = useId();
   const [open, setOpen] = useState(false);
-  const { anchorRef, panelRef, position } = useFloatingPanel<HTMLButtonElement>(open, placement);
+  const { anchorRef, panelRef, position } = useFloatingPanel<HTMLButtonElement, HTMLSpanElement>(open, placement, { gap: 10 });
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const openPopover = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -226,7 +133,7 @@ export function Popconfirm({ title, description, onConfirm, onCancel, placement 
   const [open, setOpen] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [confirmError, setConfirmError] = useState(false);
-  const { anchorRef, panelRef, position } = useFloatingPanel<HTMLButtonElement>(open, placement);
+  const { anchorRef, panelRef, position } = useFloatingPanel<HTMLButtonElement, HTMLSpanElement>(open, placement, { gap: 10 });
 
   useEffect(() => {
     if (!open) return;
@@ -274,64 +181,6 @@ export function Popconfirm({ title, description, onConfirm, onCancel, placement 
 export function Result({ status = 'info', title, subTitle, extra }: { status?: 'success' | 'error' | 'info' | 'warning' | '404' | '500'; title: ReactNode; subTitle?: ReactNode; extra?: ReactNode }) {
   const icons = { success: '✓', error: '×', info: 'i', warning: '!', '404': '404', '500': '500' };
   return <section className={`at-result at-result--${status}`}><span className="at-result__icon" aria-hidden="true">{icons[status]}</span><h2>{title}</h2>{subTitle && <p>{subTitle}</p>}{extra && <div className="at-result__extra">{extra}</div>}</section>;
-}
-
-export interface CascaderOption { label: string; value: string; disabled?: boolean; children?: CascaderOption[] }
-export function Cascader({ options, value, defaultValue = [], onChange, placeholder = '请选择…' }: { options: CascaderOption[]; value?: string[]; defaultValue?: string[]; onChange?: (path: string[], selectedOptions: CascaderOption[]) => void; placeholder?: string }) {
-  const [internal, setInternal] = useState(defaultValue);
-  const path = value ?? internal;
-  const columns: CascaderOption[][] = [];
-  let current = options;
-  for (let depth = 0; depth <= path.length; depth += 1) {
-    columns.push(current);
-    const selected = current.find((item) => item.value === path[depth]);
-    if (!selected?.children?.length) break;
-    current = selected.children;
-  }
-  return <div className="at-cascader">{columns.map((items, depth) => <select key={depth} aria-label={`第 ${depth + 1} 级选项`} value={path[depth] ?? ''} onChange={(event) => {
-    const next = [...path.slice(0, depth), event.target.value];
-    const selected: CascaderOption[] = [];
-    let level = options;
-    for (const itemValue of next) { const match = level.find((item) => item.value === itemValue); if (!match) break; selected.push(match); level = match.children ?? []; }
-    setInternal(next); onChange?.(next, selected);
-  }}><option value="">{placeholder}</option>{items.map((item) => <option key={item.value} value={item.value} disabled={item.disabled}>{item.label}</option>)}</select>)}</div>;
-}
-export function ColorPicker({ value, defaultValue = '#685cf6', onChange, disabled, label = '选择颜色' }: { value?: string; defaultValue?: string; onChange?: (value: string) => void; disabled?: boolean; label?: string }) {
-  const [internal, setInternal] = useState(defaultValue);
-  const color = value ?? internal;
-  return <label className="at-color-picker"><span>{label}</span><input aria-label={label} type="color" disabled={disabled} value={color} onChange={(event) => { setInternal(event.target.value); onChange?.(event.target.value); }} /><code>{color.toUpperCase()}</code></label>;
-}
-export function Mentions({ options, value, defaultValue = '', onChange, placeholder = '输入 @ 提及成员', label = '内容' }: { options: string[]; value?: string; defaultValue?: string; onChange?: (value: string) => void; placeholder?: string; label?: string }) {
-  const [internal, setInternal] = useState(defaultValue);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const current = value ?? internal;
-  const listId = useId();
-  const mention = current.match(/(?:^|\s)@([^\s@]*)$/);
-  const suggestions = mention ? options.filter((option) => option.toLocaleLowerCase().includes(mention[1].toLocaleLowerCase())) : [];
-  const choose = (option: string) => {
-    const next = current.replace(/@[\S]*$/, `@${option} `);
-    setInternal(next);
-    onChange?.(next);
-  };
-  return <div className="at-mentions"><label htmlFor={listId}>{label}</label><textarea id={listId} value={current} placeholder={placeholder} rows={3} aria-autocomplete="list" aria-expanded={suggestions.length > 0} aria-controls={`${listId}-options`} onChange={(event) => { setInternal(event.target.value); setActiveIndex(0); onChange?.(event.target.value); }} onKeyDown={(event) => {
-    if (!suggestions.length) return;
-    if (event.key === 'ArrowDown') { event.preventDefault(); setActiveIndex((index) => Math.min(index + 1, suggestions.length - 1)); }
-    if (event.key === 'ArrowUp') { event.preventDefault(); setActiveIndex((index) => Math.max(index - 1, 0)); }
-    if (event.key === 'Enter' && suggestions[activeIndex]) { event.preventDefault(); choose(suggestions[activeIndex]); }
-  }} />{suggestions.length > 0 && <div id={`${listId}-options`} className="at-mentions__options" role="listbox" aria-label="可提及成员">{suggestions.map((option, index) => <button key={option} type="button" role="option" aria-selected={activeIndex === index} onMouseDown={(event) => event.preventDefault()} onClick={() => choose(option)}>@{option}</button>)}</div>}<small>输入 @ 后可选择团队成员</small></div>;
-}
-export interface TransferItem { key: string; title: string; disabled?: boolean }
-export function Transfer({ dataSource, targetKeys, defaultTargetKeys = [], onChange, titles = ['可选项目', '已选项目'] }: { dataSource: TransferItem[]; targetKeys?: string[]; defaultTargetKeys?: string[]; onChange?: (nextTargetKeys: string[]) => void; titles?: [string, string] | string[] }) {
-  const [internal, setInternal] = useState(defaultTargetKeys);
-  const [selected, setSelected] = useState<string[]>([]);
-  const targets = targetKeys ?? internal;
-  const move = (toTarget: boolean) => { const next = toTarget ? [...new Set([...targets, ...selected])] : targets.filter((key) => !selected.includes(key)); setInternal(next); onChange?.(next); setSelected([]); };
-  const renderList = (target: boolean, title: string) => <section className="at-transfer__panel"><strong>{title}</strong><div>{dataSource.filter((item) => targets.includes(item.key) === target).map((item) => <label key={item.key}><input type="checkbox" disabled={item.disabled} checked={selected.includes(item.key)} onChange={(event) => setSelected((keys) => event.target.checked ? [...keys, item.key] : keys.filter((key) => key !== item.key))} />{item.title}</label>)}</div><small>{dataSource.filter((item) => targets.includes(item.key) === target).length} 项</small></section>;
-  return <div className="at-transfer">{renderList(false, titles[0] ?? '可选项目')}<div className="at-transfer__actions"><button type="button" disabled={!selected.some((key) => !targets.includes(key))} onClick={() => move(true)} aria-label="移至已选">›</button><button type="button" disabled={!selected.some((key) => targets.includes(key))} onClick={() => move(false)} aria-label="移回可选">‹</button></div>{renderList(true, titles[1] ?? '已选项目')}</div>;
-}
-export function TreeSelect({ options, value, defaultValue = '', onChange, placeholder = '请选择…', label }: { options: CascaderOption[]; value?: string; defaultValue?: string; onChange?: (value: string) => void; placeholder?: string; label?: string }) {
-  const flatten = (items: CascaderOption[], prefix = ''): Array<{ value: string; label: string; disabled?: boolean }> => items.flatMap((item) => [{ value: item.value, label: `${prefix}${item.label}`, disabled: item.disabled }, ...flatten(item.children ?? [], `${prefix}　`)]);
-  return <label className="at-tree-select">{label && <span>{label}</span>}<select value={value} defaultValue={value === undefined ? defaultValue : undefined} onChange={(event) => onChange?.(event.target.value)}><option value="">{placeholder}</option>{flatten(options).map((item) => <option key={item.value} value={item.value} disabled={item.disabled}>{item.label}</option>)}</select></label>;
 }
 
 export interface CalendarProps { value?: Date; defaultValue?: Date; onChange?: (date: Date) => void }

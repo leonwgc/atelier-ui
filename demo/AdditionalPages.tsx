@@ -1,16 +1,12 @@
 import { useState, type ReactNode } from 'react';
+import { highlightCode } from './shared';
 import {
-  Affix, Anchor, App, AutoComplete, BorderBeam, Button, Calendar, Carousel, Cascader, ColorPicker, ConfigProvider,
-  Dropdown, Flex, FloatButton, Grid, GridCol, Icon, Image, InputNumber, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader,
-  LayoutSider, List, Listy, Masonry, Menu, Mentions, Message, Notification, Popconfirm, Popover, QRCode, Rate, Result,
-  Segmented, Slider, Space, Splitter, Statistic, TimePicker, Tour, Transfer, Tree, TreeSelect, Typography, Util, Watermark,
+  Affix, Anchor, App, BorderBeam, Button, Calendar, Carousel, ConfigProvider, Dropdown, Flex, FloatButton, Grid, GridCol, Icon, Image, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, List, Listy, Masonry, Menu, Message, Notification, Popconfirm, Popover, QRCode, Result, Space, Splitter, Statistic, Tour, Tree, Typography, Util, Watermark,
 } from '../src';
 
 export type AdditionalPageId =
-  | 'affix' | 'anchor' | 'autoComplete' | 'dropdown' | 'floatButton' | 'flex' | 'grid' | 'icon' | 'image'
-  | 'inputNumber' | 'inputOTP' | 'layout' | 'popover' | 'popconfirm' | 'rate' | 'result' | 'segmented' | 'slider'
-  | 'space' | 'statistic' | 'timePicker' | 'typography'
-  | 'cascader' | 'colorPicker' | 'mentions' | 'transfer' | 'treeSelect' | 'calendar' | 'carousel' | 'list' | 'listy'
+  | 'affix' | 'anchor' | 'dropdown' | 'floatButton' | 'flex' | 'grid' | 'icon' | 'image' | 'inputOTP' | 'layout' | 'popover' | 'popconfirm' | 'result'
+  | 'space' | 'statistic' | 'typography' | 'calendar' | 'carousel' | 'list' | 'listy'
   | 'masonry' | 'qrcode' | 'menu' | 'tree' | 'tour' | 'watermark' | 'splitter' | 'message' | 'notification'
   | 'app' | 'configProvider' | 'borderBeam' | 'util';
 
@@ -180,34 +176,6 @@ export function ProjectActions() {
     preview: <Dropdown items={[{ key: 'edit', label: '编辑项目', onClick: () => window.alert('编辑项目') }, { key: 'archive', label: '归档项目' }]}><Button>更多操作</Button></Dropdown>,
   },
   {
-    id: 'autoComplete', title: 'AutoComplete 自动完成', icon: '⌕', group: '数据录入', description: '在输入过程中提供匹配建议，同时允许输入自定义内容。',
-    code: `import { AutoComplete } from 'atelier-ui/auto-complete';
-
-export function ProjectSearch() {
-  return <AutoComplete label="负责人" options={['林知夏', '陈一川', '周禾']} placeholder="搜索或输入姓名" />;
-}`,
-    rows: [['options', 'string[]', 'required'], ['value', 'string', '—'], ['onChange', '(value: string) => void', '—'], ['label', 'string', '—']],
-    preview: <AutoComplete label="负责人" options={['林知夏', '陈一川', '周禾']} placeholder="搜索或输入姓名" />,
-  },
-  {
-    id: 'inputNumber', title: 'InputNumber 数字输入框', icon: '#', group: '数据录入', description: '录入数值并通过范围、步长约束输入结果。',
-    code: `import { InputNumber } from 'atelier-ui/input-number';
-
-export function TeamCapacity() {
-  return (
-    <InputNumber
-      label="团队人数"
-      min={1}
-      max={100}
-      defaultValue={8}
-      onValueChange={(value) => console.log(value)}
-    />
-  );
-}`,
-    rows: [['min / max', 'number', '—'], ['step', 'number', '1'], ['value', 'number | string', '—'], ['onValueChange', '(value: number | null) => void', '—']],
-    preview: <InputNumber label="团队人数" min={1} max={100} defaultValue={8} />,
-  },
-  {
     id: 'inputOTP', title: 'InputOTP 验证码输入', icon: '▦', group: '数据录入', description: '将一次性验证码拆分为易于输入和校验的独立数字格。',
     code: `import { useState } from 'react';
 import { InputOTP } from 'atelier-ui/input-otp';
@@ -226,62 +194,6 @@ export function VerificationCode() {
 }`,
     rows: [['length', 'number', '6'], ['value / defaultValue', 'string', '—'], ['onChange', '(value: string) => void', '—'], ['onComplete', '(value: string) => void', '—'], ['disabled', 'boolean', 'false'], ['autoFocus', 'boolean', 'false']],
     preview: <InputOTP defaultValue="482" ariaLabel="演示验证码" />,
-  },
-  {
-    id: 'rate', title: 'Rate 评分', icon: '★', group: '数据录入', description: '用离散星级快速收集满意度或质量评分。',
-    code: `import { Rate } from 'atelier-ui/rate';
-
-export function Satisfaction() {
-  return <Rate defaultValue={4} onChange={(value) => console.log('评分：', value)} />;
-}`,
-    rows: [['value', 'number', '0'], ['count', 'number', '5'], ['allowClear', 'boolean', 'true'], ['onChange', '(value: number) => void', '—']],
-    preview: <Rate defaultValue={4} />,
-  },
-  {
-    id: 'slider', title: 'Slider 滑动输入条', icon: '━', group: '数据录入', description: '在连续数值范围内通过拖动选择数值。',
-    code: `import { Slider } from 'atelier-ui/slider';
-
-export function OpacitySetting() {
-  return (
-    <Slider
-      label="透明度"
-      min={0}
-      max={100}
-      defaultValue={72}
-      onChange={(value) => console.log(value)}
-    />
-  );
-}`,
-    rows: [['min / max', 'number', '0 / 100'], ['step', 'number', '1'], ['value', 'number', '—'], ['onChange', '(value: number) => void', '—']],
-    preview: <Slider label="透明度" min={0} max={100} defaultValue={72} />,
-  },
-  {
-    id: 'timePicker', title: 'TimePicker 时间选择', icon: '◷', group: '数据录入', description: '使用原生时间输入控件选择一个本地时间。',
-    code: `import { TimePicker } from 'atelier-ui/time-picker';
-
-export function MeetingTime() {
-  return <TimePicker label="会议时间" defaultValue="14:30" min="09:00" max="18:00" />;
-}`,
-    rows: [['type', "'time'", 'time'], ['value / defaultValue', 'string', '—'], ['min / max', 'string', '—'], ['disabled', 'boolean', 'false']],
-    preview: <TimePicker label="会议时间" defaultValue="14:30" min="09:00" max="18:00" />,
-  },
-  {
-    id: 'segmented', title: 'Segmented 分段控制器', icon: '◧', group: '数据展示', description: '在少量互斥选项间切换当前内容或视图。',
-    code: `import { Segmented } from 'atelier-ui/segmented';
-
-export function ViewSwitch() {
-  return (
-    <Segmented
-      options={[
-        { label: '列表', value: 'list' },
-        { label: '看板', value: 'board' },
-      ]}
-      onChange={(value) => console.log(value)}
-    />
-  );
-}`,
-    rows: [['options', 'Array<{ label, value, disabled? }>', 'required'], ['value', 'string', '—'], ['defaultValue', 'string', '首个选项'], ['onChange', '(value) => void', '—']],
-    preview: <Segmented options={[{ label: '列表', value: 'list' }, { label: '看板', value: 'board' }, { label: '日历', value: 'calendar' }]} />,
   },
   {
     id: 'statistic', title: 'Statistic 统计数值', icon: '↗', group: '数据展示', description: '突出展示关键数值，并支持前缀、后缀与精度配置。',
@@ -363,104 +275,6 @@ export function SaveResult() {
 }`,
     rows: [['status', "'success' | 'error' | 'info' | 'warning' | '404' | '500'", 'info'], ['title', 'ReactNode', 'required'], ['subTitle', 'ReactNode', '—'], ['extra', 'ReactNode', '—']],
     preview: <Result status="success" title="保存成功" subTitle="项目设置已更新。" extra={<Button variant="primary">返回项目</Button>} />,
-  },
-
-  {
-    id: 'cascader', title: 'Cascader 级联选择', icon: '›', group: '数据录入', description: '按层级逐步缩小范围，适合地点、组织和分类路径。',
-    code: `import { Cascader } from 'atelier-ui/cascader';
-
-const regions = [
-  {
-    label: '中国',
-    value: 'cn',
-    children: [
-      {
-        label: '上海',
-        value: 'sh',
-        children: [{ label: '徐汇区', value: 'xh' }],
-      },
-    ],
-  },
-];
-
-export function RegionPicker() {
-  return <Cascader options={regions} onChange={(path) => console.log(path)} />;
-}`,
-    rows: [['options', 'CascaderOption[]', 'required'], ['value / defaultValue', 'string[]', '— / []'], ['onChange', '(path, selectedOptions) => void', '—']],
-    preview: <Cascader options={[{ label: '中国', value: 'cn', children: [{ label: '上海', value: 'sh', children: [{ label: '徐汇区', value: 'xh' }, { label: '长宁区', value: 'cn' }] }, { label: '杭州', value: 'hz', children: [{ label: '西湖区', value: 'xh' }] }] }]} />,
-  },
-  {
-    id: 'colorPicker', title: 'ColorPicker 颜色选择器', icon: '◉', group: '数据录入', description: '通过原生颜色面板选择颜色，并读取标准十六进制值。',
-    code: `import { ColorPicker } from 'atelier-ui/color-picker';
-
-export function BrandColor() {
-  return (
-    <ColorPicker
-      label="品牌主色"
-      defaultValue="#685cf6"
-      onChange={(color) => console.log(color)}
-    />
-  );
-}`,
-    rows: [['value / defaultValue', 'string', '— / #685cf6'], ['onChange', '(color: string) => void', '—'], ['disabled', 'boolean', 'false']],
-    preview: <ColorPicker label="品牌主色" defaultValue="#685cf6" />,
-  },
-  {
-    id: 'mentions', title: 'Mentions 提及', icon: '@', group: '数据录入', description: '在多行内容中输入成员提及文本，并显示候选成员。',
-    code: `import { Mentions } from 'atelier-ui/mentions';
-
-export function TeamNote() {
-  return (
-    <Mentions
-      label="项目留言"
-      options={['林知夏', '陈一川', '周禾']}
-      onChange={(text) => console.log(text)}
-    />
-  );
-}`,
-    rows: [['options', 'string[]', 'required'], ['value / defaultValue', 'string', '— / 空字符串'], ['onChange', '(value: string) => void', '—']],
-    preview: <Mentions label="项目留言" options={['林知夏', '陈一川', '周禾']} defaultValue="@林知夏 请确认设计稿" />,
-  },
-  {
-    id: 'transfer', title: 'Transfer 穿梭框', icon: '⇄', group: '数据录入', description: '在可选列表与已选列表之间批量移动条目。',
-    code: `import { Transfer } from 'atelier-ui/transfer';
-
-const members = [
-  { key: 'lin', title: '林知夏' },
-  { key: 'chen', title: '陈一川' },
-  { key: 'zhou', title: '周禾' },
-];
-
-export function MemberTransfer() {
-  return (
-    <Transfer
-      dataSource={members}
-      defaultTargetKeys={['lin']}
-      onChange={(keys) => console.log(keys)}
-    />
-  );
-}`,
-    rows: [['dataSource', 'TransferItem[]', 'required'], ['targetKeys', 'string[]', '—'], ['defaultTargetKeys', 'string[]', '[]'], ['onChange', '(nextTargetKeys) => void', '—']],
-    preview: <Transfer dataSource={[{ key: 'lin', title: '林知夏' }, { key: 'chen', title: '陈一川' }, { key: 'zhou', title: '周禾' }]} defaultTargetKeys={['lin']} />,
-  },
-  {
-    id: 'treeSelect', title: 'TreeSelect 树选择', icon: '⌄', group: '数据录入', description: '从带层级关系的选项中选择单个值。',
-    code: `import { TreeSelect } from 'atelier-ui/tree-select';
-
-const teams = [{ label: '设计部', value: 'design', children: [{ label: '品牌组', value: 'brand' }] }];
-
-export function TeamSelect() {
-  return (
-    <TreeSelect
-      label="所属团队"
-      options={teams}
-      defaultValue="brand"
-      onChange={(value) => console.log(value)}
-    />
-  );
-}`,
-    rows: [['options', 'CascaderOption[]', 'required'], ['value / defaultValue', 'string', '— / 空字符串'], ['onChange', '(value: string) => void', '—']],
-    preview: <TreeSelect label="所属团队" options={[{ label: '设计部', value: 'design', children: [{ label: '品牌组', value: 'brand' }, { label: '体验组', value: 'ux' }] }, { label: '工程部', value: 'engineering' }]} defaultValue="brand" />,
   },
   {
     id: 'calendar', title: 'Calendar 日历', icon: '▦', group: '数据展示', description: '按月浏览日期并通过键盘可访问的日历按钮选择日期。',
@@ -745,18 +559,4 @@ export function AdditionalComponentPage({ id }: { id: AdditionalPageId }) {
   const item = additionalComponents.find((component) => component.id === id);
   if (!item) return null;
   return <><div className="page-heading"><div className="eyebrow"><span className="eyebrow__dot" />{item.group.toLocaleUpperCase()}</div><div className="page-heading__row"><div><h1>{item.title}</h1><p>{item.description}</p></div><span className="heading-badge">{item.title.split(' ')[0]}</span></div></div><section className="example-card"><div className="example-card__heading"><div><h3>交互示例</h3><p>在下方体验组件，再展开查看可直接使用的 TypeScript 示例。</p></div><button type="button" className={`code-toggle ${showCode ? 'code-toggle--active' : ''}`} onClick={() => setShowCode((visible) => !visible)}><span>{`</>`}</span>{showCode ? '收起代码' : '查看完整代码'}</button></div><div className="example-card__preview">{item.preview}</div>{showCode && <pre className="code-panel"><code dangerouslySetInnerHTML={{ __html: highlightCode(item.code) }} /></pre>}</section><section className="api-table-section"><div className="eyebrow"><span className="eyebrow__dot" /> API REFERENCE</div><h2>组件属性</h2><div className="api-table-wrap"><table className="api-table"><thead><tr><th>属性</th><th>类型</th><th>默认值</th></tr></thead><tbody>{item.rows.map(([prop, type, fallback]) => <tr key={prop}><td><code>{prop}</code></td><td>{type}</td><td>{fallback}</td></tr>)}</tbody></table></div></section></>;
-}
-
-const codeTokens = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|<\/?[A-Za-z][\w.]*(?=[\s/>])|\b(?:import|from|export|default|const|let|var|function|return|async|await|type|interface|new|true|false|null|undefined|if|else)\b|\b\d+(?:\.\d+)?\b|\b[A-Za-z_$][\w$]*(?=\s*\()|[{}()[\].,;:=<>!?|&+*/-])/g;
-function escapeHtml(value: string) { return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;'); }
-function highlightCode(source: string) {
-  return source.replace(codeTokens, (token) => {
-    const className = token.startsWith('//') || token.startsWith('/*') ? 'code-token--comment'
-      : token.startsWith('"') || token.startsWith("'") || token.startsWith('`') ? 'code-token--string'
-        : token.startsWith('<') ? 'code-token--tag'
-          : /^(?:import|from|export|default|const|let|var|function|return|async|await|type|interface|new|true|false|null|undefined|if|else)$/.test(token) ? 'code-token--keyword'
-            : /^\d/.test(token) ? 'code-token--number'
-              : /^[A-Za-z_$]/.test(token) ? 'code-token--function' : 'code-token--punctuation';
-    return `<span class="${className}">${escapeHtml(token)}</span>`;
-  }).split(/(<span class="[^"]+">[\s\S]*?<\/span>)/g).map((part) => part.startsWith('<span ') ? part : escapeHtml(part)).join('');
 }

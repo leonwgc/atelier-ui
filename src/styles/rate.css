@@ -1,1 +1,19 @@
-.at-rate{display:inline-flex;gap:4px}.at-rate__star{padding:1px;border:0;background:none;color:var(--at-color-border-strong);font-size:27px;line-height:1;transform-origin:center;transition:color var(--at-motion-fast) var(--at-ease-standard),transform var(--at-motion-fast) var(--at-ease-emphasized)}.at-rate__star:hover{transform:scale(1.16)}.at-rate__star--active{color:#e9a438}.at-rate__star[aria-pressed="true"]{animation:at-rate-select 180ms var(--at-ease-emphasized)}.at-rate__star:focus-visible{outline:2px solid var(--at-color-primary);border-radius:4px}@keyframes at-rate-select{50%{transform:scale(1.2)}}
+.at-rate { display: inline-flex; flex-direction: column; gap: 6px; }
+.at-rate__stars { display: inline-flex; gap: 4px; border-radius: 6px; outline-offset: 4px; }
+.at-rate__stars:focus-visible { outline: 2px solid color-mix(in srgb, var(--at-color-primary) 55%, transparent); }
+.at-rate__star {
+  position: relative; display: inline-flex; padding: 1px; border: 0; background: none;
+  color: var(--at-color-border-strong); line-height: 0; transform-origin: center;
+  transition: color var(--at-motion-fast) var(--at-ease-standard), transform var(--at-motion-fast) var(--at-ease-emphasized);
+}
+.at-rate__star:hover:not(:disabled), .at-rate__star--hover { transform: scale(1.14); }
+.at-rate__star:disabled { cursor: not-allowed; }
+.at-rate__base { display: inline-flex; }
+.at-rate__fill { position: absolute; inset: 1px auto 1px 1px; display: inline-flex; overflow: hidden; color: #e9a438; filter: drop-shadow(0 2px 6px rgb(233 164 56 / 35%)); transition: width var(--at-motion-fast) var(--at-ease-standard); }
+.at-rate__fill > * { flex: 0 0 auto; }
+.at-rate__star--active { color: #f3dbb0; }
+.at-rate__star[aria-pressed="true"] .at-rate__fill { animation: at-rate-select 220ms var(--at-ease-emphasized); }
+.at-rate--disabled .at-rate__star { color: var(--at-color-border); }
+.at-rate--disabled .at-rate__fill { color: #e6c38c; filter: none; }
+.at-rate__caption { min-height: 1.2em; color: var(--at-color-subtle); font-size: 13px; }
+@keyframes at-rate-select { 40% { transform: scale(1.18); } }

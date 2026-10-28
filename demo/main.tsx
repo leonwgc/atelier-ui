@@ -6,9 +6,11 @@ import {
   type TableColumn,
 } from '../src';
 import { additionalComponents, AdditionalComponentPage, isAdditionalPageId, type AdditionalPageId } from './AdditionalPages';
+import { dataEntryPages, DataEntryPage, isDataEntryPageId, type DataEntryPageId } from './DataEntryPages';
+import { ApiTable, ExampleCard, PageHeading } from './shared';
 import './styles.css';
 
-type PageId = 'overview' | 'form' | 'buttons' | 'inputs' | 'selection' | 'feedback' | 'table' | 'alert' | 'tag' | 'avatar' | 'tooltip' | 'badge' | 'breadcrumb' | 'divider' | 'empty' | 'pagination' | 'progress' | 'skeleton' | 'spin' | 'tabs' | 'card' | 'descriptions' | 'steps' | 'timeline' | 'collapse' | 'datePicker' | 'upload' | 'drawer' | AdditionalPageId;
+type PageId = 'overview' | 'form' | 'buttons' | 'inputs' | 'selection' | 'feedback' | 'table' | 'alert' | 'tag' | 'avatar' | 'tooltip' | 'badge' | 'breadcrumb' | 'divider' | 'empty' | 'pagination' | 'progress' | 'skeleton' | 'spin' | 'tabs' | 'card' | 'descriptions' | 'steps' | 'timeline' | 'collapse' | 'datePicker' | 'upload' | 'drawer' | DataEntryPageId | AdditionalPageId;
 
 const navigation: Array<{ id: PageId; title: string; icon: string; group: string }> = [
   { id: 'overview', title: '组件总览', icon: '◫', group: '开始使用' },
@@ -19,6 +21,7 @@ const navigation: Array<{ id: PageId; title: string; icon: string; group: string
   { id: 'card', title: 'Card 卡片', icon: '▢', group: '基础组件' },
   { id: 'inputs', title: 'Input 输入', icon: '▤', group: '数据录入' },
   { id: 'selection', title: '选择组件', icon: '☑', group: '数据录入' },
+  ...dataEntryPages.map(({ id, title, icon, group }) => ({ id, title, icon, group })),
   { id: 'feedback', title: 'Modal 弹窗', icon: '▣', group: '反馈组件' },
   { id: 'alert', title: 'Alert 提示', icon: 'ⓘ', group: '反馈组件' },
   { id: 'tooltip', title: 'Tooltip 文字提示', icon: '◉', group: '反馈组件' },
@@ -141,6 +144,7 @@ function App() {
         {page === 'datePicker' && <DatePickerPage />}
         {page === 'upload' && <UploadPage />}
         {page === 'drawer' && <DrawerPage />}
+        {isDataEntryPageId(page) && <DataEntryPage id={page} />}
         {isAdditionalPageId(page) && <AdditionalComponentPage id={page} />}
         <footer className="site-footer"><span>Atelier UI · 让界面细节自然发生</span><span>React 18 · TypeScript</span></footer>
       </div>
@@ -161,34 +165,6 @@ function App() {
       </section>
     </div>}
   </div>;
-}
-
-function PageHeading({ eyebrow, title, description, badge }: { eyebrow: string; title: string; description: string; badge?: string }) {
-  return <div className="page-heading"><div className="eyebrow"><span className="eyebrow__dot" />{eyebrow}</div><div className="page-heading__row"><div><h1>{title}</h1><p>{description}</p></div>{badge && <span className="heading-badge">{badge}</span>}</div></div>;
-}
-
-function ExampleCard({ title, description, code, children, className }: { title: string; description?: string; code?: string; children: ReactNode; className?: string }) {
-  const [showCode, setShowCode] = useState(false);
-  return <section className={`example-card ${className ?? ''}`}><div className="example-card__heading"><div><h3>{title}</h3>{description && <p>{description}</p>}</div>{code && <button type="button" className={`code-toggle ${showCode ? 'code-toggle--active' : ''}`} onClick={() => setShowCode((show) => !show)}><span>{`</>`}</span>{showCode ? '收起代码' : '查看完整代码'}</button>}</div><div className="example-card__preview">{children}</div>{showCode && <pre className="code-panel"><code dangerouslySetInnerHTML={{ __html: highlightCode(code ?? '') }} /></pre>}</section>;
-}
-
-const codeTokens = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|<\/?[A-Za-z][\w.]*(?=[\s/>])|\b(?:import|from|export|default|const|let|var|function|return|async|await|type|interface|new|true|false|null|undefined|if|else)\b|\b\d+(?:\.\d+)?\b|\b[A-Za-z_$][\w$]*(?=\s*\()|[{}()[\].,;:=<>!?|&+*/-])/g;
-
-function escapeHtml(value: string) {
-  return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
-}
-
-function highlightCode(source: string) {
-  return source.replace(codeTokens, (token) => {
-    const className = token.startsWith('//') || token.startsWith('/*') ? 'code-token--comment'
-      : token.startsWith('"') || token.startsWith("'") || token.startsWith('`') ? 'code-token--string'
-        : token.startsWith('<') ? 'code-token--tag'
-          : /^(?:import|from|export|default|const|let|var|function|return|async|await|type|interface|new|true|false|null|undefined|if|else)$/.test(token) ? 'code-token--keyword'
-            : /^\d/.test(token) ? 'code-token--number'
-              : /^[A-Za-z_$]/.test(token) ? 'code-token--function'
-                : 'code-token--punctuation';
-    return `<span class="${className}">${escapeHtml(token)}</span>`;
-  }).split(/(<span class="[^"]+">[\s\S]*?<\/span>)/g).map((part) => part.startsWith('<span ') ? part : escapeHtml(part)).join('');
 }
 
 // Every code panel is a standalone TSX example with its imports and local state.
@@ -380,29 +356,6 @@ export function ProjectDescription() {
       rows={4}
       hint="简单介绍项目目标和团队协作方式"
     />
-  );
-}`,
-  select: `import { Select } from 'atelier-ui/select';
-
-const roles = [
-  { label: '所有角色', value: 'all' },
-  { label: '产品设计师', value: 'designer' },
-  { label: '前端工程师', value: 'frontend' },
-  { label: '产品经理', value: 'pm' },
-];
-
-const channels = [
-  { label: '邮件通知', value: 'email' },
-  { label: '站内消息', value: 'in-app' },
-  { label: 'Slack', value: 'slack' },
-];
-
-export function TeamPreferences() {
-  return (
-    <div>
-      <Select label="团队角色" options={roles} searchable />
-      <Select label="通知渠道" options={channels} multiple defaultValue={['email']} />
-    </div>
   );
 }`,
   checkbox: `import { useState } from 'react';
@@ -1077,11 +1030,10 @@ function ButtonPage() {
 
 function InputPage() {
   const [query, setQuery] = useState('');
-  return <><PageHeading eyebrow="DATA ENTRY" title="Input 输入组件" description="为文本、选择和多行内容提供清晰、友好的输入体验。" badge="Input · Select" />
+  return <><PageHeading eyebrow="DATA ENTRY" title="Input 输入组件" description="为文本与多行内容提供清晰、友好的输入体验。" badge="Input · Textarea" />
     <ExampleCard title="Input 输入框" description="支持标签、提示、错误状态、前后缀和清空操作。" code={codeSamples.inputs}><div className="input-demo-grid"><Input label="项目名称" placeholder="请输入项目名称" /><Input label="搜索成员" placeholder="按姓名或邮箱搜索" prefix={<span className="search-icon">⌕</span>} clearable value={query} onChange={(event) => setQuery(event.target.value)} /><Input label="工作邮箱" placeholder="name@company.com" error="请输入有效的邮箱地址" /><Input label="只读字段" value="workspace-id-1842" readOnly hint="此字段由系统自动生成" /></div></ExampleCard>
     <ExampleCard title="Textarea 多行输入" description="适合备注、描述等较长内容。" code={codeSamples.textarea}><div className="textarea-demo"><Textarea label="项目简介" placeholder="描述一下这个项目…" rows={4} hint="简单介绍项目目标和团队协作方式" /></div></ExampleCard>
-    <ExampleCard title="Select 选择器" description="支持本地搜索和多选。" code={codeSamples.select}><div className="input-demo-grid"><Select label="团队角色" searchable options={[{ label: '所有角色', value: 'all' }, { label: '产品设计师', value: 'designer' }, { label: '前端工程师', value: 'frontend' }, { label: '产品经理', value: 'pm' }]} /><Select label="通知渠道（多选）" multiple defaultValue={['email']} options={[{ label: '邮件通知', value: 'email' }, { label: '站内消息', value: 'in-app' }, { label: 'Slack', value: 'slack' }]} /></div></ExampleCard>
-    <ApiTable rows={[["label", "string", "—"], ["hint / error", "string", "—"], ["prefix / suffix", "ReactNode", "—"], ["clearable", "boolean", "false"], ["searchable", "boolean", "false"], ["multiple", "boolean", "false"]]} />
+    <ApiTable rows={[["label", "string", "—"], ["hint / error", "string", "—"], ["prefix / suffix", "ReactNode", "—"], ["clearable", "boolean", "false"], ["size", "'sm' | 'md' | 'lg'", "'md'"], ["rows", "number", "3"]]} />
   </>;
 }
 
@@ -1328,10 +1280,6 @@ function TablePage() {
     <ExampleCard title="项目列表" description="本地分页、排序、筛选与行选择。" code={codeSamples.table}><div className="table-toolbar"><div><strong>所有项目</strong><span>共 9 个项目</span></div><div><Button onClick={() => { setLoading(true); window.setTimeout(() => setLoading(false), 850); }}>↻ 刷新数据</Button><Button variant="primary">＋ 新建项目</Button></div></div><Table<Project> rowKey="id" columns={projectColumns} dataSource={projects} rowSelection={{ selectedRowKeys: selected, onChange: setSelected }} loading={loading} onChange={(change) => console.info('Table change', change)} /><div className="table-selection-note">{selected.length ? `已选择 ${selected.length} 个项目` : '点击行首复选框，选择需要批量操作的项目'}</div></ExampleCard>
     <ExampleCard title="服务端分页模式" description="通过受控模式将分页和筛选交给业务请求。" code={codeSamples.serverTable}><div className="server-table-toolbar"><span>服务端数据模拟 · 每页 4 条</span><span>当前请求页：<b>{serverPage}</b></span></div><Table<Project> mode="server" rowKey="id" columns={projectColumns} dataSource={serverData} currentPage={serverPage} total={projects.length} pageSize={4} pageSizeOptions={[4]} onChange={(change) => { setServerPage(change.page); }} /></ExampleCard>
   </>;
-}
-
-function ApiTable({ rows }: { rows: string[][] }) {
-  return <section className="api-table-section"><div className="eyebrow"><span className="eyebrow__dot" /> API REFERENCE</div><h2>组件属性</h2><div className="api-table-wrap"><table className="api-table"><thead><tr><th>属性</th><th>类型</th><th>默认值</th></tr></thead><tbody>{rows.map(([name, type, value]) => <tr key={name}><td><code>{name}</code></td><td>{type}</td><td>{value}</td></tr>)}</tbody></table></div></section>;
 }
 
 createRoot(document.getElementById('root')!).render(<App />);
