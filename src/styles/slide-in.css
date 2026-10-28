@@ -1,0 +1,3 @@
+.at-slide-in { animation: at-slide-in-enter var(--at-slide-in-duration, 500ms) var(--at-ease-emphasized) var(--at-slide-in-delay, 0ms) both; }
+@keyframes at-slide-in-enter { from { opacity: 0; transform: translate(var(--at-slide-in-x, 0), var(--at-slide-in-y, 16px)); } to { opacity: 1; transform: translate(0, 0); } }
+@media (prefers-reduced-motion: reduce) { .at-slide-in { animation: none; } }

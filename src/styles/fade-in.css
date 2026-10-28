@@ -1,0 +1,3 @@
+.at-fade-in { animation: at-fade-in-enter var(--at-fade-in-duration, 500ms) var(--at-ease-emphasized) var(--at-fade-in-delay, 0ms) both; }
+@keyframes at-fade-in-enter { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .at-fade-in { animation: none; } }

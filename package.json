@@ -409,6 +409,16 @@
       "import": "./dist/blur-fade.js",
       "require": "./dist/blur-fade.cjs"
     },
+    "./fade-in": {
+      "types": "./dist/entries/fade-in.d.ts",
+      "import": "./dist/fade-in.js",
+      "require": "./dist/fade-in.cjs"
+    },
+    "./slide-in": {
+      "types": "./dist/entries/slide-in.d.ts",
+      "import": "./dist/slide-in.js",
+      "require": "./dist/slide-in.cjs"
+    },
     "./shimmer": {
       "types": "./dist/entries/shimmer.d.ts",
       "import": "./dist/shimmer.js",

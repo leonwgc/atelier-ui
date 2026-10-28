@@ -113,6 +113,8 @@ export default defineConfig({
         'number-ticker': resolve(process.cwd(), 'src/entries/number-ticker.ts'),
         'typing-animation': resolve(process.cwd(), 'src/entries/typing-animation.ts'),
         'blur-fade': resolve(process.cwd(), 'src/entries/blur-fade.ts'),
+        'fade-in': resolve(process.cwd(), 'src/entries/fade-in.ts'),
+        'slide-in': resolve(process.cwd(), 'src/entries/slide-in.ts'),
         'shimmer': resolve(process.cwd(), 'src/entries/shimmer.ts'),
         'animated-list': resolve(process.cwd(), 'src/entries/animated-list.ts'),
         'transition': resolve(process.cwd(), 'src/entries/transition.ts'),

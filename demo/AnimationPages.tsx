@@ -1,8 +1,8 @@
 import { useState, type ReactNode } from 'react';
 import { highlightCode } from './shared';
-import { AnimatedList, BlurFade, BorderBeam, Button, Input, Marquee, NumberTicker, Shimmer, Transition, TransitionGroup, TypingAnimation, useFieldArray, useForm } from '../src';
+import { AnimatedList, BlurFade, BorderBeam, Button, FadeIn, Input, Marquee, NumberTicker, Shimmer, SlideIn, Transition, TransitionGroup, TypingAnimation, useFieldArray, useForm } from '../src';
 
-export type AnimationPageId = 'marquee' | 'numberTicker' | 'typingAnimation' | 'blurFade' | 'shimmer' | 'animatedList' | 'transition' | 'transitionGroup' | 'borderBeam';
+export type AnimationPageId = 'marquee' | 'numberTicker' | 'typingAnimation' | 'blurFade' | 'fadeIn' | 'slideIn' | 'shimmer' | 'animatedList' | 'transition' | 'transitionGroup' | 'borderBeam';
 type ApiRow = [string, string, string];
 
 interface AnimationPageMeta {
@@ -77,6 +77,34 @@ export function Intro() {
 }`,
     rows: [['children', 'ReactNode', 'required'], ['delay', 'number', '0 ms'], ['duration', 'number', '500 ms'], ['blur', 'number', '6 px'], ['offsetY', 'number', '8 px']],
     preview: <BlurFade key="blur-fade-demo" className="animation-fade-preview" delay={80} duration={850}><strong>Every detail finds its place.</strong></BlurFade>,
+  },
+  {
+    id: 'fadeIn', title: 'FadeIn 淡入', icon: '◦', description: '让内容以轻柔的透明度渐变进入，可配置延迟与时长。',
+    code: `import { FadeIn } from 'atelier-ui/fade-in';
+
+export function Intro() {
+  return (
+    <FadeIn delay={120} duration={700}>
+      <h2>Every detail finds its place.</h2>
+    </FadeIn>
+  );
+}`,
+    rows: [['children', 'ReactNode', 'required'], ['delay', 'number', '0 ms'], ['duration', 'number', '500 ms'], ['HTML attributes', 'HTMLAttributes<HTMLDivElement>', '—']],
+    preview: <FadeIn key="fade-in-demo" className="animation-fade-preview" delay={80} duration={850}><strong>Every detail finds its place.</strong></FadeIn>,
+  },
+  {
+    id: 'slideIn', title: 'SlideIn 滑入', icon: '⇲', description: '让内容从指定方向平滑滑入，同时淡入显示。',
+    code: `import { SlideIn } from 'atelier-ui/slide-in';
+
+export function Intro() {
+  return (
+    <SlideIn direction="left" distance={24} delay={100} duration={600}>
+      <h2>Every detail finds its place.</h2>
+    </SlideIn>
+  );
+}`,
+    rows: [['children', 'ReactNode', 'required'], ['direction', "'left' | 'right' | 'up' | 'down'", 'up'], ['distance', 'number', '16 px'], ['delay', 'number', '0 ms'], ['duration', 'number', '500 ms'], ['HTML attributes', 'HTMLAttributes<HTMLDivElement>', '—']],
+    preview: <SlideIn key="slide-in-demo" className="animation-fade-preview" direction="left" distance={24} delay={80} duration={850}><strong>Every detail finds its place.</strong></SlideIn>,
   },
   {
     id: 'shimmer', title: 'Shimmer 流光', icon: '✧', description: '为内容表面添加柔和的掠光效果，可自定义高光颜色。',
