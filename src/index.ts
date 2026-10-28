@@ -72,9 +72,11 @@ export type { CopyableConfig, EditableConfig, EllipsisConfig, LinkProps, Paragra
 export { Flex } from './Flex';
 export type { FlexProps } from './Flex';
 export { Space } from './Space';
+export type { SpaceProps } from './Space';
 export { Layout, LayoutHeader, LayoutSider, LayoutContent, LayoutFooter } from './Layout';
 export type { LayoutProps } from './Layout';
 export { Grid, GridCol } from './Grid';
+export type { GridColProps, GridProps } from './Grid';
 export { Affix } from './Affix';
 export type { AffixProps } from './Affix';
 export { Anchor } from './Anchor';
@@ -102,6 +104,7 @@ export type { FloatingPlacement, PopoverPlacement, PopoverProps, PopoverTrigger 
 export { Popconfirm } from './Popconfirm';
 export type { PopconfirmProps } from './Popconfirm';
 export { Result } from './Result';
+export type { ResultProps, ResultStatus } from './Result';
 
 export { Cascader } from './Cascader';
 export type { CascaderOption, CascaderProps } from './Cascader';
@@ -135,12 +138,14 @@ export { Watermark } from './Watermark';
 export type { WatermarkFont, WatermarkProps } from './Watermark';
 export { Splitter, SplitterPanel } from './Splitter';
 export type { SplitterPanelProps, SplitterProps } from './Splitter';
-export { Message } from './Message';
-export type { MessageType } from './Message';
-export { Notification } from './Notification';
+export { Message, message } from './Message';
+export type { MessageOptions, MessageProps, MessageType } from './Message';
+export { Notification, notification } from './Notification';
+export type { NotificationOptions, NotificationPlacement, NotificationProps } from './Notification';
 export { App } from './App';
 export type { AppProps } from './App';
 export { ConfigProvider, useConfig } from './ConfigProvider';
-export type { UIConfig } from './ConfigProvider';
+export type { ConfigLocale, ConfigProviderProps, ConfigSize, ThemeTokens, UIConfig } from './ConfigProvider';
 export { BorderBeam } from './BorderBeam';
+export type { BorderBeamProps } from './BorderBeam';
 export { Util } from './Util';

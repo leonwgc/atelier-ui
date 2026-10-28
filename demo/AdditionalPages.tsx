@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { highlightCode } from './shared';
 import {
-  App, BorderBeam, Button, ConfigProvider, Flex, Grid, GridCol, Icon, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, Message, Notification, Result, Space, Util,
+  App, BorderBeam, Button, ConfigProvider, Flex, Grid, GridCol, Icon, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, message, notification, Result, Space, Util,
 } from '../src';
 
 export type AdditionalPageId =
@@ -135,73 +135,59 @@ export function SaveResult() {
   },
   {
     id: 'message', title: 'Message 全局提示', icon: '·', group: '反馈组件', description: '在页面顶部短暂展示轻量级的操作结果提示。',
-    code: `import { useState } from 'react';
-import { Button } from 'atelier-ui/button';
-import { Message } from 'atelier-ui/message';
+    code: `import { Button } from 'atelier-ui/button';
+import { message } from 'atelier-ui/message';
 
 export function SaveMessage() {
-  const [visible, setVisible] = useState(false);
-  return (
-    <>
-      <Button onClick={() => setVisible(true)}>保存设置</Button>
-      {visible && (
-        <Message
-          type="success"
-          content="设置已保存"
-          onClose={() => setVisible(false)}
-        />
-      )}
-    </>
-  );
+  return <Button onClick={() => message.success('设置已保存')}>保存设置</Button>;
 }`,
-    rows: [['type', "'success' | 'info' | 'warning' | 'error'", 'info'], ['content', 'ReactNode', 'required'], ['duration', 'number', '4000 ms'], ['onClose', '() => void', '—']],
-    preview: <Message type="success" content="设置已保存" />,
+    rows: [['message.success(content, options?)', '(ReactNode, MessageOptions?) => { close }', '—'], ['message.open(content, options?)', '(ReactNode, MessageOptions?) => { close }', 'info'], ['duration', 'number', '4000 ms'], ['message.destroy()', '() => void', '关闭所有消息']],
+    preview: <Button onClick={() => message.success('设置已保存')}>保存设置</Button>,
   },
   {
     id: 'notification', title: 'Notification 通知提醒', icon: '▣', group: '反馈组件', description: '在屏幕角落呈现带标题和描述的详细通知卡片。',
-    code: `import { Notification } from 'atelier-ui/notification';
+    code: `import { Button } from 'atelier-ui/button';
+import { notification } from 'atelier-ui/notification';
 
 export function ProjectNotice() {
-  return (
-    <Notification
-      title="成员已加入"
-      description="林知夏已加入 Aurora workspace。"
-      type="success"
-      placement="top-right"
-      onClose={() => console.log('已关闭')}
-    />
-  );
+  return <Button onClick={() => notification.success({
+    title: '成员已加入',
+    description: '林知夏已加入 Aurora workspace。',
+  })}>查看通知</Button>;
 }`,
-    rows: [['title', 'ReactNode', 'required'], ['description', 'ReactNode', '—'], ['type', "'success' | 'info' | 'warning' | 'error'", 'info'], ['placement', "'top-right' | 'bottom-right' | 'top-left' | 'bottom-left'", 'top-right']],
-    preview: <Notification title="成员已加入" description="林知夏已加入 Aurora workspace。" type="success" placement="top-right" />,
+    rows: [['notification.open(options)', 'NotificationOptions => { close }', '—'], ['title', 'ReactNode', 'required'], ['description', 'ReactNode', '—'], ['type', "'success' | 'info' | 'warning' | 'error'", 'info'], ['placement', "'top-right' | 'bottom-right' | 'top-left' | 'bottom-left'", 'top-right'], ['notification.destroy()', '() => void', '关闭所有通知']],
+    preview: <Button onClick={() => notification.success({ title: '成员已加入', description: '林知夏已加入 Aurora workspace。' })}>查看通知</Button>,
   },
   {
-    id: 'app', title: 'App 应用容器', icon: '▣', group: '其他组件', description: '为应用内容提供统一的组件容器和样式边界。',
+    id: 'app', title: 'App 应用容器', icon: '▣', group: '通用组件', description: '为应用内容提供统一的组件容器和样式边界。',
     code: `import { App } from 'atelier-ui/app';
 import { Button } from 'atelier-ui/button';
+import { message } from 'atelier-ui/message';
 
 export function AppRoot() {
-  return <App><Button variant="primary">创建工作区</Button></App>;
+  return <App><Button variant="primary" onClick={() => message.success('工作区已创建')}>创建工作区</Button></App>;
 }`,
     rows: [['children', 'ReactNode', 'required'], ['className', 'string', '—'], ['HTML attributes', 'HTMLAttributes<HTMLDivElement>', '—']],
-    preview: <App><Button variant="primary">创建工作区</Button></App>,
+    preview: <App><Button variant="primary" onClick={() => message.success('工作区已创建')}>创建工作区</Button></App>,
   },
   {
-    id: 'configProvider', title: 'ConfigProvider 全局化配置', icon: '⚙', group: '其他组件', description: '在子树范围统一配置前缀、方向和基础主题变量。',
+    id: 'configProvider', title: 'ConfigProvider 全局化配置', icon: '⚙', group: '通用组件', description: '在子树范围统一配置前缀、方向、尺寸、语言和主题变量。',
     code: `import { ConfigProvider } from 'atelier-ui/config-provider';
 import { Button } from 'atelier-ui/button';
 
 export function BrandedSection() {
   return (
     <ConfigProvider
-      theme={{ primaryColor: '#2f9472', borderRadius: '16px' }}
+      size="large"
+      locale="zh-CN"
+      theme={{ primaryColor: '#2f9472', borderRadius: '12px' }}
     >
       <Button variant="primary">保存更改</Button>
     </ConfigProvider>
   );
 }`,
-    rows: [['prefixCls', 'string', 'at'], ['direction', "'ltr' | 'rtl'", 'ltr'], ['theme.primaryColor', 'string', '—'], ['theme.borderRadius', 'string', '—'], ['useConfig()', 'UIConfig', '读取上下文']],
-    preview: <ConfigProvider theme={{ primaryColor: '#2f9472' }}><Button variant="primary">保存更改</Button></ConfigProvider>,
+    rows: [['prefixCls', 'string', 'at'], ['direction', "'ltr' | 'rtl'", 'ltr'], ['size', "'small' | 'middle' | 'large'", 'middle'], ['locale', "'zh-CN' | 'en-US'", 'zh-CN'], ['theme.primaryColor', 'string', '—'], ['theme.borderRadius', 'string', '—'], ['useConfig()', 'UIConfig', '读取上下文']],
+    preview: <ConfigProvider size="large" locale="zh-CN" theme={{ primaryColor: '#2f9472' }}><Button variant="primary">保存更改</Button></ConfigProvider>,
   },
   {
     id: 'borderBeam', title: 'BorderBeam 边框流光', icon: '✧', group: '其他组件', description: '为重点卡片添加可自定义颜色和速度的流动边框。',
@@ -214,7 +200,7 @@ export function HighlightCard() {
     preview: <BorderBeam><strong>为新项目准备好了吗？</strong></BorderBeam>,
   },
   {
-    id: 'util', title: 'Util 常用工具', icon: '⌘', group: '其他组件', description: '提供数字范围、数字格式和类名拼接等小型工具函数。',
+    id: 'util', title: 'Util 常用工具', icon: '⌘', group: '通用组件', description: '提供数字范围、数字格式和类名拼接等小型工具函数。',
     code: `import { Util } from 'atelier-ui/util';
 
 export function CapacityLabel() {

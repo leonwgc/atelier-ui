@@ -1,1 +1,7 @@
-.at-config{min-width:0}
+.at-config { min-width: 0; }
+.at-config[data-size='small'] .at-input-wrap--md,
+.at-config[data-size='small'] .at-selector--md,
+.at-config[data-size='small'] .at-button--md,
+.at-config[data-size='large'] .at-input-wrap--md,
+.at-config[data-size='large'] .at-selector--md,
+.at-config[data-size='large'] .at-button--md { min-height: var(--at-control-height); }
