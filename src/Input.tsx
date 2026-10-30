@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { forwardRef, useState, type InputHTMLAttributes, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/field.css';
@@ -18,6 +19,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   { size = 'md', label, hint, error, prefix, suffix, clearable, value, defaultValue, onChange, disabled, className, id, ...props },
   ref,
 ) {
+  const { t } = useLocale();
+
   const inputId = id ?? (label ? `at-input-${label.replace(/\W+/g, '-').toLowerCase()}` : undefined);
   const [uncontrolledValue, setUncontrolledValue] = useState(String(defaultValue ?? ''));
   const currentValue = value == null ? uncontrolledValue : String(value);
@@ -29,7 +32,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         {prefix && <span className="at-input-wrap__adornment">{prefix}</span>}
         <input {...props} id={inputId} ref={ref} className="at-input" value={currentValue} onChange={(event) => { if (value == null) setUncontrolledValue(event.target.value); onChange?.(event); }} disabled={disabled} aria-invalid={Boolean(error) || undefined} />
         {clearable && hasValue && !disabled && (
-          <button type="button" className="at-input-wrap__clear" aria-label="清空输入" onClick={() => { if (value == null) setUncontrolledValue(''); onChange?.({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>); }}>
+          <button type="button" className="at-input-wrap__clear" aria-label={t('common.clearInput')} onClick={() => { if (value == null) setUncontrolledValue(''); onChange?.({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>); }}>
             ×
           </button>
         )}

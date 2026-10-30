@@ -157,6 +157,45 @@ This catalog follows the public exports in `src/index.ts`.
 
 `ConfigProvider` configures component prefixes, direction, size, locale, and theme variables; `useConfig` reads the configuration. Public utilities include `formatTime`, `parseTime`, `formatCountdown`, `formatStatistic`, `hsvToRgb`, `parseColor`, `rgbToHsv`, and `toHex`.
 
+
+### Internationalization
+
+All built-in component text and accessible labels support Simplified Chinese and English. The default is `zh-CN`. Components without built-in text continue to render the content you supply. Explicit text props take precedence, including an intentional empty string or `null` where the prop permits it.
+
+```tsx
+import { ConfigProvider } from 'atelier-ui/config-provider';
+import { createLocale, enUS } from 'atelier-ui/locale';
+import { Empty } from 'atelier-ui/empty';
+
+const jaJP = createLocale('ja-JP', {
+  'common.noData': 'データがありません',
+  'common.ok': '確認',
+}, enUS);
+
+export function Example() {
+  return (
+    <ConfigProvider locale="en-US" locales={{ 'ja-JP': jaJP }}>
+      <Empty />
+      <ConfigProvider messages={{ 'common.noData': 'Nothing here yet' }}>
+        <Empty />
+      </ConfigProvider>
+      <ConfigProvider locale="ja-JP"><Empty /></ConfigProvider>
+    </ConfigProvider>
+  );
+}
+```
+
+- `locale`: a language identifier or a `Locale` object such as `enUS` or `zhCN`.
+- `locales`: register additional packs by identifier. `createLocale(code, messages, base = enUS, formatLocale = code)` fills missing translations from the base. Unsupported Intl identifiers use the base formatting locale.
+- `messages`: typed partial overrides for the selected pack. Nested providers inherit the parent language, registry and configuration unless overridden.
+- `useLocale()`: read `locale`, `formatLocale`, `messages` and `t(key, params)`. Message keys and interpolation parameters are documented by the exported `LocaleKey`, `LocaleMessages` and `LocaleParams` types. For example, `t('pagination.total', { total: 12 })`.
+
+Dates, calendar month/weekday names, default numeric separators, number tickers and table sorting use the formatting locale. Existing formatting props still override the defaults. Native date-picker UI also depends on the browser and operating system. User-provided labels, content, validation messages and schema errors remain under application control.
+
+Standalone APIs render outside the calling React tree. Use `useModal()`, `useMessage()` and `useNotification()` inside a provider to create language-bound APIs. Alternatively pass `locale: enUS` in `Modal.confirm`, message options or notification options. Unbound static APIs keep the default Chinese locale. The optional second argument to `yupResolver(schema, locale)` controls its built-in fallback message; schema-provided errors are preserved.
+
+The documentation language switch is in the upper-right corner. It updates navigation, descriptions, API tables, examples and the surrounding ConfigProvider, remembers the choice in local storage, and preserves the current page and form state. Component-language controls on the ConfigProvider page can intentionally override the site language.
+
 ### Form Hooks
 
 The form API manages state through `useForm`, `useWatch`, `Controller`, `FormProvider`, `useFormContext`, and `useFieldArray`, with optional Zod and Yup resolvers. Form state is managed through Hooks; the library does not provide `<Form>` or `<Form.Item>` components.

@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { Children, Fragment, isValidElement, useCallback, useEffect, useLayoutEffect, useRef, useState, type HTMLAttributes, type KeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactElement, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/splitter.css';
@@ -46,6 +47,8 @@ function toPixels(value: number | string | undefined, total: number) {
 }
 
 export function Splitter({ layout = 'horizontal', onResizeStart, onResize, onResizeEnd, lazy = false, className, children, ...props }: SplitterProps) {
+  const { t } = useLocale();
+
   const panels = Children.toArray(children).filter((child): child is ReactElement<SplitterPanelProps> => isValidElement(child)) as Array<ReactElement<SplitterPanelProps>>;
   const count = panels.length;
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -198,14 +201,14 @@ export function Splitter({ layout = 'horizontal', onResizeStart, onResize, onRes
           aria-valuenow={total ? Math.round((panelSize / total) * 100) : undefined}
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-label={`调整第 ${index + 1} 与第 ${index + 2} 个面板`}
+          aria-label={t('splitter.resize', { first: index + 1, second: index + 2 })}
           tabIndex={resizable ? 0 : -1}
           onPointerDown={resizable ? onBarPointerDown(index) : undefined}
           onKeyDown={resizable ? onBarKeyDown(index) : undefined}
         >
           {(canCollapseStart || canCollapseEnd) && <span className="at-splitter__collapse">
-            {canCollapseStart && <button type="button" className="at-splitter__collapse-button" aria-label={collapsed[index] != null ? '展开面板' : '收起左侧面板'} onPointerDown={(event) => event.stopPropagation()} onClick={() => toggleCollapse(index, 'start')}>{horizontal ? <ChevronLeft size={12} style={collapsed[index] != null ? { transform: 'rotate(180deg)' } : undefined} /> : <ChevronLeft size={12} style={{ transform: collapsed[index] != null ? 'rotate(-90deg)' : 'rotate(90deg)' }} />}</button>}
-            {canCollapseEnd && <button type="button" className="at-splitter__collapse-button" aria-label={collapsed[index + 1] != null ? '展开面板' : '收起右侧面板'} onPointerDown={(event) => event.stopPropagation()} onClick={() => toggleCollapse(index, 'end')}>{horizontal ? <ChevronRight size={12} style={collapsed[index + 1] != null ? { transform: 'rotate(180deg)' } : undefined} /> : <ChevronRight size={12} style={{ transform: collapsed[index + 1] != null ? 'rotate(-90deg)' : 'rotate(90deg)' }} />}</button>}
+            {canCollapseStart && <button type="button" className="at-splitter__collapse-button" aria-label={collapsed[index] != null ? t('splitter.expand') : t('splitter.collapseStart')} onPointerDown={(event) => event.stopPropagation()} onClick={() => toggleCollapse(index, 'start')}>{horizontal ? <ChevronLeft size={12} style={collapsed[index] != null ? { transform: 'rotate(180deg)' } : undefined} /> : <ChevronLeft size={12} style={{ transform: collapsed[index] != null ? 'rotate(-90deg)' : 'rotate(90deg)' }} />}</button>}
+            {canCollapseEnd && <button type="button" className="at-splitter__collapse-button" aria-label={collapsed[index + 1] != null ? t('splitter.expand') : t('splitter.collapseEnd')} onPointerDown={(event) => event.stopPropagation()} onClick={() => toggleCollapse(index, 'end')}>{horizontal ? <ChevronRight size={12} style={collapsed[index + 1] != null ? { transform: 'rotate(180deg)' } : undefined} /> : <ChevronRight size={12} style={{ transform: collapsed[index + 1] != null ? 'rotate(-90deg)' : 'rotate(90deg)' }} />}</button>}
           </span>}
           {!canCollapseStart && !canCollapseEnd && <span className="at-splitter__grip" aria-hidden="true" />}
         </div>}

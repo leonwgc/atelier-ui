@@ -1,3 +1,4 @@
+import { useDemoLocale, translateDemoValue } from './locale';
 import { useState, type ReactNode } from 'react';
 import {
   AutoComplete, Cascader, ColorPicker, InputNumber, Mentions, Rate, Segmented, Select, Slider, TimePicker, Transfer, TreeSelect,
@@ -62,151 +63,190 @@ const transferMembers: TransferItem[] = [
 ];
 
 function ControlledSelect() {
+  const { t: dt } = useDemoLocale();
+  const localizedRoles = translateDemoValue(roles, dt);
+
   const [role, setRole] = useState('frontend');
   return <div className="input-demo-grid">
-    <Select label="团队角色" options={roles} value={role} onChange={(value) => setRole(value as string)} hint={`当前值：${role || '未选择'}`} allowClear />
-    <Select label="禁用状态" options={roles} defaultValue="pm" disabled />
+    <Select label={dt("团队角色")} options={localizedRoles} value={role} onChange={(value) => setRole(value as string)} hint={dt("当前值：{0}", { 0: role || dt("未选择") })} allowClear />
+    <Select label={dt("禁用状态")} options={localizedRoles} defaultValue="pm" disabled />
   </div>;
 }
 function MultipleSelect() {
+  const { t: dt } = useDemoLocale();
+  const localizedChannels = translateDemoValue(channels, dt);
+
   const [selected, setSelected] = useState<string[]>(['email', 'in-app']);
   return <div className="input-demo-grid">
-    <Select label="通知渠道" options={channels} multiple searchable value={selected} onChange={(value) => setSelected(value as string[])} placeholder="选择通知渠道" />
-    <Select label="折叠超出的标签" options={channels} multiple defaultValue={['email', 'in-app', 'slack', 'wecom']} maxTagCount={2} />
+    <Select label={dt("通知渠道")} options={localizedChannels} multiple searchable value={selected} onChange={(value) => setSelected(value as string[])} placeholder={dt("选择通知渠道")} />
+    <Select label={dt("折叠超出的标签")} options={localizedChannels} multiple defaultValue={['email', 'in-app', 'slack', 'wecom']} maxTagCount={2} />
   </div>;
 }
 function CustomSelect() {
+  const { t: dt } = useDemoLocale();
+  const localizedGroupedRoles = translateDemoValue(groupedRoles, dt);
+  const localizedRoles = translateDemoValue(roles, dt);
+
   return <div className="input-demo-grid">
-    <Select label="分组 + 搜索" options={groupedRoles} searchable placeholder="搜索角色" />
+    <Select label={dt("分组 + 搜索")} options={localizedGroupedRoles} searchable placeholder={dt("搜索角色")} />
     <Select
-      label="自定义选项渲染"
-      options={roles}
+      label={dt("自定义选项渲染")}
+      options={localizedRoles}
       defaultValue="designer"
       popupClassName="demo-select-popup"
       optionRender={(option, { selected }) => <span className="demo-option"><span className="demo-option__avatar" aria-hidden="true">{option.label.slice(0, 1)}</span><span className="demo-option__body"><strong>{option.label}</strong>{option.description && <small>{option.description}</small>}</span>{selected && <span className="demo-option__mark">✓</span>}</span>}
-      popupRender={(menu) => <>{menu}<div className="at-popup__footer demo-popup-footer"><span>找不到合适的角色？</span><button type="button" onClick={() => window.alert('新建角色')}>新建角色</button></div></>}
+      popupRender={(menu) => <>{menu}<div className="at-popup__footer demo-popup-footer"><span>{dt("找不到合适的角色？")}</span><button type="button" onClick={() => window.alert(dt("新建角色"))}>{dt("新建角色")}</button></div></>}
     />
   </div>;
 }
 
 function BasicAutoComplete() {
+  const { t: dt } = useDemoLocale();
+
   const [value, setValue] = useState('');
   return <div className="input-demo-grid">
-    <AutoComplete label="负责人" options={['林知夏', '陈一川', '周禾', '沈星河']} value={value} onChange={setValue} placeholder="搜索或输入姓名" allowClear hint={value ? `当前输入：${value}` : '支持键盘 ↑ ↓ 选择，Enter 确认'} />
-    <AutoComplete label="邮箱后缀补全" options={value.includes('@') ? [] : ['gmail.com', 'outlook.com', 'atelier.design'].map((domain) => `${value || 'name'}@${domain}`)} filterOption={false} placeholder="输入邮箱前缀" onSelect={(selected) => setValue(selected)} />
+    <AutoComplete label={dt("负责人")} options={[dt("林知夏"), dt("陈一川"), dt("周禾"), dt("沈星河")]} value={value} onChange={setValue} placeholder={dt("搜索或输入姓名")} allowClear hint={value ? dt("当前输入：{0}", { 0: value }) : dt("支持键盘 ↑ ↓ 选择，Enter 确认")} />
+    <AutoComplete label={dt("邮箱后缀补全")} options={value.includes('@') ? [] : ['gmail.com', 'outlook.com', 'atelier.design'].map((domain) => `${value || 'name'}@${domain}`)} filterOption={false} placeholder={dt("输入邮箱前缀")} onSelect={(selected) => setValue(selected)} />
   </div>;
 }
 function StyledAutoComplete() {
+  const { t: dt } = useDemoLocale();
+  const localizedMembers = translateDemoValue(members, dt);
+
   return <div className="input-demo-grid">
     <AutoComplete
-      label="自定义弹层风格"
-      options={members}
-      placeholder="搜索团队成员"
+      label={dt("自定义弹层风格")}
+      options={localizedMembers}
+      placeholder={dt("搜索团队成员")}
       popupClassName="demo-dark-popup"
       popupMatchSelectWidth={false}
       popupStyle={{ minWidth: 320 }}
       optionRender={(option, { active }) => <span className={`demo-member ${active ? 'demo-member--active' : ''}`}><span className="demo-member__avatar">{option.value.slice(0, 1)}</span><span className="demo-member__body"><strong>{option.value}</strong><small>{option.description}</small></span></span>}
-      popupRender={(menu) => <><div className="demo-dark-popup__title">团队成员</div>{menu}<div className="demo-dark-popup__footer">↑ ↓ 切换 · Enter 选择 · Esc 关闭</div></>}
+      popupRender={(menu) => <><div className="demo-dark-popup__title">{dt("团队成员")}</div>{menu}<div className="demo-dark-popup__footer">{dt("↑ ↓ 切换 · Enter 选择 · Esc 关闭")}</div></>}
     />
-    <AutoComplete label="不匹配时的提示" options={['设计评审', '发布计划', '周会纪要']} notFoundContent="没有找到相关文档" placeholder="搜索文档" status="warning" hint="status=warning 时边框会变为警示色" />
+    <AutoComplete label={dt("不匹配时的提示")} options={[dt("设计评审"), dt("发布计划"), dt("周会纪要")]} notFoundContent={dt("没有找到相关文档")} placeholder={dt("搜索文档")} status="warning" hint={dt("status=warning 时边框会变为警示色")} />
   </div>;
 }
 
 function BasicInputNumber() {
+  const { t: dt } = useDemoLocale();
+
   const [count, setCount] = useState<number | null>(8);
   return <div className="input-demo-grid">
-    <InputNumber label="团队人数" min={1} max={100} value={count} onChange={setCount} hint={`当前：${count ?? '空'} 人`} />
-    <InputNumber label="预算（万元）" min={0} step={0.5} precision={1} defaultValue={12.5} prefix="¥" controls="inline" />
-    <InputNumber label="折扣" min={0} max={100} defaultValue={85} formatter={(value) => `${value}%`} parser={(text) => Number(text.replace('%', ''))} />
-    <InputNumber label="禁用" defaultValue={3} disabled />
+    <InputNumber label={dt("团队人数")} min={1} max={100} value={count} onChange={setCount} hint={dt("当前：{0} 人", { 0: count ?? dt("空") })} />
+    <InputNumber label={dt("预算（万元）")} min={0} step={0.5} precision={1} defaultValue={12.5} prefix="¥" controls="inline" />
+    <InputNumber label={dt("折扣")} min={0} max={100} defaultValue={85} formatter={(value) => `${value}%`} parser={(text) => Number(text.replace('%', ''))} />
+    <InputNumber label={dt("禁用")} defaultValue={3} disabled />
   </div>;
 }
 
 function BasicRate() {
+  const { t: dt } = useDemoLocale();
+
   const [score, setScore] = useState(4);
   return <div className="component-row component-row--align-end" style={{ gap: 36 }}>
-    <div><span className="demo-hint">基础评分 · 当前 {score} 分</span><br /><Rate value={score} onChange={setScore} /></div>
-    <div><span className="demo-hint">半星 + 文案</span><br /><Rate allowHalf defaultValue={3.5} tooltips={['很差', '较差', '一般', '不错', '很棒']} /></div>
-    <div><span className="demo-hint">只读 / 小尺寸</span><br /><Rate defaultValue={5} disabled size="sm" label="历史评分" tooltips={['1 分', '2 分', '3 分', '4 分', '5 分']} /></div>
-    <div><span className="demo-hint">自定义字符</span><br /><Rate defaultValue={2} label="喜爱程度" tooltips={['一颗心', '两颗心', '三颗心', '四颗心', '五颗心']} character={<span style={{ fontSize: 24, lineHeight: 1 }}>♥</span>} /></div>
+    <div><span className="demo-hint">{dt("基础评分 · 当前")}{score} {dt("分")}</span><br /><Rate value={score} onChange={setScore} /></div>
+    <div><span className="demo-hint">{dt("半星 + 文案")}</span><br /><Rate allowHalf defaultValue={3.5} tooltips={[dt("很差"), dt("较差"), dt("一般"), dt("不错"), dt("很棒")]} /></div>
+    <div><span className="demo-hint">{dt("只读 / 小尺寸")}</span><br /><Rate defaultValue={5} disabled size="sm" label={dt("历史评分")} tooltips={[dt("1 分"), dt("2 分"), dt("3 分"), dt("4 分"), dt("5 分")]} /></div>
+    <div><span className="demo-hint">{dt("自定义字符")}</span><br /><Rate defaultValue={2} label={dt("喜爱程度")} tooltips={[dt("一颗心"), dt("两颗心"), dt("三颗心"), dt("四颗心"), dt("五颗心")]} character={<span style={{ fontSize: 24, lineHeight: 1 }}>♥</span>} /></div>
   </div>;
 }
 
 function BasicSlider() {
+  const { t: dt } = useDemoLocale();
+
   const [opacity, setOpacity] = useState(72);
   const [range, setRange] = useState<[number, number]>([20, 60]);
   return <div className="demo-stack" style={{ display: 'grid', gap: 28, maxWidth: 520 }}>
-    <Slider label="透明度" showValue value={opacity} onChange={setOpacity} tooltipFormatter={(value) => `${value}%`} />
-    <Slider label="预算区间" showValue range value={range} onChange={setRange} min={0} max={100} step={5} />
-    <Slider label="满意度" marks={{ 0: '很差', 25: '较差', 50: '一般', 75: '不错', 100: '很棒' }} step={null} defaultValue={75} tooltip="none" />
-    <Slider label="禁用" defaultValue={40} disabled />
+    <Slider label={dt("透明度")} showValue value={opacity} onChange={setOpacity} tooltipFormatter={(value) => `${value}%`} />
+    <Slider label={dt("预算区间")} showValue range value={range} onChange={setRange} min={0} max={100} step={5} />
+    <Slider label={dt("满意度")} marks={{ 0: dt("很差"), 25: dt("较差"), 50: dt("一般"), 75: dt("不错"), 100: dt("很棒") }} step={null} defaultValue={75} tooltip="none" />
+    <Slider label={dt("禁用")} defaultValue={40} disabled />
   </div>;
 }
 
 function BasicSegmented() {
+  const { t: dt } = useDemoLocale();
+
   const [view, setView] = useState<'list' | 'board' | 'calendar'>('list');
   return <div className="demo-stack" style={{ display: 'grid', gap: 18, justifyItems: 'start' }}>
-    <Segmented options={[{ label: '列表', value: 'list' }, { label: '看板', value: 'board' }, { label: '日历', value: 'calendar' }]} value={view} onChange={setView} />
-    <Segmented options={[{ label: '周', value: 'week', icon: '▤' }, { label: '月', value: 'month', icon: '▦' }, { label: '季度', value: 'quarter', icon: '▧', disabled: true }]} defaultValue="month" size="sm" shape="round" />
-    <Segmented options={['全部', '进行中', '已完成']} block style={{ width: 360 }} size="lg" />
-    <span className="demo-hint">当前视图：{view}</span>
+    <Segmented options={[{ label: dt("列表"), value: 'list' }, { label: dt("看板"), value: 'board' }, { label: dt("日历"), value: 'calendar' }]} value={view} onChange={setView} />
+    <Segmented options={[{ label: dt("周"), value: 'week', icon: '▤' }, { label: dt("月"), value: 'month', icon: '▦' }, { label: dt("季度"), value: 'quarter', icon: '▧', disabled: true }]} defaultValue="month" size="sm" shape="round" />
+    <Segmented options={[dt("全部"), dt("进行中"), dt("已完成")]} block style={{ width: 360 }} size="lg" />
+    <span className="demo-hint">{dt("当前视图：")}{view}</span>
   </div>;
 }
 
 function BasicTimePicker() {
+  const { t: dt } = useDemoLocale();
+
   const [time, setTime] = useState<string | null>('14:30');
   return <div className="input-demo-grid">
-    <TimePicker label="会议时间" value={time} onChange={setTime} minTime="09:00" maxTime="18:00" hint={time ? `已选择 ${time}` : '09:00 – 18:00 之间'} />
-    <TimePicker label="精确到秒" format="HH:mm:ss" defaultValue="08:15:30" secondStep={15} />
-    <TimePicker label="15 分钟间隔" minuteStep={15} placeholder="选择时段" showNow={false} />
-    <TimePicker label="禁用" defaultValue="10:00" disabled />
+    <TimePicker label={dt("会议时间")} value={time} onChange={setTime} minTime="09:00" maxTime="18:00" hint={time ? dt("已选择 {0}", { 0: time }) : dt("09:00 – 18:00 之间")} />
+    <TimePicker label={dt("精确到秒")} format="HH:mm:ss" defaultValue="08:15:30" secondStep={15} />
+    <TimePicker label={dt("15 分钟间隔")} minuteStep={15} placeholder={dt("选择时段")} showNow={false} />
+    <TimePicker label={dt("禁用")} defaultValue="10:00" disabled />
   </div>;
 }
 
 function BasicColorPicker() {
+  const { t: dt } = useDemoLocale();
+
   const [color, setColor] = useState('#685cf6');
   return <div className="input-demo-grid">
-    <ColorPicker label="品牌主色" value={color} onChange={setColor} presets={['#685cf6', '#2f9472', '#c98a29', '#d94d64', '#222438', '#9298aa']} hint={`当前：${color}`} />
-    <ColorPicker label="带透明度 · RGB" defaultValue="#2f947299" showAlpha format="rgb" />
-    <div className="component-row component-row--align-end"><ColorPicker label="仅色块" defaultValue="#c98a29" showText={false} /><ColorPicker label="可清除" defaultValue="#d94d64" allowClear size="sm" /></div>
-    <div className="at-field"><span className="at-field__label">实时预览</span><div className="demo-color-preview" style={{ background: color }} aria-hidden="true" /></div>
+    <ColorPicker label={dt("品牌主色")} value={color} onChange={setColor} presets={['#685cf6', '#2f9472', '#c98a29', '#d94d64', '#222438', '#9298aa']} hint={dt("当前：{0}", { 0: color })} />
+    <ColorPicker label={dt("带透明度 · RGB")} defaultValue="#2f947299" showAlpha format="rgb" />
+    <div className="component-row component-row--align-end"><ColorPicker label={dt("仅色块")} defaultValue="#c98a29" showText={false} /><ColorPicker label={dt("可清除")} defaultValue="#d94d64" allowClear size="sm" /></div>
+    <div className="at-field"><span className="at-field__label">{dt("实时预览")}</span><div className="demo-color-preview" style={{ background: color }} aria-hidden="true" /></div>
   </div>;
 }
 
 function BasicMentions() {
-  const [text, setText] = useState('@林知夏 请确认设计稿');
+  const { t: dt } = useDemoLocale();
+  const localizedMembers = translateDemoValue(members, dt);
+
+  const [text, setText] = useState(dt("@林知夏 请确认设计稿"));
   return <div className="textarea-demo demo-stack" style={{ display: 'grid', gap: 18 }}>
-    <Mentions label="项目留言" options={members.map((member) => ({ value: member.value, description: member.description }))} value={text} onChange={setText} autoSize={{ minRows: 3, maxRows: 6 }} hint="输入 @ 选择成员" />
-    <Mentions label="多种触发符" options={['林知夏', '陈一川', '周禾']} prefix={['@', '#']} placeholder="@ 提及成员，# 关联话题" rows={2} filterOption={(query, option) => option.value.includes(query)} />
+    <Mentions label={dt("项目留言")} options={localizedMembers.map((member) => ({ value: member.value, description: member.description }))} value={text} onChange={setText} autoSize={{ minRows: 3, maxRows: 6 }} hint={dt("输入 @ 选择成员")} />
+    <Mentions label={dt("多种触发符")} options={[dt("林知夏"), dt("陈一川"), dt("周禾")]} prefix={['@', '#']} placeholder={dt("@ 提及成员，# 关联话题")} rows={2} filterOption={(query, option) => option.value.includes(query)} />
   </div>;
 }
 
 function BasicCascader() {
+  const { t: dt } = useDemoLocale();
+  const localizedRegions = translateDemoValue(regions, dt);
+
   const [path, setPath] = useState<string[]>(['cn', 'sh', 'xuhui']);
   return <div className="input-demo-grid">
-    <Cascader label="所在地区" options={regions} value={path} onChange={setPath} hint={`已选：${path.join(' / ') || '无'}`} />
-    <Cascader label="悬停展开 + 搜索" options={regions} expandTrigger="hover" showSearch placeholder="搜索城市或区县" />
-    <Cascader label="允许选择任意一级" options={regions} changeOnSelect defaultValue={['cn', 'hz']} displayRender={(labels) => labels.join(' › ')} />
-    <Cascader label="禁用" options={regions} defaultValue={['sg', 'central']} disabled />
+    <Cascader label={dt("所在地区")} options={localizedRegions} value={path} onChange={setPath} hint={dt("已选：{0}", { 0: path.join(' / ') || dt("无") })} />
+    <Cascader label={dt("悬停展开 + 搜索")} options={localizedRegions} expandTrigger="hover" showSearch placeholder={dt("搜索城市或区县")} />
+    <Cascader label={dt("允许选择任意一级")} options={localizedRegions} changeOnSelect defaultValue={['cn', 'hz']} displayRender={(labels) => labels.join(' › ')} />
+    <Cascader label={dt("禁用")} options={localizedRegions} defaultValue={['sg', 'central']} disabled />
   </div>;
 }
 
 function BasicTreeSelect() {
+  const { t: dt } = useDemoLocale();
+  const localizedTeams = translateDemoValue(teams, dt);
+
   const [team, setTeam] = useState('web');
   const [checked, setChecked] = useState<string[]>(['ux']);
   return <div className="input-demo-grid">
-    <TreeSelect label="所属团队" treeData={teams} value={team} onChange={(value) => setTeam(value as string)} showSearch hint={`当前：${team}`} />
-    <TreeSelect label="多选可勾选" treeData={teams} treeCheckable value={checked} onChange={(value) => setChecked(value as string[])} treeDefaultExpandAll placeholder="选择参与团队" />
-    <TreeSelect label="默认展开指定节点" treeData={teams} treeDefaultExpandedKeys={['engineering']} placeholder="请选择团队" size="sm" />
-    <TreeSelect label="禁用" treeData={teams} defaultValue="brand" disabled />
+    <TreeSelect label={dt("所属团队")} treeData={localizedTeams} value={team} onChange={(value) => setTeam(value as string)} showSearch hint={dt("当前：{0}", { 0: team })} />
+    <TreeSelect label={dt("多选可勾选")} treeData={localizedTeams} treeCheckable value={checked} onChange={(value) => setChecked(value as string[])} treeDefaultExpandAll placeholder={dt("选择参与团队")} />
+    <TreeSelect label={dt("默认展开指定节点")} treeData={localizedTeams} treeDefaultExpandedKeys={['engineering']} placeholder={dt("请选择团队")} size="sm" />
+    <TreeSelect label={dt("禁用")} treeData={localizedTeams} defaultValue="brand" disabled />
   </div>;
 }
 
 function BasicTransfer() {
+  const { t: dt } = useDemoLocale();
+  const localizedTransferMembers = translateDemoValue(transferMembers, dt);
+
   const [targets, setTargets] = useState<string[]>(['lin']);
   return <div className="demo-stack" style={{ display: 'grid', gap: 24 }}>
-    <Transfer dataSource={transferMembers} targetKeys={targets} onChange={(keys, direction, moved) => { setTargets(keys); console.info(direction, moved); }} titles={['可选成员', '项目成员']} />
-    <Transfer dataSource={transferMembers} defaultTargetKeys={['chen', 'zhou']} showSearch oneWay titles={['成员库', '已加入']} operations={['加入项目', '移出项目']} render={(item) => <span>{item.title}<span className="demo-hint"> · {item.description ?? '未分组'}</span></span>} footer={(direction, info) => `${direction === 'left' ? '可选' : '已选'} ${info.total} 人`} />
+    <Transfer dataSource={localizedTransferMembers} targetKeys={targets} onChange={(keys, direction, moved) => { setTargets(keys); console.info(direction, moved); }} titles={[dt("可选成员"), dt("项目成员")]} />
+    <Transfer dataSource={localizedTransferMembers} defaultTargetKeys={['chen', 'zhou']} showSearch oneWay titles={[dt("成员库"), dt("已加入")]} operations={[dt("加入项目"), dt("移出项目")]} render={(item) => <span>{item.title}<span className="demo-hint"> · {item.description ?? dt("未分组")}</span></span>} footer={(direction, info) => dt("{0} {1} 人", { 0: direction === 'left' ? dt("可选") : dt("已选"), 1: info.total })} />
   </div>;
 }
 
@@ -575,7 +615,10 @@ export function isDataEntryPageId(id: string): id is DataEntryPageId {
 }
 
 export function DataEntryPage({ id }: { id: DataEntryPageId }) {
-  const page = dataEntryPages.find((item) => item.id === id);
+  const { t: dt } = useDemoLocale();
+  const localizedDataEntryPages = translateDemoValue(dataEntryPages, dt);
+
+  const page = localizedDataEntryPages.find((item) => item.id === id);
   if (!page) return null;
   return <>
     <PageHeading eyebrow="DATA ENTRY" title={page.title} description={page.description} badge={page.badge} />

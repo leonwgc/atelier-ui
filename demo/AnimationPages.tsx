@@ -1,3 +1,4 @@
+import { useDemoLocale, translateDemoValue } from './locale';
 import { ApiTable, CodeBlock, ExampleCard, PageHeading } from './shared';
 import { animationExamples } from './animation-examples';
 import exampleStyles from './animation-examples/styles.css?raw';
@@ -117,17 +118,20 @@ export function isAnimationPageId(id: string): id is AnimationPageId {
 }
 
 export function AnimationPage({ id }: { id: AnimationPageId }) {
-  const item = animationPages.find((page) => page.id === id);
+  const { t: dt } = useDemoLocale();
+  const localizedAnimationPages = translateDemoValue(animationPages, dt);
+
+  const item = localizedAnimationPages.find((page) => page.id === id);
   if (!item) return null;
   const { Preview, code } = animationExamples[id];
 
   return <>
-    <PageHeading eyebrow="动画组件" title={item.title} description={item.description} badge={item.title.split(' ')[0]} />
-    <ExampleCard key={id} title="交互示例" description="体验组件效果，再查看可直接使用的 TypeScript 示例及配套样式。" code={code}>
+    <PageHeading eyebrow={dt("动画组件")} title={item.title} description={item.description} badge={item.title.split(' ')[0]} />
+    <ExampleCard key={id} title={dt("交互示例")} description={dt("体验组件效果，再查看可直接使用的 TypeScript 示例及配套样式。")} code={code}>
       <Preview />
     </ExampleCard>
     <details className="animation-demo-styles" key={`${id}-styles`}>
-      <summary>查看示例配套样式（styles.css）</summary>
+      <summary>{dt("查看示例配套样式（styles.css）")}</summary>
       <CodeBlock code={exampleStyles} language="css" />
     </details>
     <ApiTable rows={item.rows} />

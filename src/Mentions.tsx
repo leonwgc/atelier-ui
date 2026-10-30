@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { forwardRef, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode, type TextareaHTMLAttributes } from 'react';
 import './styles/theme.css';
 import './styles/field.css';
@@ -56,11 +57,15 @@ function caretOffset(textarea: HTMLTextAreaElement, index: number) {
 
 export const Mentions = forwardRef<HTMLTextAreaElement, MentionsProps>(function Mentions(
   {
-    options, value, defaultValue = '', onChange, onSelect, onSearch, prefix = '@', split = ' ', filterOption = true, notFoundContent = '没有匹配的成员',
+    options, value, defaultValue = '', onChange, onSelect, onSearch, prefix = '@', split = ' ', filterOption = true, notFoundContent: notFoundContentProp,
     size = 'md', status, label, hint, error, autoSize = false, placement = 'bottom-start', popupClassName, popupStyle, optionRender,
-    className, id, disabled, rows = 3, placeholder = '输入 @ 提及成员', onKeyDown, onBlur, ...textareaProps
+    className, id, disabled, rows = 3, placeholder: placeholderProp, onKeyDown, onBlur, ...textareaProps
   }, ref,
 ) {
+  const { t } = useLocale();
+  const notFoundContent = notFoundContentProp === undefined ? t('mentions.empty') : notFoundContentProp;
+  const placeholder = placeholderProp === undefined ? t('mentions.placeholder') : placeholderProp;
+
   const reactId = useId();
   const inputId = id ?? `at-mentions-${reactId}`;
   const listId = `${inputId}-listbox`;
@@ -189,7 +194,7 @@ export const Mentions = forwardRef<HTMLTextAreaElement, MentionsProps>(function 
       <span ref={floating.anchorRef} className="at-mentions__caret" aria-hidden="true" style={caret ? { top: caret.top, left: caret.left, height: caret.height } : undefined} />
     </div>
     <Popup open={showPopup} panelRef={floating.panelRef} position={floating.position} placement={placement} className={cx(`at-popup--${size}`, 'at-mentions__popup', popupClassName)} style={popupStyle}>
-      <ul ref={listRef} id={listId} className="at-popup__list at-mentions__list" role="listbox" aria-label="可提及成员">
+      <ul ref={listRef} id={listId} className="at-popup__list at-mentions__list" role="listbox" aria-label={t('mentions.label')}>
         {suggestions.length === 0 && <li className="at-popup__empty">{notFoundContent}</li>}
         {suggestions.map((option, index) => {
           const active = index === activeIndex;

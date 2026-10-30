@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { forwardRef, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/field.css';
@@ -58,10 +59,14 @@ function collectPaths(options: CascaderOption[], includeBranches: boolean, trail
 
 export const Cascader = forwardRef<HTMLDivElement, CascaderProps>(function Cascader(
   {
-    options, value, defaultValue = [], onChange, placeholder = '请选择…', expandTrigger = 'click', changeOnSelect = false, showSearch = false, displayRender, notFoundContent = '暂无匹配选项',
+    options, value, defaultValue = [], onChange, placeholder: placeholderProp, expandTrigger = 'click', changeOnSelect = false, showSearch = false, displayRender, notFoundContent: notFoundContentProp,
     disabled = false, allowClear = true, size = 'md', status, label, hint, error, open: openProp, onOpenChange, placement = 'bottom-start', popupClassName, popupStyle, className, id, onKeyDown, ...rest
   }, ref,
 ) {
+  const { t } = useLocale();
+  const placeholder = placeholderProp === undefined ? t('common.select') : placeholderProp;
+  const notFoundContent = notFoundContentProp === undefined ? t('common.noOptions') : notFoundContentProp;
+
   const reactId = useId();
   const triggerId = id ?? `at-cascader-${reactId}`;
   const labelId = label ? `${triggerId}-label` : undefined;
@@ -190,11 +195,11 @@ export const Cascader = forwardRef<HTMLDivElement, CascaderProps>(function Casca
       onKeyDown={handleKeyDown}
     >
       {showSearch && showPopup
-        ? <input ref={searchRef} className="at-selector__search" value={query} placeholder={hasValue ? labels.join(' / ') : placeholder} aria-label={label ? `${label}搜索` : '搜索选项'} onChange={(event) => setQuery(event.target.value)} onKeyDown={handleKeyDown} />
+        ? <input ref={searchRef} className="at-selector__search" value={query} placeholder={hasValue ? labels.join(' / ') : placeholder} aria-label={label ? t('common.searchLabel', { label }) : t('common.searchOptions')} onChange={(event) => setQuery(event.target.value)} onKeyDown={handleKeyDown} />
         : <span className={cx('at-selector__value', !hasValue && 'at-selector__placeholder')}>{display}</span>}
     </Selector>
     <Popup open={showPopup} panelRef={panelRef} position={position} placement={placement} className={cx(`at-popup--${size}`, 'at-cascader__popup', popupClassName)} style={popupStyle}>
-      {query ? <ul className="at-popup__list at-cascader__search-list" role="listbox" aria-label="搜索结果">
+      {query ? <ul className="at-popup__list at-cascader__search-list" role="listbox" aria-label={t('common.searchResults')}>
         {searchResults.length === 0 && <li className="at-popup__empty">{notFoundContent}</li>}
         {searchResults.map((path, index) => {
           const key = path.map((item) => item.value).join('/');
@@ -204,7 +209,7 @@ export const Cascader = forwardRef<HTMLDivElement, CascaderProps>(function Casca
           </li>;
         })}
       </ul> : <div className="at-cascader__columns">
-        {columns.map((column, depth) => <ul key={depth} className="at-cascader__column" role="listbox" aria-label={`第 ${depth + 1} 级`}>
+        {columns.map((column, depth) => <ul key={depth} className="at-cascader__column" role="listbox" aria-label={t('cascader.level', { level: depth + 1 })}>
           {column.length === 0 && <li className="at-popup__empty">{notFoundContent}</li>}
           {column.map((option) => {
             const active = activePath[depth] === option.value;

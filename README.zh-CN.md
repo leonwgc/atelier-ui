@@ -157,6 +157,45 @@ Atelier UI 是一个从零实现的 React 组件库与配套 Demo 站点。项�
 
 `ConfigProvider` 用于配置组件前缀、方向、尺寸、语言和主题变量；`useConfig` 用于读取配置。公开工具函数包括 `formatTime`、`parseTime`、`formatCountdown`、`formatStatistic`、`hsvToRgb`、`parseColor`、`rgbToHsv` 和 `toHex`。
 
+
+### 国际化
+
+所有组件的内置文案和无障碍标签支持简体中文与英文，默认语言为 `zh-CN`。没有内置文案的组件继续渲染调用方提供的内容。显式传入的文案属性优先，包括属性允许的空字符串或 `null`。
+
+```tsx
+import { ConfigProvider } from 'atelier-ui/config-provider';
+import { createLocale, enUS } from 'atelier-ui/locale';
+import { Empty } from 'atelier-ui/empty';
+
+const jaJP = createLocale('ja-JP', {
+  'common.noData': 'データがありません',
+  'common.ok': '確認',
+}, enUS);
+
+export function Example() {
+  return (
+    <ConfigProvider locale="en-US" locales={{ 'ja-JP': jaJP }}>
+      <Empty />
+      <ConfigProvider messages={{ 'common.noData': '此区域暂时没有内容' }}>
+        <Empty />
+      </ConfigProvider>
+      <ConfigProvider locale="ja-JP"><Empty /></ConfigProvider>
+    </ConfigProvider>
+  );
+}
+```
+
+- `locale`：语言标识，或 `enUS`、`zhCN` 等 `Locale` 对象。
+- `locales`：按标识注册扩展语言包。`createLocale(code, messages, base = enUS, formatLocale = code)` 从基础语言包补齐缺失翻译；Intl 不支持的语言标识使用基础语言包的格式化语言。
+- `messages`：覆盖当前语言包的部分文案，键名受类型约束。嵌套 Provider 默认继承父级语言、语言包注册表和配置。
+- `useLocale()`：读取 `locale`、`formatLocale`、`messages` 和 `t(key, params)`。文案键名及插值参数由导出的 `LocaleKey`、`LocaleMessages`、`LocaleParams` 类型说明，例如 `t('pagination.total', { total: 12 })`。
+
+日历月份和星期、日期标签、默认数字分隔符、数值动画及表格排序跟随格式化语言；原有显式格式化属性仍然优先。原生日期选择界面同时受浏览器与操作系统语言影响。业务标签、内容、自定义校验信息和 schema 错误文案由调用方管理。
+
+独立静态 API 不在调用方的 React 上下文中渲染。请在 Provider 内使用 `useModal()`、`useMessage()`、`useNotification()` 获得绑定语言的 API；也可在 `Modal.confirm`、消息或通知的参数中显式传入 `locale: enUS`。未绑定的静态 API 保持默认中文。`yupResolver(schema, locale)` 的可选第二个参数配置其内置回退错误文案，schema 自带的错误文案保持原样。
+
+文档站右上角提供中英文切换，联动导航、说明、API 表格、示例和外层 ConfigProvider，并将选择保存到 localStorage。切换保留当前页面及表单状态；ConfigProvider 页面的组件语言控件可以显式覆盖整站语言。
+
 ### 表单 Hooks
 
 提供 hook-first 的表单状态管理能力，包含 `useForm`、`useWatch`、`Controller`、`FormProvider`、`useFormContext` 和 `useFieldArray`，并提供可选的 Zod、Yup resolver。表单状态通过 Hooks 管理，不提供 `<Form>` 或 `<Form.Item>` 组件。

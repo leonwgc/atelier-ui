@@ -1,3 +1,4 @@
+import { getFormatLocale, useLocale } from './locale';
 import './styles/theme.css';
 import './styles/number-ticker.css';
 import { useEffect, useState, type HTMLAttributes } from 'react';
@@ -19,11 +20,13 @@ export function NumberTicker({
   duration = 1200,
   delay = 0,
   decimals = 0,
-  locale = 'zh-CN',
+  locale: localeProp,
   prefix = '',
   suffix = '',
   ...props
 }: NumberTickerProps) {
+  const { formatLocale } = useLocale();
+  const locale = localeProp === undefined ? formatLocale : getFormatLocale(localeProp, formatLocale);
   const [current, setCurrent] = useState(startValue);
 
   useEffect(() => {

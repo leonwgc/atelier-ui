@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { forwardRef, useEffect, useId, useRef, useState, type InputHTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/field.css';
@@ -43,6 +44,8 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
     className, id, disabled, readOnly, onBlur, onFocus, onKeyDown, placeholder, ...inputProps
   }, ref,
 ) {
+  const { t } = useLocale();
+
   const reactId = useId();
   const inputId = id ?? `at-input-number-${reactId}`;
   const [current, setCurrent] = useControllableState<number | null>(value, defaultValue, onChange);
@@ -107,7 +110,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
     type="button"
     tabIndex={-1}
     className={cx('at-input-number__step', extraClass)}
-    aria-label={direction === 1 ? '增加' : '减少'}
+    aria-label={direction === 1 ? t('inputNumber.increase') : t('inputNumber.decrease')}
     disabled={direction === 1 ? !canIncrease : !canDecrease}
     onPointerDown={(event) => { event.preventDefault(); startHold(direction); }}
     onPointerUp={stopHold}

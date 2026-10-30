@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useEffect, useId, useMemo, useRef, useState, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/calendar.css';
@@ -34,12 +35,14 @@ const isSameMonth = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() &&
 const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 const addMonths = (date: Date, amount: number) => new Date(date.getFullYear(), date.getMonth() + amount, Math.min(date.getDate(), new Date(date.getFullYear(), date.getMonth() + amount + 1, 0).getDate()));
 const addDays = (date: Date, amount: number) => new Date(date.getFullYear(), date.getMonth(), date.getDate() + amount);
-const MONTHS = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
-const DEFAULT_WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
 
 export function Calendar({
-  value, defaultValue, onChange, onPanelChange, onSelect, mode: modeProp, defaultMode = 'month', fullscreen = true, cellRender, disabledDate, validRange, firstDayOfWeek = 1, weekdayLabels = DEFAULT_WEEKDAYS, showToday = true, headerRender, className, ...props
+  value, defaultValue, onChange, onPanelChange, onSelect, mode: modeProp, defaultMode = 'month', fullscreen = true, cellRender, disabledDate, validRange, firstDayOfWeek = 1, weekdayLabels: weekdayLabelsProp, showToday = true, headerRender, className, ...props
 }: CalendarProps) {
+  const { t, formatLocale } = useLocale();
+  const formatDate = (date: Date, options: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(formatLocale, options).format(date);
+  const monthNames = Array.from({ length: 12 }, (_, month) => formatDate(new Date(2024, month, 1), { month: 'long' }));
+  const weekdayLabels = weekdayLabelsProp ?? Array.from({ length: 7 }, (_, day) => formatDate(new Date(2024, 0, 7 + day), { weekday: formatLocale.startsWith('zh') ? 'narrow' : 'short' }));
   const id = useId();
   const today = useMemo(() => startOfDay(new Date()), []);
   const [selected, setSelected] = useControllableState<Date>(value, defaultValue ?? today, onChange);
@@ -115,16 +118,16 @@ export function Calendar({
 
   const header = headerRender ? headerRender({ value: viewing, mode, onChange: changePanel, onModeChange: (next) => changePanel(viewing, next) }) : <header className="at-calendar__header">
     <div className="at-calendar__nav">
-      <button type="button" className="at-calendar__nav-button" aria-label="上一年" onClick={() => changePanel(addMonths(viewing, -12))}><ChevronLeft size={16} /><ChevronLeft size={16} className="at-calendar__nav-double" /></button>
-      {mode === 'month' && <button type="button" className="at-calendar__nav-button" aria-label="上个月" onClick={() => changePanel(addMonths(viewing, -1))}><ChevronLeft size={16} /></button>}
-      <strong id={`${id}-label`} className="at-calendar__label" aria-live="polite">{viewing.getFullYear()} 年{mode === 'month' && ` ${viewing.getMonth() + 1} 月`}</strong>
-      {mode === 'month' && <button type="button" className="at-calendar__nav-button" aria-label="下个月" onClick={() => changePanel(addMonths(viewing, 1))}><ChevronRight size={16} /></button>}
-      <button type="button" className="at-calendar__nav-button" aria-label="下一年" onClick={() => changePanel(addMonths(viewing, 12))}><ChevronRight size={16} /><ChevronRight size={16} className="at-calendar__nav-double" /></button>
+      <button type="button" className="at-calendar__nav-button" aria-label={t('calendar.previousYear')} onClick={() => changePanel(addMonths(viewing, -12))}><ChevronLeft size={16} /><ChevronLeft size={16} className="at-calendar__nav-double" /></button>
+      {mode === 'month' && <button type="button" className="at-calendar__nav-button" aria-label={t('calendar.previousMonth')} onClick={() => changePanel(addMonths(viewing, -1))}><ChevronLeft size={16} /></button>}
+      <strong id={`${id}-label`} className="at-calendar__label" aria-live="polite">{t(mode === 'month' ? 'calendar.monthTitle' : 'calendar.yearTitle', { year: viewing.getFullYear(), month: formatLocale.startsWith('zh') ? viewing.getMonth() + 1 : formatDate(viewing, { month: 'long' }) })}</strong>
+      {mode === 'month' && <button type="button" className="at-calendar__nav-button" aria-label={t('calendar.nextMonth')} onClick={() => changePanel(addMonths(viewing, 1))}><ChevronRight size={16} /></button>}
+      <button type="button" className="at-calendar__nav-button" aria-label={t('calendar.nextYear')} onClick={() => changePanel(addMonths(viewing, 12))}><ChevronRight size={16} /><ChevronRight size={16} className="at-calendar__nav-double" /></button>
     </div>
     <div className="at-calendar__actions">
-      {showToday && <button type="button" className="at-calendar__today" onClick={() => { select(today, 'today'); changePanel(today, 'month'); }}>今天</button>}
-      <div className="at-calendar__mode" role="radiogroup" aria-label="视图">
-        {(['month', 'year'] as CalendarMode[]).map((item) => <button key={item} type="button" role="radio" aria-checked={mode === item} className={cx('at-calendar__mode-option', mode === item && 'at-calendar__mode-option--active')} onClick={() => changePanel(viewing, item)}>{item === 'month' ? '月' : '年'}</button>)}
+      {showToday && <button type="button" className="at-calendar__today" onClick={() => { select(today, 'today'); changePanel(today, 'month'); }}>{t('calendar.today')}</button>}
+      <div className="at-calendar__mode" role="radiogroup" aria-label={t('calendar.view')}>
+        {(['month', 'year'] as CalendarMode[]).map((item) => <button key={item} type="button" role="radio" aria-checked={mode === item} className={cx('at-calendar__mode-option', mode === item && 'at-calendar__mode-option--active')} onClick={() => changePanel(viewing, item)}>{t(item === 'month' ? 'calendar.month' : 'calendar.year')}</button>)}
       </div>
     </div>
   </header>;
@@ -145,7 +148,7 @@ export function Calendar({
             aria-selected={info.selected}
             aria-disabled={info.disabled || undefined}
             aria-current={info.today ? 'date' : undefined}
-            aria-label={`${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`}
+            aria-label={formatDate(date, { year: 'numeric', month: 'long', day: 'numeric' })}
             className={cx('at-calendar__cell', info.selected && 'at-calendar__cell--selected', info.today && 'at-calendar__cell--today', outside && 'at-calendar__cell--outside', info.disabled && 'at-calendar__cell--disabled')}
             onClick={() => select(date, 'date')}
             onFocus={() => setFocused(date)}
@@ -157,7 +160,7 @@ export function Calendar({
         })}
       </div>)}
     </div> : <div ref={gridRef} className="at-calendar__months" role="grid" onKeyDown={onGridKeyDown}>
-      {MONTHS.map((name, month) => {
+      {monthNames.map((name, month) => {
         const date = new Date(viewing.getFullYear(), month, 1);
         const info: CalendarCellInfo = { type: 'month', today: isSameMonth(date, today), selected: isSameMonth(date, selected), outside: false, disabled: validRange ? new Date(viewing.getFullYear(), month + 1, 0) < startOfDay(validRange[0]) || date > startOfDay(validRange[1]) : false };
         const extra = cellRender?.(date, info);
@@ -167,7 +170,7 @@ export function Calendar({
           tabIndex={focused.getFullYear() === viewing.getFullYear() && focused.getMonth() === month ? 0 : -1}
           aria-selected={info.selected}
           aria-disabled={info.disabled || undefined}
-          aria-label={`${viewing.getFullYear()}年${month + 1}月`}
+          aria-label={formatDate(date, { year: 'numeric', month: 'long' })}
           className={cx('at-calendar__cell', 'at-calendar__cell--month', info.selected && 'at-calendar__cell--selected', info.today && 'at-calendar__cell--today', info.disabled && 'at-calendar__cell--disabled')}
           onClick={() => { if (info.disabled) return; setFocused(date); changePanel(date, 'month'); onSelect?.(date, { source: 'month' }); }}
           onFocus={() => setFocused(date)}

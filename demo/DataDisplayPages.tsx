@@ -1,3 +1,4 @@
+import { useDemoLocale, translateDemoValue } from './locale';
 import { useRef, useState, type ReactNode } from 'react';
 import {
   Avatar, Button, Calendar, Carousel, Countdown, Image, ImagePreviewGroup, Link, List, ListItem, ListItemMeta, Listy, Masonry, Paragraph, QRCode, Splitter, SplitterPanel, Statistic, Tag, Text, Title, Tree, Typography, Watermark,
@@ -24,80 +25,89 @@ const svgImage = (fill: string, accent: string, label: string) => `data:image/sv
 const covers = [svgImage('#685cf6', '#b6b0ff', 'Aurora'), svgImage('#2f9472', '#9fdcc5', 'Meadow'), svgImage('#c98a29', '#f3d8a3', 'Dune'), svgImage('#222438', '#6f78a8', 'Night')];
 
 function TypographyDemo() {
-  const [name, setName] = useState('Atelier 设计系统');
+  const { t: dt } = useDemoLocale();
+
+  const [name, setName] = useState(dt("Atelier 设计系统"));
   return <Typography>
     <Title level={2}>{name}</Title>
     <Paragraph>
-      一套<Text strong>强调细节</Text>的 React 组件库。<Text type="secondary">次要文本</Text>、<Text type="success">成功</Text>、<Text type="warning">警告</Text>、<Text type="danger">危险</Text>、<Text code>code</Text>、<Text keyboard>⌘K</Text>、<Text mark>高亮</Text>、<Text delete>删除</Text>、<Text underline>下划线</Text>、<Text italic>斜体</Text>与 <Link href="#typography">链接</Link>。
+      {dt("一套")}<Text strong>{dt("强调细节")}</Text>{dt("的 React 组件库。")}<Text type="secondary">{dt("次要文本")}</Text>、<Text type="success">{dt("成功")}</Text>、<Text type="warning">{dt("警告")}</Text>、<Text type="danger">{dt("危险")}</Text>、<Text code>code</Text>、<Text keyboard>⌘K</Text>、<Text mark>{dt("高亮")}</Text>、<Text delete>{dt("删除")}</Text>、<Text underline>{dt("下划线")}</Text>、<Text italic>{dt("斜体")}</Text>{dt("与")}<Link href="#typography">{dt("链接")}</Link>。
     </Paragraph>
-    <Paragraph copyable>这段文本可以一键复制，点击右侧图标试试。</Paragraph>
+    <Paragraph copyable>{dt("这段文本可以一键复制，点击右侧图标试试。")}</Paragraph>
     <Text editable={{ onChange: setName }}>{name}</Text>
     <Paragraph ellipsis={{ rows: 2, expandable: true }} type="secondary">
-      Atelier UI 以可访问性为先：所有交互控件都具备语义角色、可见焦点与键盘操作。组件之间共享同一套主题变量、动效时长与缓动曲线，因此在不同页面之间切换时，界面保持一致的节奏感。你可以通过 ConfigProvider 覆盖主题 token，也可以直接使用 CSS 变量进行细粒度定制。这段文字默认折叠为两行，点击“展开”可以查看全部内容。
-    </Paragraph>
-    <Text ellipsis style={{ maxWidth: 240 }}>单行省略：这是一段很长很长的文本内容，超出宽度后会显示省略号。</Text>
+      {dt("Atelier UI 以可访问性为先：所有交互控件都具备语义角色、可见焦点与键盘操作。组件之间共享同一套主题变量、动效时长与缓动曲线，因此在不同页面之间切换时，界面保持一致的节奏感。你可以通过 ConfigProvider 覆盖主题 token，也可以直接使用 CSS 变量进行细粒度定制。这段文字默认折叠为两行，点击“展开”可以查看全部内容。")}</Paragraph>
+    <Text ellipsis style={{ maxWidth: 240 }}>{dt("单行省略：这是一段很长很长的文本内容，超出宽度后会显示省略号。")}</Text>
   </Typography>;
 }
 
 function StatisticDemo() {
+  const { t: dt } = useDemoLocale();
+
   const deadline = useRef(Date.now() + 1000 * 60 * 60 * 26 + 1000 * 45).current;
   return <div className="demo-stat-grid">
-    <Statistic title="活跃成员" value={128_430} suffix="人" />
-    <Statistic title="月度营收" value={2_395_120.5} precision={2} prefix="¥" trend="up" trendLabel="较上月 +12.4%" />
-    <Statistic title="跳出率" value={32.18} precision={2} suffix="%" trend="down" trendLabel="较上周 -3.2%" />
-    <Statistic title="加载中" value={0} loading />
-    <Countdown title="活动倒计时" value={deadline} format="D 天 HH:mm:ss" />
-    <Countdown title="毫秒级" value={deadline} format="HH:mm:ss.SS" size="sm" />
+    <Statistic title={dt("活跃成员")} value={128_430} suffix={dt("人")} />
+    <Statistic title={dt("月度营收")} value={2_395_120.5} precision={2} prefix="¥" trend="up" trendLabel={dt("较上月 +12.4%")} />
+    <Statistic title={dt("跳出率")} value={32.18} precision={2} suffix="%" trend="down" trendLabel={dt("较上周 -3.2%")} />
+    <Statistic title={dt("加载中")} value={0} loading />
+    <Countdown title={dt("活动倒计时")} value={deadline} format={dt("D 天 HH:mm:ss")} />
+    <Countdown title={dt("毫秒级")} value={deadline} format="HH:mm:ss.SS" size="sm" />
   </div>;
 }
 
 function ImageDemo() {
+  const { t: dt } = useDemoLocale();
+
   return <div className="demo-stack" style={{ display: 'grid', gap: 20 }}>
     <div className="component-row" style={{ gap: 16, alignItems: 'flex-start' }}>
-      <Image src={covers[0]} alt="Aurora 项目封面" width={240} height={150} />
-      <Image src="https://invalid.example/broken.png" alt="加载失败示例" width={160} height={150} />
-      <Image src="https://invalid.example/broken-2.png" fallback={covers[3]} alt="失败后回退" width={240} height={150} />
+      <Image src={covers[0]} alt={dt("Aurora 项目封面")} width={240} height={150} />
+      <Image src="https://invalid.example/broken.png" alt={dt("加载失败示例")} width={160} height={150} />
+      <Image src="https://invalid.example/broken-2.png" fallback={covers[3]} alt={dt("失败后回退")} width={240} height={150} />
     </div>
     <ImagePreviewGroup>
       <div className="component-row" style={{ gap: 12 }}>
-        {covers.map((cover, index) => <Image key={cover} src={cover} alt={`相册图片 ${index + 1}`} width={120} height={80} />)}
+        {covers.map((cover, index) => <Image key={cover} src={cover} alt={dt("相册图片 {0}", { 0: index + 1 })} width={120} height={80} />)}
       </div>
     </ImagePreviewGroup>
   </div>;
 }
 
 function CarouselDemo() {
+  const { t: dt } = useDemoLocale();
+
   const ref = useRef<CarouselRef>(null);
   const [current, setCurrent] = useState(0);
   return <div className="demo-stack" style={{ display: 'grid', gap: 18 }}>
     <Carousel ref={ref} autoplay arrows aspectRatio={16 / 7} onChange={setCurrent} style={{ maxWidth: 640 }}>
-      {covers.map((cover, index) => <img key={cover} src={cover} alt={`幻灯片 ${index + 1}`} />)}
+      {covers.map((cover, index) => <img key={cover} src={cover} alt={dt("幻灯片 {0}", { 0: index + 1 })} />)}
     </Carousel>
     <div className="component-row">
-      <Button size="sm" onClick={() => ref.current?.prev()}>上一张</Button>
-      <Button size="sm" onClick={() => ref.current?.next()}>下一张</Button>
-      <span className="demo-hint">当前：{current + 1} / {covers.length}</span>
+      <Button size="sm" onClick={() => ref.current?.prev()}>{dt("上一张")}</Button>
+      <Button size="sm" onClick={() => ref.current?.next()}>{dt("下一张")}</Button>
+      <span className="demo-hint">{dt("当前：")}{current + 1} / {covers.length}</span>
     </div>
     <div className="demo-carousel-row">
       <Carousel effect="fade" dotPosition="right" aspectRatio={4 / 3} style={{ maxWidth: 300 }}>
-        {['设计评审', '发布计划', '周会纪要'].map((text) => <div key={text} className="demo-slide">{text}</div>)}
+        {[dt("设计评审"), dt("发布计划"), dt("周会纪要")].map((text) => <div key={text} className="demo-slide">{text}</div>)}
       </Carousel>
       <Carousel dotPosition="top" infinite={false} arrows aspectRatio={4 / 3} style={{ maxWidth: 300 }}>
-        {['不循环', '第二页', '最后一页'].map((text) => <div key={text} className="demo-slide demo-slide--alt">{text}</div>)}
+        {[dt("不循环"), dt("第二页"), dt("最后一页")].map((text) => <div key={text} className="demo-slide demo-slide--alt">{text}</div>)}
       </Carousel>
     </div>
   </div>;
 }
 
 function CalendarDemo() {
+  const { t: dt } = useDemoLocale();
+
   const [date, setDate] = useState(new Date(2026, 9, 27));
-  const events: Record<string, string[]> = { '2026-10-08': ['设计评审'], '2026-10-15': ['发布 v0.2', '周会'], '2026-10-27': ['组件走查'] };
+  const events: Record<string, string[]> = { '2026-10-08': [dt("设计评审")], '2026-10-15': [dt("发布 v0.2"), dt("周会")], '2026-10-27': [dt("组件走查")] };
   const key = (value: Date) => `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`;
   return <div className="demo-stack" style={{ display: 'grid', gap: 20 }}>
     <Calendar value={date} onChange={setDate} cellRender={(value, info) => info.type === 'date' && events[key(value)] ? <ul className="demo-calendar-events">{events[key(value)].map((item) => <li key={item}>{item}</li>)}</ul> : null} />
     <div className="component-row" style={{ alignItems: 'flex-start', gap: 20 }}>
       <Calendar fullscreen={false} value={date} onChange={setDate} cellRender={(value, info) => (info.type === 'date' && events[key(value)] ? true : null)} disabledDate={(value) => value.getDay() === 0} />
-      <span className="demo-hint">已选择：{date.toLocaleDateString('zh-CN')}（周日不可选）</span>
+      <span className="demo-hint">{dt("已选择：")}{date.toLocaleDateString('zh-CN')}{dt("（周日不可选）")}</span>
     </div>
   </div>;
 }
@@ -112,22 +122,25 @@ const folderTree: TreeNode[] = [
 ];
 
 function TreeDemo() {
+  const { t: dt } = useDemoLocale();
+  const localizedFolderTree = translateDemoValue(folderTree, dt);
+
   const [checked, setChecked] = useState<string[]>(['logo']);
   const [selected, setSelected] = useState<string[]>(['tokens']);
   const [filter, setFilter] = useState('');
-  const [lazyData, setLazyData] = useState<TreeNode[]>(folderTree);
+  const [lazyData, setLazyData] = useState<TreeNode[]>(localizedFolderTree);
   const loadData = (node: TreeNode) => new Promise<void>((resolve) => setTimeout(() => {
-    setLazyData((data) => data.map((item) => (item.key === node.key ? { ...item, children: [{ key: `${node.key}-1`, title: '2024 年归档' }, { key: `${node.key}-2`, title: '2025 年归档' }] } : item)));
+    setLazyData((data) => data.map((item) => (item.key === node.key ? { ...item, children: [{ key: `${node.key}-1`, title: dt("2024 年归档") }, { key: `${node.key}-2`, title: dt("2025 年归档") }] } : item)));
     resolve();
   }, 700));
   return <div className="demo-tree-row">
     <div className="demo-tree-frame">
-      <Tree treeData={folderTree} checkable defaultExpandAll checkedKeys={checked} onCheck={(keys) => setChecked(keys)} selectedKeys={selected} onSelect={(keys) => setSelected(keys)} label="文件树（可勾选）" />
-      <span className="demo-hint">已勾选：{checked.join(', ') || '无'}</span>
+      <Tree treeData={localizedFolderTree} checkable defaultExpandAll checkedKeys={checked} onCheck={(keys) => setChecked(keys)} selectedKeys={selected} onSelect={(keys) => setSelected(keys)} label={dt("文件树（可勾选）")} />
+      <span className="demo-hint">{dt("已勾选：")}{checked.join(', ') || dt("无")}</span>
     </div>
     <div className="demo-tree-frame">
-      <input className="demo-plain-input" placeholder="搜索节点…" value={filter} onChange={(event) => setFilter(event.target.value)} aria-label="搜索树节点" />
-      <Tree treeData={lazyData} showLine showIcon icon={(_, state) => <span aria-hidden="true">{state.leaf ? '📄' : state.expanded ? '📂' : '📁'}</span>} filterValue={filter} loadData={loadData} defaultExpandedKeys={['design']} blockNode label="文件树（连线 + 异步加载）" />
+      <input className="demo-plain-input" placeholder={dt("搜索节点…")} value={filter} onChange={(event) => setFilter(event.target.value)} aria-label={dt("搜索树节点")} />
+      <Tree treeData={lazyData} showLine showIcon icon={(_, state) => <span aria-hidden="true">{state.leaf ? '📄' : state.expanded ? '📂' : '📁'}</span>} filterValue={filter} loadData={loadData} defaultExpandedKeys={['design']} blockNode label={dt("文件树（连线 + 异步加载）")} />
     </div>
   </div>;
 }
@@ -141,55 +154,64 @@ const members = [
 ];
 
 function ListDemo() {
+  const { t: dt } = useDemoLocale();
+  const localizedMembers = translateDemoValue(members, dt);
+
   const [loading, setLoading] = useState(false);
   return <div className="demo-stack" style={{ display: 'grid', gap: 20 }}>
     <List
-      dataSource={members}
+      dataSource={localizedMembers}
       rowKey="id"
       bordered
-      header={<div className="component-row" style={{ justifyContent: 'space-between' }}><span>团队成员</span><Button size="sm" onClick={() => { setLoading(true); setTimeout(() => setLoading(false), 900); }}>刷新</Button></div>}
-      footer={`共 ${members.length} 人`}
+      header={<div className="component-row" style={{ justifyContent: 'space-between' }}><span>{dt("团队成员")}</span><Button size="sm" onClick={() => { setLoading(true); setTimeout(() => setLoading(false), 900); }}>{dt("刷新")}</Button></div>}
+      footer={dt("共 {0} 人", { 0: members.length })}
       loading={loading}
       pagination={{ pageSize: 3 }}
-      renderItem={(member) => <ListItem actions={[<button key="edit" type="button">编辑</button>, <button key="remove" type="button">移除</button>]} extra={<Tag>{member.role}</Tag>}>
+      renderItem={(member) => <ListItem actions={[<button key="edit" type="button">{dt("编辑")}</button>, <button key="remove" type="button">{dt("移除")}</button>]} extra={<Tag>{member.role}</Tag>}>
         <ListItemMeta avatar={<Avatar name={member.name} />} title={member.name} description={member.email} />
       </ListItem>}
     />
-    <List dataSource={members.slice(0, 4)} rowKey="id" grid={{ column: 4, gutter: 14, xs: 1, sm: 2 }} renderItem={(member) => <ListItem><ListItemMeta avatar={<Avatar name={member.name} />} title={member.name} description={member.role} /></ListItem>} />
-    <List dataSource={[]} renderItem={() => null} bordered emptyText="还没有成员，点击右上角邀请" />
+    <List dataSource={localizedMembers.slice(0, 4)} rowKey="id" grid={{ column: 4, gutter: 14, xs: 1, sm: 2 }} renderItem={(member) => <ListItem><ListItemMeta avatar={<Avatar name={member.name} />} title={member.name} description={member.role} /></ListItem>} />
+    <List dataSource={[]} renderItem={() => null} bordered emptyText={dt("还没有成员，点击右上角邀请")} />
   </div>;
 }
 
 function ListyDemo() {
+  const { t: dt } = useDemoLocale();
+
   const ref = useRef<ListyRef>(null);
   const [count, setCount] = useState(2000);
-  const items = Array.from({ length: count }, (_, index) => ({ id: index + 1, name: `成员 ${index + 1}`, note: index % 7 === 0 ? '这一行内容更长一些，用于演示动态高度测量时不同行高的排版效果。' : '普通成员' }));
+  const items = Array.from({ length: count }, (_, index) => ({ id: index + 1, name: dt("成员 {0}", { 0: index + 1 }), note: index % 7 === 0 ? dt("这一行内容更长一些，用于演示动态高度测量时不同行高的排版效果。") : dt("普通成员") }));
   return <div className="demo-stack" style={{ display: 'grid', gap: 14 }}>
     <div className="component-row">
-      <Button size="sm" onClick={() => ref.current?.scrollTo(999, 'center')}>跳到第 1000 行</Button>
-      <Button size="sm" onClick={() => ref.current?.scrollToTop()}>回到顶部</Button>
-      <span className="demo-hint">共 {count.toLocaleString()} 行，仅渲染可见区域</span>
+      <Button size="sm" onClick={() => ref.current?.scrollTo(999, 'center')}>{dt("跳到第 1000 行")}</Button>
+      <Button size="sm" onClick={() => ref.current?.scrollToTop()}>{dt("回到顶部")}</Button>
+      <span className="demo-hint">{dt("共")}{count.toLocaleString()} {dt("行，仅渲染可见区域")}</span>
     </div>
-    <Listy ref={ref} items={items} itemKey={(item) => item.id} height={300} itemHeight={48} dynamicHeight onEndReached={() => setCount((value) => Math.min(value + 500, 10_000))} footer={count >= 10_000 ? '已加载全部' : '滚动到底部自动加载更多'} renderItem={(item) => <div className="demo-listy-row"><Avatar name={item.name} size="sm" /><div><strong>{item.name}</strong><div className="demo-hint">{item.note}</div></div></div>} />
+    <Listy ref={ref} items={items} itemKey={(item) => item.id} height={300} itemHeight={48} dynamicHeight onEndReached={() => setCount((value) => Math.min(value + 500, 10_000))} footer={count >= 10_000 ? dt("已加载全部") : dt("滚动到底部自动加载更多")} renderItem={(item) => <div className="demo-listy-row"><Avatar name={item.name} size="sm" /><div><strong>{item.name}</strong><div className="demo-hint">{item.note}</div></div></div>} />
   </div>;
 }
 
 function MasonryDemo() {
+  const { t: dt } = useDemoLocale();
+
   const [cards, setCards] = useState(() => Array.from({ length: 9 }, (_, index) => ({ id: index + 1, height: 80 + ((index * 53) % 120), color: covers[index % covers.length] })));
   return <div className="demo-stack" style={{ display: 'grid', gap: 14 }}>
     <div className="component-row">
-      <Button size="sm" onClick={() => setCards((list) => [...list, { id: list.length + 1, height: 80 + ((list.length * 53) % 120), color: covers[list.length % covers.length] }])}>添加卡片</Button>
-      <Button size="sm" onClick={() => setCards((list) => list.slice(0, -1))} disabled={cards.length === 0}>移除最后一张</Button>
+      <Button size="sm" onClick={() => setCards((list) => [...list, { id: list.length + 1, height: 80 + ((list.length * 53) % 120), color: covers[list.length % covers.length] }])}>{dt("添加卡片")}</Button>
+      <Button size="sm" onClick={() => setCards((list) => list.slice(0, -1))} disabled={cards.length === 0}>{dt("移除最后一张")}</Button>
     </div>
-    <Masonry dataSource={cards} itemKey={(card) => card.id} columns={{ 0: 1, 480: 2, 760: 3 }} gap={14} renderItem={(card) => <div className="demo-masonry-card" style={{ height: card.height, backgroundImage: `url(${card.color})` }}><span>卡片 {card.id}</span></div>} />
+    <Masonry dataSource={cards} itemKey={(card) => card.id} columns={{ 0: 1, 480: 2, 760: 3 }} gap={14} renderItem={(card) => <div className="demo-masonry-card" style={{ height: card.height, backgroundImage: `url(${card.color})` }}><span>{dt("卡片")}{card.id}</span></div>} />
   </div>;
 }
 
 function QRCodeDemo() {
+  const { t: dt } = useDemoLocale();
+
   const [status, setStatus] = useState<QRCodeStatus>('active');
   const [text, setText] = useState('https://atelier.design/invite/team-aurora');
   return <div className="demo-stack" style={{ display: 'grid', gap: 16 }}>
-    <input className="demo-plain-input" style={{ maxWidth: 420 }} value={text} onChange={(event) => setText(event.target.value)} aria-label="二维码内容" />
+    <input className="demo-plain-input" style={{ maxWidth: 420 }} value={text} onChange={(event) => setText(event.target.value)} aria-label={dt("二维码内容")} />
     <div className="component-row" style={{ gap: 20, alignItems: 'flex-start' }}>
       <QRCode value={text} />
       <QRCode value={text} icon={covers[0]} size={160} color="#685cf6" />
@@ -203,32 +225,36 @@ function QRCodeDemo() {
 }
 
 function WatermarkDemo() {
-  const [text, setText] = useState('Atelier · 内部预览');
+  const { t: dt } = useDemoLocale();
+
+  const [text, setText] = useState(dt("Atelier · 内部预览"));
   return <div className="demo-stack" style={{ display: 'grid', gap: 14 }}>
-    <input className="demo-plain-input" style={{ maxWidth: 320 }} value={text} onChange={(event) => setText(event.target.value)} aria-label="水印文字" />
+    <input className="demo-plain-input" style={{ maxWidth: 320 }} value={text} onChange={(event) => setText(event.target.value)} aria-label={dt("水印文字")} />
     <Watermark content={[text, 'lin@atelier.design']} font={{ color: 'rgba(104, 92, 246, 0.16)', fontSize: 14 }} gap={[80, 70]}>
       <div className="demo-watermark-body">
-        <Title level={4}>项目设置</Title>
-        <Paragraph type="secondary">水印由 canvas 生成并平铺在内容之上；通过开发者工具删除或隐藏水印节点时会被自动恢复。</Paragraph>
-        <div className="component-row"><Button variant="primary">保存</Button><Button>取消</Button></div>
+        <Title level={4}>{dt("项目设置")}</Title>
+        <Paragraph type="secondary">{dt("水印由 canvas 生成并平铺在内容之上；通过开发者工具删除或隐藏水印节点时会被自动恢复。")}</Paragraph>
+        <div className="component-row"><Button variant="primary">{dt("保存")}</Button><Button>{dt("取消")}</Button></div>
       </div>
     </Watermark>
   </div>;
 }
 
 function SplitterDemo() {
+  const { t: dt } = useDemoLocale();
+
   const [sizes, setSizes] = useState<number[]>([]);
   return <div className="demo-stack" style={{ display: 'grid', gap: 14 }}>
     <Splitter style={{ height: 240 }} onResizeEnd={setSizes}>
-      <SplitterPanel defaultSize="30%" min="18%" max="50%" collapsible><strong>导航</strong><p className="demo-hint">可拖拽、可折叠，最小 18%，最大 50%。</p></SplitterPanel>
-      <SplitterPanel><strong>内容区</strong><p className="demo-hint">按住分隔条拖动，或聚焦分隔条后使用方向键（Shift 加速）。</p></SplitterPanel>
-      <SplitterPanel defaultSize={200} min={120} resizable={false}><strong>属性面板</strong><p className="demo-hint">resizable=false，宽度固定。</p></SplitterPanel>
+      <SplitterPanel defaultSize="30%" min="18%" max="50%" collapsible><strong>{dt("导航")}</strong><p className="demo-hint">{dt("可拖拽、可折叠，最小 18%，最大 50%。")}</p></SplitterPanel>
+      <SplitterPanel><strong>{dt("内容区")}</strong><p className="demo-hint">{dt("按住分隔条拖动，或聚焦分隔条后使用方向键（Shift 加速）。")}</p></SplitterPanel>
+      <SplitterPanel defaultSize={200} min={120} resizable={false}><strong>{dt("属性面板")}</strong><p className="demo-hint">{dt("resizable=false，宽度固定。")}</p></SplitterPanel>
     </Splitter>
     <Splitter layout="vertical" style={{ height: 260 }} lazy>
-      <SplitterPanel defaultSize="40%" min={60}><strong>编辑器</strong><p className="demo-hint">垂直布局，lazy 模式在松开时才应用新尺寸。</p></SplitterPanel>
-      <SplitterPanel collapsible><strong>控制台</strong><p className="demo-hint">可折叠面板。</p></SplitterPanel>
+      <SplitterPanel defaultSize="40%" min={60}><strong>{dt("编辑器")}</strong><p className="demo-hint">{dt("垂直布局，lazy 模式在松开时才应用新尺寸。")}</p></SplitterPanel>
+      <SplitterPanel collapsible><strong>{dt("控制台")}</strong><p className="demo-hint">{dt("可折叠面板。")}</p></SplitterPanel>
     </Splitter>
-    <span className="demo-hint">{sizes.length ? `当前宽度：${sizes.map((size) => Math.round(size)).join(' / ')} px` : '拖动上方分隔条查看尺寸回调'}</span>
+    <span className="demo-hint">{sizes.length ? dt("当前宽度：{0} px", { 0: sizes.map((size) => Math.round(size)).join(' / ') }) : dt("拖动上方分隔条查看尺寸回调")}</span>
   </div>;
 }
 
@@ -485,7 +511,10 @@ export function isDataDisplayPageId(id: string): id is DataDisplayPageId {
 }
 
 export function DataDisplayPage({ id }: { id: DataDisplayPageId }) {
-  const page = dataDisplayPages.find((item) => item.id === id);
+  const { t: dt } = useDemoLocale();
+  const localizedDataDisplayPages = translateDemoValue(dataDisplayPages, dt);
+
+  const page = localizedDataDisplayPages.find((item) => item.id === id);
   if (!page) return null;
   return <>
     <PageHeading eyebrow={page.eyebrow} title={page.title} description={page.description} badge={page.badge} />

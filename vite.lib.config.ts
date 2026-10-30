@@ -107,6 +107,7 @@ export default defineConfig({
         'splitter': resolve(process.cwd(), 'src/entries/splitter.ts'),
         'message': resolve(process.cwd(), 'src/entries/message.ts'),
         'notification': resolve(process.cwd(), 'src/entries/notification.ts'),
+        locale: resolve(process.cwd(), 'src/entries/locale.ts'),
         'config-provider': resolve(process.cwd(), 'src/entries/config-provider.ts'),
         'border-beam': resolve(process.cwd(), 'src/entries/border-beam.ts'),
         'marquee': resolve(process.cwd(), 'src/entries/marquee.ts'),

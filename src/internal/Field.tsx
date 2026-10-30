@@ -1,3 +1,4 @@
+import { useLocale } from '../locale';
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import '../styles/theme.css';
 import '../styles/field.css';
@@ -40,8 +41,11 @@ export interface SelectorProps extends Omit<HTMLAttributes<HTMLDivElement>, 'pre
 
 /** Visual trigger box used by Select, Cascader, TreeSelect, TimePicker and ColorPicker. */
 export const Selector = forwardRef<HTMLDivElement, SelectorProps>(function Selector(
-  { size = 'md', status, open = false, disabled = false, hasValue = false, allowClear = false, onClear, prefix, suffix, clearLabel = '清除', className, children, ...props }, ref,
+  { size = 'md', status, open = false, disabled = false, hasValue = false, allowClear = false, onClear, prefix, suffix, clearLabel: clearLabelProp, className, children, ...props }, ref,
 ) {
+  const { t } = useLocale();
+  const clearLabel = clearLabelProp === undefined ? t('common.clear') : clearLabelProp;
+
   return <div
     {...props}
     ref={ref}
@@ -56,7 +60,10 @@ export const Selector = forwardRef<HTMLDivElement, SelectorProps>(function Selec
 });
 
 export interface SelectorTagProps { label: ReactNode; disabled?: boolean; onRemove?: () => void; removeLabel?: string }
-export function SelectorTag({ label, disabled, onRemove, removeLabel = '移除' }: SelectorTagProps) {
+export function SelectorTag({ label, disabled, onRemove, removeLabel: removeLabelProp }: SelectorTagProps) {
+  const { t } = useLocale();
+  const removeLabel = removeLabelProp === undefined ? t('common.remove') : removeLabelProp;
+
   return <span className="at-selector__tag">
     <span className="at-selector__tag-label">{label}</span>
     {onRemove && !disabled && <button type="button" tabIndex={-1} className="at-selector__tag-remove" aria-label={`${removeLabel} ${typeof label === 'string' ? label : ''}`.trim()} onMouseDown={(event) => event.preventDefault()} onClick={(event) => { event.stopPropagation(); onRemove(); }}><Close size={10} /></button>}

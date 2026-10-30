@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useEffect, useRef, useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/statistic.css';
@@ -31,12 +32,19 @@ export function formatStatistic(value: number | string, { precision, groupSepara
 const TrendIcon = ({ direction }: { direction: 'up' | 'down' }) => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ transform: direction === 'down' ? 'rotate(180deg)' : undefined }}><path d="M12 19V5M5 12l7-7 7 7" /></svg>;
 
 export function Statistic({ title, value, precision, groupSeparator, decimalSeparator, prefix, suffix, formatter, loading = false, valueStyle, trend, trendLabel, size = 'md', className, ...props }: StatisticProps) {
-  const { integer, decimal } = formatStatistic(value, { precision, groupSeparator, decimalSeparator });
+  const { t, formatLocale } = useLocale();
+
+  const parts = new Intl.NumberFormat(formatLocale).formatToParts(1234.5);
+  const { integer, decimal } = formatStatistic(value, {
+    precision,
+    groupSeparator: groupSeparator ?? parts.find((part) => part.type === 'group')?.value ?? ',',
+    decimalSeparator: decimalSeparator ?? parts.find((part) => part.type === 'decimal')?.value ?? '.',
+  });
   return <div {...props} className={cx('at-statistic', `at-statistic--${size}`, trend && `at-statistic--${trend}`, className)}>
     {title && <div className="at-statistic__title">{title}</div>}
-    {loading ? <div className="at-statistic__skeleton" aria-busy="true" aria-label="加载中" /> : <div className="at-statistic__content" style={valueStyle}>
+    {loading ? <div className="at-statistic__skeleton" aria-busy="true" aria-label={t('common.loading')} /> : <div className="at-statistic__content" style={valueStyle}>
       {prefix != null && <span className="at-statistic__prefix">{prefix}</span>}
-      {trend && <span className="at-statistic__trend" aria-label={trend === 'up' ? '上升' : '下降'}><TrendIcon direction={trend} /></span>}
+      {trend && <span className="at-statistic__trend" aria-label={trend === 'up' ? t('statistic.up') : t('statistic.down')}><TrendIcon direction={trend} /></span>}
       <span className="at-statistic__value">{formatter ? formatter(value) : <><span className="at-statistic__int">{integer}</span>{decimal && <span className="at-statistic__decimal">{decimal}</span>}</>}</span>
       {suffix != null && <span className="at-statistic__suffix">{suffix}</span>}
     </div>}

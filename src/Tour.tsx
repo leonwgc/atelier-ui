@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
 import './styles/theme.css';
@@ -53,6 +54,8 @@ function resolveTarget(target: TourTarget): HTMLElement | null {
 export function Tour({
   steps, open = false, onClose, onFinish, current: currentProp, defaultCurrent = 0, onChange, mask = true, type = 'default', arrow = true, gap = 6, radius = 10, closable = true, indicatorsRender, zIndex = 1200, scrollIntoViewOptions = { block: 'center', behavior: 'smooth' }, className,
 }: TourProps) {
+  const { t } = useLocale();
+
   const id = useId();
   const [current, setCurrent] = useControllableState(currentProp, defaultCurrent, onChange);
   const [spot, setSpot] = useState<{ top: number; left: number; width: number; height: number } | null>(null);
@@ -154,19 +157,19 @@ export function Tour({
           if (event.key === 'ArrowLeft' && index > 0) { event.preventDefault(); previous(); }
         }}
       >
-        {closable && <button type="button" className="at-tour__close" aria-label="关闭引导" onClick={close}><Close size={14} /></button>}
+        {closable && <button type="button" className="at-tour__close" aria-label={t('tour.close')} onClick={close}><Close size={14} /></button>}
         {step.cover && <div className="at-tour__cover">{step.cover}</div>}
         <div className="at-tour__body">
           <h3 id={`${id}-title`} className="at-tour__title">{step.title}</h3>
           {step.description && <p id={`${id}-description`} className="at-tour__description">{step.description}</p>}
         </div>
         <footer className="at-tour__footer">
-          <div className="at-tour__indicators" aria-label={`第 ${index + 1} 步，共 ${total} 步`}>
+          <div className="at-tour__indicators" aria-label={t('tour.step', { current: index + 1, total })}>
             {indicatorsRender ? indicatorsRender(index, total) : steps.map((_, dot) => <span key={dot} className={cx('at-tour__dot', dot === index && 'at-tour__dot--active')} />)}
           </div>
           <div className="at-tour__actions">
-            {index > 0 && <Button size="sm" variant={type === 'primary' ? 'ghost' : 'secondary'} className="at-tour__button" onClick={previous}>{step.prevButtonProps?.children ?? '上一步'}</Button>}
-            <Button size="sm" variant="primary" className="at-tour__button at-tour__button--next" onClick={next}>{step.nextButtonProps?.children ?? (index === total - 1 ? '完成' : '下一步')}</Button>
+            {index > 0 && <Button size="sm" variant={type === 'primary' ? 'ghost' : 'secondary'} className="at-tour__button" onClick={previous}>{step.prevButtonProps?.children ?? t('tour.previous')}</Button>}
+            <Button size="sm" variant="primary" className="at-tour__button at-tour__button--next" onClick={next}>{step.nextButtonProps?.children ?? (index === total - 1 ? t('tour.finish') : t('tour.next'))}</Button>
           </div>
         </footer>
       </div>

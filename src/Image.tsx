@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { createContext, useCallback, useContext, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type ImgHTMLAttributes, type PointerEvent as ReactPointerEvent, type ReactNode, type WheelEvent } from 'react';
 import { createPortal } from 'react-dom';
 import './styles/theme.css';
@@ -43,6 +44,8 @@ interface PreviewItem { id: string; src: string; previewSrc?: string }
 interface PreviewLayerProps { items: PreviewItem[]; index: number; onIndexChange: (index: number) => void; onClose: () => void }
 
 function PreviewLayer({ items, index, onIndexChange, onClose }: PreviewLayerProps) {
+  const { t, locale } = useLocale();
+
   const [scale, setScale] = useState(1);
   const [rotate, setRotate] = useState(0);
   const [flip, setFlip] = useState({ x: 1, y: 1 });
@@ -80,21 +83,21 @@ function PreviewLayer({ items, index, onIndexChange, onClose }: PreviewLayerProp
   const onPointerUp = () => { dragStart.current = null; setDragging(false); };
 
   const tools: Array<{ label: string; icon: ReactNode; onClick: () => void; disabled?: boolean }> = [
-    { label: '放大', icon: <ZoomInIcon />, onClick: () => zoom(0.25), disabled: scale >= 5 },
-    { label: '缩小', icon: <ZoomOutIcon />, onClick: () => zoom(-0.25), disabled: scale <= 0.25 },
-    { label: '向左旋转', icon: <RotateIcon />, onClick: () => setRotate((value) => value - 90) },
-    { label: '向右旋转', icon: <RotateIcon flip />, onClick: () => setRotate((value) => value + 90) },
-    { label: '水平翻转', icon: <FlipIcon />, onClick: () => setFlip((value) => ({ ...value, x: -value.x })) },
-    { label: '垂直翻转', icon: <FlipIcon vertical />, onClick: () => setFlip((value) => ({ ...value, y: -value.y })) },
+    { label: t('image.zoomIn'), icon: <ZoomInIcon />, onClick: () => zoom(0.25), disabled: scale >= 5 },
+    { label: t('image.zoomOut'), icon: <ZoomOutIcon />, onClick: () => zoom(-0.25), disabled: scale <= 0.25 },
+    { label: t('image.rotateLeft'), icon: <RotateIcon />, onClick: () => setRotate((value) => value - 90) },
+    { label: t('image.rotateRight'), icon: <RotateIcon flip />, onClick: () => setRotate((value) => value + 90) },
+    { label: t('image.flipHorizontal'), icon: <FlipIcon />, onClick: () => setFlip((value) => ({ ...value, x: -value.x })) },
+    { label: t('image.flipVertical'), icon: <FlipIcon vertical />, onClick: () => setFlip((value) => ({ ...value, y: -value.y })) },
   ];
 
   return createPortal(
     <div
       ref={layerRef}
       className="at-image-preview"
-      role="dialog"
+      role="dialog" lang={locale}
       aria-modal="true"
-      aria-label="图片预览"
+      aria-label={t('image.preview')}
       tabIndex={-1}
       onKeyDown={(event) => {
         switch (event.key) {
@@ -112,16 +115,16 @@ function PreviewLayer({ items, index, onIndexChange, onClose }: PreviewLayerProp
       <div className="at-image-preview__backdrop" onClick={onClose} />
       <header className="at-image-preview__header">
         {items.length > 1 && <span className="at-image-preview__counter">{index + 1} / {items.length}</span>}
-        <div className="at-image-preview__tools" role="toolbar" aria-label="图片操作">
+        <div className="at-image-preview__tools" role="toolbar" aria-label={t('image.tools')}>
           {tools.map((tool) => <button key={tool.label} type="button" className="at-image-preview__tool" aria-label={tool.label} title={tool.label} disabled={tool.disabled} onClick={tool.onClick}>{tool.icon}</button>)}
           <span className="at-image-preview__scale" aria-live="polite">{Math.round(scale * 100)}%</span>
-          <button type="button" className="at-image-preview__tool" aria-label="重置" title="重置" onClick={reset}>1:1</button>
+          <button type="button" className="at-image-preview__tool" aria-label={t('image.reset')} title={t('image.reset')} onClick={reset}>1:1</button>
         </div>
-        <button type="button" className="at-image-preview__close" aria-label="关闭预览" onClick={onClose}><Close size={18} /></button>
+        <button type="button" className="at-image-preview__close" aria-label={t('image.close')} onClick={onClose}><Close size={18} /></button>
       </header>
       {items.length > 1 && <>
-        <button type="button" className="at-image-preview__nav at-image-preview__nav--prev" aria-label="上一张" onClick={() => go(-1)}><ChevronLeft size={22} /></button>
-        <button type="button" className="at-image-preview__nav at-image-preview__nav--next" aria-label="下一张" onClick={() => go(1)}><ChevronRight size={22} /></button>
+        <button type="button" className="at-image-preview__nav at-image-preview__nav--prev" aria-label={t('common.previousImage')} onClick={() => go(-1)}><ChevronLeft size={22} /></button>
+        <button type="button" className="at-image-preview__nav at-image-preview__nav--next" aria-label={t('common.nextImage')} onClick={() => go(1)}><ChevronRight size={22} /></button>
       </>}
       {item && <img
         key={item.id}
@@ -143,6 +146,8 @@ function PreviewLayer({ items, index, onIndexChange, onClose }: PreviewLayerProp
 }
 
 export function Image({ src, alt = '', preview = true, fallback, placeholder = true, fit = 'cover', rounded = true, className, style, width, height, onPreviewOpen, onLoad, onError, loading = 'lazy', ...props }: ImageProps) {
+  const { t } = useLocale();
+
   const id = useId();
   const group = useContext(GroupContext);
   const config: ImagePreviewConfig | null = preview ? (preview === true ? {} : preview) : null;
@@ -188,9 +193,9 @@ export function Image({ src, alt = '', preview = true, fallback, placeholder = t
         setStatus('error');
       }}
     />
-    {status === 'error' && !fallback && <span className="at-image__broken" role="img" aria-label={alt || '图片加载失败'}><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 16 5-5 4 4 3-3 6 6" /><path d="m3 3 18 18" /></svg></span>}
-    {config && status === 'loaded' && !failed && <button type="button" className="at-image__mask" aria-label={`预览${alt ? `：${alt}` : '图片'}`} onClick={show}>
-      <span className="at-image__mask-content">{config.mask ?? <><EyeIcon /><span>预览</span></>}</span>
+    {status === 'error' && !fallback && <span className="at-image__broken" role="img" aria-label={alt || t('image.failed')}><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 16 5-5 4 4 3-3 6 6" /><path d="m3 3 18 18" /></svg></span>}
+    {config && status === 'loaded' && !failed && <button type="button" className="at-image__mask" aria-label={alt ? t('image.openLabel', { alt }) : t('image.preview')} onClick={show}>
+      <span className="at-image__mask-content">{config.mask ?? <><EyeIcon /><span>{t('image.open')}</span></>}</span>
     </button>}
     {isOpen && !group && <PreviewLayer items={items} index={0} onIndexChange={() => undefined} onClose={hide} />}
   </span>;

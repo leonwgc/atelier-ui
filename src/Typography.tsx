@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useEffect, useLayoutEffect, useRef, useState, type AnchorHTMLAttributes, type CSSProperties, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/typography.css';
@@ -40,13 +41,15 @@ function textOf(node: ReactNode): string {
 }
 
 function CopyButton({ config, content }: { config: CopyableConfig; content: ReactNode }) {
+  const { t } = useLocale();
+
   const [copied, setCopied] = useState(false);
   useEffect(() => {
     if (!copied) return;
     const timer = setTimeout(() => setCopied(false), 2000);
     return () => clearTimeout(timer);
   }, [copied]);
-  const [idle, done] = config.tooltips ?? ['复制', '已复制'];
+  const [idle, done] = config.tooltips ?? [t('typography.copy'), t('typography.copied')];
   const copy = async () => {
     const text = config.text ?? textOf(content);
     try { await navigator.clipboard.writeText(text); } catch {
@@ -60,12 +63,14 @@ function CopyButton({ config, content }: { config: CopyableConfig; content: Reac
     setCopied(true);
     config.onCopy?.();
   };
-  return <button type="button" className={cx('at-typography__action', copied && 'at-typography__action--done')} aria-label={typeof (copied ? done : idle) === 'string' ? String(copied ? done : idle) : '复制'} title={typeof (copied ? done : idle) === 'string' ? String(copied ? done : idle) : undefined} onClick={() => { void copy(); }}>
+  return <button type="button" className={cx('at-typography__action', copied && 'at-typography__action--done')} aria-label={typeof (copied ? done : idle) === 'string' ? String(copied ? done : idle) : t('typography.copy')} title={typeof (copied ? done : idle) === 'string' ? String(copied ? done : idle) : undefined} onClick={() => { void copy(); }}>
     {copied ? <Check size={14} /> : <CopyIcon />}
   </button>;
 }
 
 function Editor({ value, config, onDone }: { value: string; config: EditableConfig; onDone: () => void }) {
+  const { t } = useLocale();
+
   const [draft, setDraft] = useState(value);
   const ref = useRef<HTMLTextAreaElement | null>(null);
   useLayoutEffect(() => {
@@ -82,7 +87,7 @@ function Editor({ value, config, onDone }: { value: string; config: EditableConf
     if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); commit(); }
     if (event.key === 'Escape') { event.preventDefault(); cancel(); }
   };
-  return <textarea ref={ref} className="at-typography__editor" value={draft} maxLength={config.maxLength} rows={1} aria-label="编辑文本" onChange={(event) => setDraft(event.target.value)} onKeyDown={onKeyDown} onBlur={commit} />;
+  return <textarea ref={ref} className="at-typography__editor" value={draft} maxLength={config.maxLength} rows={1} aria-label={t('typography.editText')} onChange={(event) => setDraft(event.target.value)} onKeyDown={onKeyDown} onBlur={commit} />;
 }
 
 const BASE_KEYS = new Set(['type', 'strong', 'italic', 'underline', 'delete', 'code', 'mark', 'keyboard', 'disabled', 'copyable', 'editable', 'ellipsis', 'children', 'className', 'style']);
@@ -94,6 +99,7 @@ function splitProps<T extends TypographyBaseProps>(props: T): [TypographyBasePro
 }
 
 function useTypography(props: TypographyBaseProps) {
+  const { t } = useLocale();
   const { type, strong, italic, underline, delete: deleted, code, mark, keyboard, disabled, copyable, editable, ellipsis, children, className, style } = props;
   const [editing, setEditing] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -116,10 +122,10 @@ function useTypography(props: TypographyBaseProps) {
   const classes = cx('at-typography', type && `at-typography--${type}`, disabled && 'at-typography--disabled', clamp && (rows > 1 ? 'at-typography--clamp' : 'at-typography--ellipsis'), className);
   const styles: CSSProperties = clamp && rows > 1 ? { WebkitLineClamp: rows, ...style } : style ?? {};
   const actions = (copyConfig || editableConfig) && !isEditing ? <span className="at-typography__actions">
-    {editableConfig && <button type="button" className="at-typography__action" aria-label="编辑" title="编辑" onClick={() => { editableConfig.onStart?.(); if (editableConfig.editing === undefined) setEditing(true); }}><EditIcon /></button>}
+    {editableConfig && <button type="button" className="at-typography__action" aria-label={t('typography.edit')} title={t('typography.edit')} onClick={() => { editableConfig.onStart?.(); if (editableConfig.editing === undefined) setEditing(true); }}><EditIcon /></button>}
     {copyConfig && <CopyButton config={copyConfig} content={children} />}
   </span> : null;
-  const expandButton = ellipsisConfig?.expandable && !expanded ? <button type="button" className="at-typography__expand" onClick={() => { setExpanded(true); ellipsisConfig.onExpand?.(); }}>{ellipsisConfig.symbol ?? '展开'}</button> : null;
+  const expandButton = ellipsisConfig?.expandable && !expanded ? <button type="button" className="at-typography__expand" onClick={() => { setExpanded(true); ellipsisConfig.onExpand?.(); }}>{ellipsisConfig.symbol ?? t('common.expand')}</button> : null;
   const title = clamp && ellipsisConfig?.tooltip !== false && typeof children === 'string' ? children : undefined;
 
   const editor = isEditing && editableConfig ? <Editor value={textOf(children)} config={editableConfig} onDone={() => setEditing(false)} /> : null;

@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { forwardRef, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/field.css';
@@ -51,10 +52,14 @@ function descendants(node: TreeSelectNode): TreeSelectNode[] {
 export const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(function TreeSelect(
   {
     treeData, value, defaultValue, onChange, multiple = false, treeCheckable = false, showSearch = false, treeDefaultExpandAll = false, treeDefaultExpandedKeys,
-    placeholder = '请选择…', notFoundContent = '暂无匹配选项', disabled = false, allowClear = true, maxTagCount, size = 'md', status, label, hint, error,
+    placeholder: placeholderProp, notFoundContent: notFoundContentProp, disabled = false, allowClear = true, maxTagCount, size = 'md', status, label, hint, error,
     open: openProp, onOpenChange, placement = 'bottom-start', popupClassName, popupStyle, popupMatchSelectWidth = true, className, id, onKeyDown, ...rest
   }, ref,
 ) {
+  const { t } = useLocale();
+  const placeholder = placeholderProp === undefined ? t('common.select') : placeholderProp;
+  const notFoundContent = notFoundContentProp === undefined ? t('common.noOptions') : notFoundContentProp;
+
   const isMultiple = multiple || treeCheckable;
   const reactId = useId();
   const triggerId = id ?? `at-tree-select-${reactId}`;
@@ -161,13 +166,13 @@ export const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(function T
       {shown.map((node) => <SelectorTag key={node.value} label={node.label} disabled={disabled} onRemove={() => choose(node)} />)}
       {extra > 0 && <span className="at-selector__tag at-selector__tag--count">+{extra}</span>}
       {showSearch && showPopup
-        ? <input ref={searchRef} className="at-selector__search" value={query} placeholder={hasValue ? '' : placeholder} aria-label={label ? `${label}搜索` : '搜索选项'} onChange={(event) => setQuery(event.target.value)} onKeyDown={handleKeyDown} />
+        ? <input ref={searchRef} className="at-selector__search" value={query} placeholder={hasValue ? '' : placeholder} aria-label={label ? t('common.searchLabel', { label }) : t('common.searchOptions')} onChange={(event) => setQuery(event.target.value)} onKeyDown={handleKeyDown} />
         : !hasValue && <span className="at-selector__placeholder">{placeholder}</span>}
     </span>;
   } else {
     const node = selectedNodes as TreeSelectNode | undefined;
     display = showSearch && showPopup
-      ? <input ref={searchRef} className="at-selector__search" value={query} placeholder={node?.label ?? placeholder} aria-label={label ? `${label}搜索` : '搜索选项'} onChange={(event) => setQuery(event.target.value)} onKeyDown={handleKeyDown} />
+      ? <input ref={searchRef} className="at-selector__search" value={query} placeholder={node?.label ?? placeholder} aria-label={label ? t('common.searchLabel', { label }) : t('common.searchOptions')} onChange={(event) => setQuery(event.target.value)} onKeyDown={handleKeyDown} />
       : <span className={cx('at-selector__value', !node && 'at-selector__placeholder')}>{node?.label ?? placeholder}</span>;
   }
 
@@ -217,7 +222,7 @@ export const TreeSelect = forwardRef<HTMLDivElement, TreeSelectProps>(function T
             onMouseEnter={() => !node.disabled && setActiveKey(node.value)}
             onClick={() => choose(node)}
           >
-            <button type="button" tabIndex={-1} className={cx('at-tree-select__switcher', !hasChildren && 'at-tree-select__switcher--leaf', isExpanded && 'at-tree-select__switcher--open')} aria-label={isExpanded ? '收起' : '展开'} aria-hidden={!hasChildren} onMouseDown={(event) => event.preventDefault()} onClick={(event) => { event.stopPropagation(); if (hasChildren) toggleExpand(node.value); }}>{hasChildren && <ChevronRight size={14} />}</button>
+            <button type="button" tabIndex={-1} className={cx('at-tree-select__switcher', !hasChildren && 'at-tree-select__switcher--leaf', isExpanded && 'at-tree-select__switcher--open')} aria-label={isExpanded ? t('common.collapse') : t('common.expand')} aria-hidden={!hasChildren} onMouseDown={(event) => event.preventDefault()} onClick={(event) => { event.stopPropagation(); if (hasChildren) toggleExpand(node.value); }}>{hasChildren && <ChevronRight size={14} />}</button>
             {treeCheckable && <span className={cx('at-tree-select__checkbox', isSelected && 'at-tree-select__checkbox--checked', partially && 'at-tree-select__checkbox--partial')} aria-hidden="true">{isSelected && <Check size={12} />}</span>}
             {node.icon && <span className="at-tree-select__icon">{node.icon}</span>}
             <span className="at-option__label">{highlightMatch(node.label, query.trim())}</span>

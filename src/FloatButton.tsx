@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { createContext, forwardRef, useContext, useEffect, useRef, useState, type ButtonHTMLAttributes, type HTMLAttributes, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/float-button.css';
@@ -108,7 +109,10 @@ export interface BackTopProps extends Omit<FloatButtonProps, 'href' | 'target' |
   onClick?: () => void;
 }
 
-export function BackTop({ visibilityHeight = 400, target, duration = 450, onClick, icon, tooltip = '回到顶部', className, style, ...props }: BackTopProps) {
+export function BackTop({ visibilityHeight = 400, target, duration = 450, onClick, icon, tooltip: tooltipProp, className, style, ...props }: BackTopProps) {
+  const { t } = useLocale();
+  const tooltip = tooltipProp === undefined ? t('backTop.label') : tooltipProp;
+
   const [visible, setVisible] = useState(false);
   useEffect(() => {
     const container = target?.() ?? window;

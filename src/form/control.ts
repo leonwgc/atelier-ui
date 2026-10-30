@@ -1,3 +1,4 @@
+import { createTranslator, zhCN, type Translate } from '../locale';
 import { getPathValue, setPathValue } from '../utils';
 import type { FieldError, FieldErrors, FieldValues, FormState, RegisterOptions, ResolverResult, UseFormOptions } from './types';
 
@@ -13,29 +14,29 @@ function readEventValue(event: unknown) {
   return event;
 }
 
-function ruleError<TValues extends FieldValues>(value: unknown, options: RegisterOptions<TValues>, values: TValues): FieldError | undefined {
+function ruleError<TValues extends FieldValues>(value: unknown, options: RegisterOptions<TValues>, values: TValues, t: Translate): FieldError | undefined {
   if (options.required && (value == null || value === '' || value === false)) {
-    return { type: 'required', message: typeof options.required === 'string' ? options.required : '此字段为必填项' };
+    return { type: 'required', get message() { return typeof options.required === 'string' ? options.required : t('form.required'); } };
   }
-  const check = (rule: number | { value: number; message: string } | undefined, type: string, message: string, predicate: (n: number) => boolean) => {
+  const check = (rule: number | { value: number; message: string } | undefined, type: string, message: () => string, predicate: (n: number) => boolean) => {
     if (rule == null || value == null || value === '') return undefined;
-    return predicate(Number(value)) ? undefined : { type, message: typeof rule === 'number' ? message : rule.message };
+    return predicate(Number(value)) ? undefined : { type, get message() { return typeof rule === 'number' ? message() : rule.message; } };
   };
-  const min = check(options.min, 'min', `不能小于 ${typeof options.min === 'number' ? options.min : options.min?.value}`, (n) => n >= (typeof options.min === 'number' ? options.min : options.min?.value ?? -Infinity));
+  const min = check(options.min, 'min', () => t('form.min', { min: typeof options.min === 'number' ? options.min : options.min?.value ?? 0 }), (n) => n >= (typeof options.min === 'number' ? options.min : options.min?.value ?? -Infinity));
   if (min) return min;
-  const max = check(options.max, 'max', `不能大于 ${typeof options.max === 'number' ? options.max : options.max?.value}`, (n) => n <= (typeof options.max === 'number' ? options.max : options.max?.value ?? Infinity));
+  const max = check(options.max, 'max', () => t('form.max', { max: typeof options.max === 'number' ? options.max : options.max?.value ?? 0 }), (n) => n <= (typeof options.max === 'number' ? options.max : options.max?.value ?? Infinity));
   if (max) return max;
   const minLength = options.minLength;
   if (minLength != null && String(value ?? '').length < (typeof minLength === 'number' ? minLength : minLength.value)) {
-    return { type: 'minLength', message: typeof minLength === 'number' ? `至少输入 ${minLength} 个字符` : minLength.message };
+    return { type: 'minLength', get message() { return typeof minLength === 'number' ? t('form.minLength', { min: minLength }) : minLength.message; } };
   }
   const maxLength = options.maxLength;
   if (maxLength != null && String(value ?? '').length > (typeof maxLength === 'number' ? maxLength : maxLength.value)) {
-    return { type: 'maxLength', message: typeof maxLength === 'number' ? `最多输入 ${maxLength} 个字符` : maxLength.message };
+    return { type: 'maxLength', get message() { return typeof maxLength === 'number' ? t('form.maxLength', { max: maxLength }) : maxLength.message; } };
   }
   const pattern = options.pattern;
   if (pattern && !new RegExp(pattern instanceof RegExp ? pattern.source : pattern.value.source, pattern instanceof RegExp ? pattern.flags : pattern.value.flags).test(String(value ?? ''))) {
-    return { type: 'pattern', message: pattern instanceof RegExp ? '格式不正确' : pattern.message };
+    return { type: 'pattern', get message() { return pattern instanceof RegExp ? t('form.pattern') : pattern.message; } };
   }
   void values;
   return undefined;
@@ -66,11 +67,17 @@ export class FormControl<TValues extends FieldValues = FieldValues> {
   private dirty = false;
   private valid = true;
 
-  constructor(readonly options: UseFormOptions<TValues> = {}) {
+  constructor(readonly options: UseFormOptions<TValues> = {}, private translator: Translate = createTranslator(zhCN.messages)) {
     this.defaults = structuredClone(options.defaultValues ?? {}) as TValues;
     this.values = structuredClone(this.defaults);
     this.snapshot = this.makeSnapshot();
   }
+
+  setTranslator = (translator: Translate) => {
+    if (this.translator === translator) return;
+    this.translator = translator;
+    this.notify();
+  };
 
   subscribe = (listener: () => void) => {
     this.listeners.add(listener);
@@ -171,13 +178,14 @@ export class FormControl<TValues extends FieldValues = FieldValues> {
       for (const name of targetNames) {
         const value = this.getValue(name);
         const options = this.rules.get(name);
-        let error = options ? ruleError(value, options, this.values) : undefined;
+        let error = options ? ruleError(value, options, this.values, (key, params) => this.translator(key, params)) : undefined;
         if (!error && options?.validate) {
           const validators = typeof options.validate === 'function' ? { validate: options.validate } : options.validate;
           for (const [type, validate] of Object.entries(validators)) {
             const result = await validate(value, this.values);
             if (result !== true) {
-              error = { type, message: typeof result === 'string' ? result : '字段校验未通过' };
+              const translate: Translate = (key, params) => this.translator(key, params);
+              error = typeof result === 'string' ? { type, message: result } : { type, get message() { return translate('form.invalid'); } };
               break;
             }
           }

@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useId, useState, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/rate.css';
@@ -22,8 +23,11 @@ export interface RateProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChang
 }
 
 export function Rate({
-  value, defaultValue = 0, onChange, onHoverChange, count = 5, allowHalf = false, allowClear = true, disabled = false, size = 'md', character, tooltips, label = '评分', className, ...props
+  value, defaultValue = 0, onChange, onHoverChange, count = 5, allowHalf = false, allowClear = true, disabled = false, size = 'md', character, tooltips, label: labelProp, className, ...props
 }: RateProps) {
+  const { t } = useLocale();
+  const label = labelProp === undefined ? t('rate.label') : labelProp;
+
   const id = useId();
   const [current, setCurrent] = useControllableState(value, defaultValue, onChange);
   const [hover, setHover] = useState<number | null>(null);
@@ -68,14 +72,14 @@ export function Rate({
       aria-valuemin={0}
       aria-valuemax={count}
       aria-valuenow={current}
-      aria-valuetext={tooltips?.[Math.ceil(current) - 1] ?? `${current} 星`}
+      aria-valuetext={tooltips?.[Math.ceil(current) - 1] ?? t('rate.stars', { count: current })}
       aria-disabled={disabled || undefined}
       onKeyDown={handleKeyDown}
       onMouseLeave={() => updateHover(null)}
     >
       {Array.from({ length: count }, (_, index) => {
         const fill = clamp(shown - index, 0, 1);
-        const starLabel = tooltips?.[index] ?? `${index + 1} 星`;
+        const starLabel = tooltips?.[index] ?? t('rate.stars', { count: index + 1 });
         return <button
           key={index}
           type="button"

@@ -379,6 +379,11 @@
       "import": "./dist/notification.js",
       "require": "./dist/notification.cjs"
     },
+    "./locale": {
+      "types": "./dist/entries/locale.d.ts",
+      "import": "./dist/locale.js",
+      "require": "./dist/locale.cjs"
+    },
     "./config-provider": {
       "types": "./dist/entries/config-provider.d.ts",
       "import": "./dist/config-provider.js",

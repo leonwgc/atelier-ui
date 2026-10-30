@@ -1,3 +1,4 @@
+import { useDemoLocale, translateDemoValue } from './locale';
 import { useRef, useState, type ReactNode } from 'react';
 import {
   Affix, Anchor, BackTop, Button, Dropdown, FloatButton, FloatButtonGroup, Menu, Popconfirm, Popover, Tag, Tour,
@@ -41,16 +42,19 @@ const projectActions: DropdownItem[] = [
 ];
 
 function BasicDropdown() {
+  const { t: dt } = useDemoLocale();
+  const localizedProjectActions = translateDemoValue(projectActions, dt);
+
   const [last, setLast] = useState('');
   return <div className="component-row" style={{ gap: 18 }}>
-    <Dropdown items={projectActions} onSelect={(key) => setLast(key)}><Button>更多操作</Button></Dropdown>
-    <Dropdown items={projectActions.filter((item) => item.type !== 'group' && item.key !== 'divider-2')} trigger="hover" placement="bottom-end" showArrow onSelect={(key) => setLast(key)}>
-      <span className="demo-link-trigger">悬停展开</span>
+    <Dropdown items={localizedProjectActions} onSelect={(key) => setLast(key)}><Button>{dt("更多操作")}</Button></Dropdown>
+    <Dropdown items={localizedProjectActions.filter((item) => item.type !== 'group' && item.key !== 'divider-2')} trigger="hover" placement="bottom-end" showArrow onSelect={(key) => setLast(key)}>
+      <span className="demo-link-trigger">{dt("悬停展开")}</span>
     </Dropdown>
-    <Dropdown items={[{ key: 'rename', label: '重命名' }, { key: 'move', label: '移动到…' }, { key: 'divider', type: 'divider' }, { key: 'remove', label: '移除', danger: true }]} trigger="contextMenu" onSelect={(key) => setLast(key)}>
-      <div className="demo-context-area">右键点击此区域</div>
+    <Dropdown items={[{ key: 'rename', label: dt("重命名") }, { key: 'move', label: dt("移动到…") }, { key: 'divider', type: 'divider' }, { key: 'remove', label: dt("移除"), danger: true }]} trigger="contextMenu" onSelect={(key) => setLast(key)}>
+      <div className="demo-context-area">{dt("右键点击此区域")}</div>
     </Dropdown>
-    <span className="demo-hint">{last ? `最近选择：${last}` : '选择一项后会显示在这里'}</span>
+    <span className="demo-hint">{last ? dt("最近选择：{0}", { 0: last }) : dt("选择一项后会显示在这里")}</span>
   </div>;
 }
 
@@ -70,129 +74,147 @@ const workspaceMenu: MenuItem[] = [
 ];
 
 function InlineMenu() {
+  const { t: dt } = useDemoLocale();
+  const localizedWorkspaceMenu = translateDemoValue(workspaceMenu, dt);
+
   const [selected, setSelected] = useState('mine');
   const [collapsed, setCollapsed] = useState(false);
   return <div className="demo-menu-row">
     <div className="demo-menu-frame">
-      <Menu items={workspaceMenu} selectedKey={selected} onSelect={setSelected} defaultOpenKeys={['projects']} collapsed={collapsed} label="工作区导航" />
+      <Menu items={localizedWorkspaceMenu} selectedKey={selected} onSelect={setSelected} defaultOpenKeys={['projects']} collapsed={collapsed} label={dt("工作区导航")} />
     </div>
     <div className="demo-menu-side">
-      <Button size="sm" onClick={() => setCollapsed((value) => !value)}>{collapsed ? '展开菜单' : '收起菜单'}</Button>
-      <span className="demo-hint">当前选中：{selected}</span>
+      <Button size="sm" onClick={() => setCollapsed((value) => !value)}>{collapsed ? dt("展开菜单") : dt("收起菜单")}</Button>
+      <span className="demo-hint">{dt("当前选中：")}{selected}</span>
     </div>
   </div>;
 }
 function HorizontalMenu() {
+  const { t: dt } = useDemoLocale();
+  const localizedWorkspaceMenu = translateDemoValue(workspaceMenu, dt);
+
   const [selected, setSelected] = useState('home');
   return <div className="demo-stack" style={{ display: 'grid', gap: 18 }}>
-    <div className="demo-menu-bar"><Menu mode="horizontal" items={workspaceMenu.filter((item) => item.type !== 'divider')} selectedKey={selected} onSelect={setSelected} label="顶部导航" /></div>
+    <div className="demo-menu-bar"><Menu mode="horizontal" items={localizedWorkspaceMenu.filter((item) => item.type !== 'divider')} selectedKey={selected} onSelect={setSelected} label={dt("顶部导航")} /></div>
     <div className="demo-menu-row">
-      <div className="demo-menu-frame"><Menu mode="vertical" items={workspaceMenu} defaultSelectedKey="home" label="侧边导航（弹出子菜单）" /></div>
-      <Menu theme="dark" items={workspaceMenu} defaultSelectedKey="design" defaultOpenKeys={['members']} label="深色菜单" />
+      <div className="demo-menu-frame"><Menu mode="vertical" items={localizedWorkspaceMenu} defaultSelectedKey="home" label={dt("侧边导航（弹出子菜单）")} /></div>
+      <Menu theme="dark" items={localizedWorkspaceMenu} defaultSelectedKey="design" defaultOpenKeys={['members']} label={dt("深色菜单")} />
     </div>
   </div>;
 }
 
 function ScrollSpyAnchor({ direction = 'vertical' }: { direction?: 'vertical' | 'horizontal' }) {
+  const { t: dt } = useDemoLocale();
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const prefix = direction === 'vertical' ? 'anchor' : 'hanchor';
-  const sections = [{ id: `${prefix}-overview`, title: '项目概览', children: direction === 'vertical' ? [{ id: `${prefix}-goals`, title: '目标' }, { id: `${prefix}-scope`, title: '范围' }] : undefined }, { id: `${prefix}-members`, title: '项目成员' }, { id: `${prefix}-activity`, title: '最近动态' }, { id: `${prefix}-files`, title: '文件' }];
+  const sections = [{ id: `${prefix}-overview`, title: dt("项目概览"), children: direction === 'vertical' ? [{ id: `${prefix}-goals`, title: dt("目标") }, { id: `${prefix}-scope`, title: dt("范围") }] : undefined }, { id: `${prefix}-members`, title: dt("项目成员") }, { id: `${prefix}-activity`, title: dt("最近动态") }, { id: `${prefix}-files`, title: dt("文件") }];
   const items = sections.map((section) => ({ href: `#${section.id}`, title: section.title, children: section.children?.map((child) => ({ href: `#${child.id}`, title: child.title })) }));
   const anchor = <Anchor items={items} direction={direction} getContainer={() => containerRef.current ?? window} offsetTop={12} replace affix={false} />;
   return <div className={direction === 'vertical' ? 'demo-anchor-layout' : 'demo-anchor-layout demo-anchor-layout--horizontal'}>
     {direction === 'horizontal' && anchor}
     <div ref={containerRef} className="demo-anchor-scroll">
-      {sections.flatMap((section) => [section, ...(section.children ?? [])]).map((section) => <section key={section.id} id={section.id} className="demo-anchor-section"><h4>{section.title}</h4><p>滚动内容时，锚点会自动高亮对应区块；点击锚点可平滑定位。</p></section>)}
+      {sections.flatMap((section) => [section, ...(section.children ?? [])]).map((section) => <section key={section.id} id={section.id} className="demo-anchor-section"><h4>{section.title}</h4><p>{dt("滚动内容时，锚点会自动高亮对应区块；点击锚点可平滑定位。")}</p></section>)}
     </div>
     {direction === 'vertical' && anchor}
   </div>;
 }
 
 function ScrollAffix() {
+  const { t: dt } = useDemoLocale();
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [pinned, setPinned] = useState(false);
   return <div className="demo-stack" style={{ display: 'grid', gap: 10 }}>
     <div ref={containerRef} className="demo-affix-scroll">
-      <p className="demo-affix-filler">向下滚动这个容器，操作栏会固定在容器顶部。</p>
+      <p className="demo-affix-filler">{dt("向下滚动这个容器，操作栏会固定在容器顶部。")}</p>
       <Affix target={() => containerRef.current} offsetTop={0} onChange={setPinned}>
-        <div className={`demo-affix-bar ${pinned ? 'demo-affix-bar--pinned' : ''}`}><strong>项目设置</strong><Button size="sm" variant="primary">保存更改</Button></div>
+        <div className={`demo-affix-bar ${pinned ? 'demo-affix-bar--pinned' : ''}`}><strong>{dt("项目设置")}</strong><Button size="sm" variant="primary">{dt("保存更改")}</Button></div>
       </Affix>
-      {Array.from({ length: 8 }, (_, index) => <p key={index} className="demo-affix-filler">内容段落 {index + 1} · 固钉在滚动时保持可见。</p>)}
+      {Array.from({ length: 8 }, (_, index) => <p key={index} className="demo-affix-filler">{dt("内容段落")}{index + 1} {dt("· 固钉在滚动时保持可见。")}</p>)}
     </div>
-    <span className="demo-hint">当前状态：{pinned ? '已固定' : '未固定'}</span>
+    <span className="demo-hint">{dt("当前状态：")}{pinned ? dt("已固定") : dt("未固定")}</span>
   </div>;
 }
 
 function OnboardingTour() {
+  const { t: dt } = useDemoLocale();
+
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<'default' | 'primary'>('default');
   const createRef = useRef<HTMLButtonElement | null>(null);
   const searchRef = useRef<HTMLDivElement | null>(null);
   const membersRef = useRef<HTMLDivElement | null>(null);
   const steps: TourStep[] = [
-    { title: '欢迎使用 Atelier', description: '花 30 秒了解工作区的三个核心区域。' },
-    { title: '新建项目', description: '从这里创建项目，所有协作都从一个清晰的项目开始。', target: () => createRef.current, placement: 'bottom-start' },
-    { title: '全局搜索', description: '输入名称、成员或标签即可快速定位，也可以用 ⌘K 打开。', target: searchRef, placement: 'bottom' },
-    { title: '成员与权限', description: '邀请成员并分配角色，权限变更会实时生效。', target: membersRef, placement: 'top' },
+    { title: dt("欢迎使用 Atelier"), description: dt("花 30 秒了解工作区的三个核心区域。") },
+    { title: dt("新建项目"), description: dt("从这里创建项目，所有协作都从一个清晰的项目开始。"), target: () => createRef.current, placement: 'bottom-start' },
+    { title: dt("全局搜索"), description: dt("输入名称、成员或标签即可快速定位，也可以用 ⌘K 打开。"), target: searchRef, placement: 'bottom' },
+    { title: dt("成员与权限"), description: dt("邀请成员并分配角色，权限变更会实时生效。"), target: membersRef, placement: 'top' },
   ];
   return <div className="demo-stack" style={{ display: 'grid', gap: 16 }}>
     <div className="demo-tour-toolbar">
-      <Button ref={createRef} variant="primary">＋ 新建项目</Button>
-      <div ref={searchRef} className="demo-tour-search">⌕ 搜索项目、成员…</div>
-      <div ref={membersRef} className="demo-tour-members"><span>林</span><span>陈</span><span>周</span><em>+3</em></div>
+      <Button ref={createRef} variant="primary">{dt("＋ 新建项目")}</Button>
+      <div ref={searchRef} className="demo-tour-search">{dt("⌕ 搜索项目、成员…")}</div>
+      <div ref={membersRef} className="demo-tour-members"><span>{dt("林")}</span><span>{dt("陈")}</span><span>{dt("周")}</span><em>+3</em></div>
     </div>
     <div className="component-row">
-      <Button onClick={() => { setType('default'); setOpen(true); }}>开始引导</Button>
-      <Button onClick={() => { setType('primary'); setOpen(true); }}>主色风格</Button>
+      <Button onClick={() => { setType('default'); setOpen(true); }}>{dt("开始引导")}</Button>
+      <Button onClick={() => { setType('primary'); setOpen(true); }}>{dt("主色风格")}</Button>
     </div>
     <Tour open={open} steps={steps} type={type} onClose={() => setOpen(false)} onFinish={() => console.info('tour finished')} />
   </div>;
 }
 
 function FloatButtons() {
+  const { t: dt } = useDemoLocale();
+
   const [open, setOpen] = useState(false);
   return <div className="demo-float-stage">
-    <div className="demo-float-cell"><FloatButton inline tooltip="帮助" icon={<HelpIcon />} /><span className="demo-hint">默认</span></div>
-    <div className="demo-float-cell"><FloatButton inline type="primary" shape="square" icon={<ChatIcon />} description="反馈" badge={{ count: 5 }} /><span className="demo-hint">主色 · 方形 · 徽标</span></div>
+    <div className="demo-float-cell"><FloatButton inline tooltip={dt("帮助")} icon={<HelpIcon />} /><span className="demo-hint">{dt("默认")}</span></div>
+    <div className="demo-float-cell"><FloatButton inline type="primary" shape="square" icon={<ChatIcon />} description={dt("反馈")} badge={{ count: 5 }} /><span className="demo-hint">{dt("主色 · 方形 · 徽标")}</span></div>
     <div className="demo-float-cell">
       <FloatButtonGroup inline shape="square">
-        <FloatButton icon={<HelpIcon />} tooltip="帮助" />
-        <FloatButton icon={<ChatIcon />} tooltip="反馈" badge={{ dot: true }} />
-        <FloatButton icon={<SettingsIcon />} tooltip="设置" />
+        <FloatButton icon={<HelpIcon />} tooltip={dt("帮助")} />
+        <FloatButton icon={<ChatIcon />} tooltip={dt("反馈")} badge={{ dot: true }} />
+        <FloatButton icon={<SettingsIcon />} tooltip={dt("设置")} />
       </FloatButtonGroup>
-      <span className="demo-hint">静态分组</span>
+      <span className="demo-hint">{dt("静态分组")}</span>
     </div>
     <div className="demo-float-cell demo-float-cell--tall">
-      <FloatButtonGroup inline trigger="click" type="primary" open={open} onOpenChange={setOpen} tooltip="快捷操作">
-        <FloatButton icon={<EditIcon />} tooltip="新建文档" />
-        <FloatButton icon={<UsersIcon />} tooltip="邀请成员" />
-        <FloatButton icon={<ChatIcon />} tooltip="发起讨论" />
+      <FloatButtonGroup inline trigger="click" type="primary" open={open} onOpenChange={setOpen} tooltip={dt("快捷操作")}>
+        <FloatButton icon={<EditIcon />} tooltip={dt("新建文档")} />
+        <FloatButton icon={<UsersIcon />} tooltip={dt("邀请成员")} />
+        <FloatButton icon={<ChatIcon />} tooltip={dt("发起讨论")} />
       </FloatButtonGroup>
-      <span className="demo-hint">点击展开菜单</span>
+      <span className="demo-hint">{dt("点击展开菜单")}</span>
     </div>
-    <BackTop visibilityHeight={200} tooltip="回到顶部" />
+    <BackTop visibilityHeight={200} tooltip={dt("回到顶部")} />
   </div>;
 }
 
 function PopoverExamples() {
+  const { t: dt } = useDemoLocale();
+
   const [open, setOpen] = useState(false);
   return <div className="component-row" style={{ gap: 18 }}>
-    <Popover title="分享项目" content="复制链接并邀请团队成员加入。"><Button>点击触发</Button></Popover>
-    <Popover trigger="hover" placement="top" content="悬停时显示，离开后延迟关闭。"><Button variant="tertiary">悬停触发</Button></Popover>
-    <Popover trigger="focus" placement="right" arrow={false} content="聚焦输入框时显示提示。"><input className="demo-plain-input" placeholder="聚焦触发" aria-label="聚焦触发示例" /></Popover>
-    <Popover open={open} onOpenChange={setOpen} placement="bottom-end" title="受控弹层" content={<div className="demo-popover-body"><p>可以在内容中放置任意交互元素。</p><div className="component-row"><Button size="sm" onClick={() => setOpen(false)}>关闭</Button><Button size="sm" variant="primary" onClick={() => setOpen(false)}>知道了</Button></div></div>}>
-      <Button variant="primary">受控 · 富内容</Button>
+    <Popover title={dt("分享项目")} content={dt("复制链接并邀请团队成员加入。")}><Button>{dt("点击触发")}</Button></Popover>
+    <Popover trigger="hover" placement="top" content={dt("悬停时显示，离开后延迟关闭。")}><Button variant="tertiary">{dt("悬停触发")}</Button></Popover>
+    <Popover trigger="focus" placement="right" arrow={false} content={dt("聚焦输入框时显示提示。")}><input className="demo-plain-input" placeholder={dt("聚焦触发")} aria-label={dt("聚焦触发示例")} /></Popover>
+    <Popover open={open} onOpenChange={setOpen} placement="bottom-end" title={dt("受控弹层")} content={<div className="demo-popover-body"><p>{dt("可以在内容中放置任意交互元素。")}</p><div className="component-row"><Button size="sm" onClick={() => setOpen(false)}>{dt("关闭")}</Button><Button size="sm" variant="primary" onClick={() => setOpen(false)}>{dt("知道了")}</Button></div></div>}>
+      <Button variant="primary">{dt("受控 · 富内容")}</Button>
     </Popover>
   </div>;
 }
 
 function PopconfirmExamples() {
+  const { t: dt } = useDemoLocale();
+
   const [log, setLog] = useState('');
   return <div className="component-row" style={{ gap: 18 }}>
-    <Popconfirm title="归档这个项目？" description="你之后仍可以从归档列表恢复。" onConfirm={() => setLog('已归档')} onCancel={() => setLog('已取消')}><Button>归档项目</Button></Popconfirm>
-    <Popconfirm title="删除项目" description="删除后不可恢复，确定继续吗？" okText="删除" okType="danger" placement="bottom" onConfirm={() => new Promise<void>((resolve) => setTimeout(() => { setLog('已删除（异步 800ms）'); resolve(); }, 800))}><Button variant="danger">删除项目</Button></Popconfirm>
-    <Popconfirm title="发布到生产环境" description="本示例会模拟一次失败的请求。" okText="发布" placement="right" onConfirm={() => new Promise<void>((_, reject) => setTimeout(() => reject(new Error('network')), 600))}><Button variant="tertiary">模拟失败</Button></Popconfirm>
-    <Tag>{log || '等待操作'}</Tag>
+    <Popconfirm title={dt("归档这个项目？")} description={dt("你之后仍可以从归档列表恢复。")} onConfirm={() => setLog(dt("已归档"))} onCancel={() => setLog(dt("已取消"))}><Button>{dt("归档项目")}</Button></Popconfirm>
+    <Popconfirm title={dt("删除项目")} description={dt("删除后不可恢复，确定继续吗？")} okText={dt("删除")} okType="danger" placement="bottom" onConfirm={() => new Promise<void>((resolve) => setTimeout(() => { setLog(dt("已删除（异步 800ms）")); resolve(); }, 800))}><Button variant="danger">{dt("删除项目")}</Button></Popconfirm>
+    <Popconfirm title={dt("发布到生产环境")} description={dt("本示例会模拟一次失败的请求。")} okText={dt("发布")} placement="right" onConfirm={() => new Promise<void>((_, reject) => setTimeout(() => reject(new Error('network')), 600))}><Button variant="tertiary">{dt("模拟失败")}</Button></Popconfirm>
+    <Tag>{log || dt("等待操作")}</Tag>
   </div>;
 }
 
@@ -451,7 +473,10 @@ export function isNavigationPageId(id: string): id is NavigationPageId {
 }
 
 export function NavigationPage({ id }: { id: NavigationPageId }) {
-  const page = navigationPages.find((item) => item.id === id);
+  const { t: dt } = useDemoLocale();
+  const localizedNavigationPages = translateDemoValue(navigationPages, dt);
+
+  const page = localizedNavigationPages.find((item) => item.id === id);
   if (!page) return null;
   return <>
     <PageHeading eyebrow={page.eyebrow} title={page.title} description={page.description} badge={page.badge} />

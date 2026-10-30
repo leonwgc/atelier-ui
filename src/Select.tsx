@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { forwardRef, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type FocusEvent, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/field.css';
@@ -53,12 +54,16 @@ function isGroup(item: SelectOption | SelectOptionGroup): item is SelectOptionGr
 
 export const Select = forwardRef<HTMLDivElement, SelectProps>(function Select(
   {
-    options, size = 'md', status, label, hint, error, placeholder = '请选择…', searchable = false, multiple = false, disabled = false, allowClear = false, maxTagCount, name, prefix,
-    value, defaultValue, onChange, onSearch, filterOption = true, notFoundContent = '暂无匹配选项',
+    options, size = 'md', status, label, hint, error, placeholder: placeholderProp, searchable = false, multiple = false, disabled = false, allowClear = false, maxTagCount, name, prefix,
+    value, defaultValue, onChange, onSearch, filterOption = true, notFoundContent: notFoundContentProp,
     open: openProp, defaultOpen = false, onOpenChange, placement = 'bottom-start', popupClassName, popupStyle, popupMatchSelectWidth = true, popupRender, optionRender, labelRender,
     className, id, onKeyDown, onBlur, onFocus, ...rest
   }, ref,
 ) {
+  const { t } = useLocale();
+  const placeholder = placeholderProp === undefined ? t('common.select') : placeholderProp;
+  const notFoundContent = notFoundContentProp === undefined ? t('common.noOptions') : notFoundContentProp;
+
   const reactId = useId();
   const triggerId = id ?? `at-select-${reactId}`;
   const listId = `${triggerId}-listbox`;
@@ -174,13 +179,13 @@ export const Select = forwardRef<HTMLDivElement, SelectProps>(function Select(
       {shown.map((option) => <SelectorTag key={option.value} label={renderLabel(option)} disabled={disabled} onRemove={() => toggle(option)} />)}
       {extra > 0 && <span className="at-selector__tag at-selector__tag--count">+{extra}</span>}
       {searchable && showPopup
-        ? <input ref={searchRef} className="at-selector__search" value={query} placeholder={hasValue ? '' : placeholder} aria-label={label ? `${label}搜索` : '搜索选项'} aria-autocomplete="list" aria-controls={listId} aria-activedescendant={activeIndex >= 0 ? `${listId}-${activeIndex}` : undefined} onChange={(event) => { setQuery(event.target.value); onSearch?.(event.target.value); setActiveIndex(0); }} onKeyDown={handleKeyDown} />
+        ? <input ref={searchRef} className="at-selector__search" value={query} placeholder={hasValue ? '' : placeholder} aria-label={label ? t('common.searchLabel', { label }) : t('common.searchOptions')} aria-autocomplete="list" aria-controls={listId} aria-activedescendant={activeIndex >= 0 ? `${listId}-${activeIndex}` : undefined} onChange={(event) => { setQuery(event.target.value); onSearch?.(event.target.value); setActiveIndex(0); }} onKeyDown={handleKeyDown} />
         : !hasValue && <span className="at-selector__placeholder">{placeholder}</span>}
     </span>;
   } else {
     const option = selectedOptions as SelectOption | undefined;
     display = searchable && showPopup
-      ? <input ref={searchRef} className="at-selector__search" value={query} placeholder={option ? option.label : placeholder} aria-label={label ? `${label}搜索` : '搜索选项'} aria-autocomplete="list" aria-controls={listId} aria-activedescendant={activeIndex >= 0 ? `${listId}-${activeIndex}` : undefined} onChange={(event) => { setQuery(event.target.value); onSearch?.(event.target.value); setActiveIndex(0); }} onKeyDown={handleKeyDown} />
+      ? <input ref={searchRef} className="at-selector__search" value={query} placeholder={option ? option.label : placeholder} aria-label={label ? t('common.searchLabel', { label }) : t('common.searchOptions')} aria-autocomplete="list" aria-controls={listId} aria-activedescendant={activeIndex >= 0 ? `${listId}-${activeIndex}` : undefined} onChange={(event) => { setQuery(event.target.value); onSearch?.(event.target.value); setActiveIndex(0); }} onKeyDown={handleKeyDown} />
       : <span className={cx('at-selector__value', !option && 'at-selector__placeholder')}>{option ? <>{option.icon && <span className="at-select__option-icon">{option.icon}</span>}{renderLabel(option)}</> : placeholder}</span>;
   }
 

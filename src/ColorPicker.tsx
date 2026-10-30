@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { forwardRef, useEffect, useId, useRef, useState, type CSSProperties, type HTMLAttributes, type PointerEvent as ReactPointerEvent } from 'react';
 import './styles/theme.css';
 import './styles/field.css';
@@ -104,9 +105,12 @@ function makeColor(hsv: HSVA): ColorValue {
 export const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(function ColorPicker(
   {
     value, defaultValue = '#685cf6', onChange, onChangeComplete, format = 'hex', showAlpha = false, showText = true, presets, disabled = false, allowClear = false,
-    size = 'md', status, label, hint, error, placeholder = '选择颜色', open: openProp, onOpenChange, placement = 'bottom-start', popupClassName, popupStyle, className, id, ...rest
+    size = 'md', status, label, hint, error, placeholder: placeholderProp, open: openProp, onOpenChange, placement = 'bottom-start', popupClassName, popupStyle, className, id, ...rest
   }, ref,
 ) {
+  const { t } = useLocale();
+  const placeholder = placeholderProp === undefined ? t('color.placeholder') : placeholderProp;
+
   const reactId = useId();
   const triggerId = id ?? `at-color-picker-${reactId}`;
   const labelId = label ? `${triggerId}-label` : undefined;
@@ -159,7 +163,7 @@ export const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(function
     if (rgb) apply(rgbToHsv(rgb)); else setText(current ? formatColor(hsvToRgb(hsv), format) : '');
   };
 
-  const presetGroups = !presets ? [] : Array.isArray(presets) && typeof presets[0] === 'string' ? [{ label: '推荐', colors: presets as string[] }] : (presets as Array<{ label: string; colors: string[] }>);
+  const presetGroups = !presets ? [] : Array.isArray(presets) && typeof presets[0] === 'string' ? [{ label: t('color.recommended'), colors: presets as string[] }] : (presets as Array<{ label: string; colors: string[] }>);
   const hueColor = `hsl(${hsv.h} 100% 50%)`;
   const displayRgb = parseColor(current);
 
@@ -181,7 +185,7 @@ export const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(function
       aria-haspopup="dialog"
       aria-expanded={showPopup}
       aria-labelledby={labelId}
-      aria-label={label ? undefined : `${placeholder}${current ? `，当前 ${current}` : ''}`}
+      aria-label={label ? undefined : current ? t('color.current', { label: placeholder, value: current }) : placeholder}
       onClick={() => { if (!disabled) setOpen(!open); }}
       onKeyDown={(event) => {
         if (disabled) return;
@@ -198,7 +202,7 @@ export const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(function
         style={{ backgroundColor: hueColor }}
         onPointerDown={(event) => drag(event, (x, y) => apply({ ...hsv, s: x, v: 1 - y }))}
       >
-        <span className="at-color-picker__area-handle" style={{ left: `${hsv.s * 100}%`, top: `${(1 - hsv.v) * 100}%`, backgroundColor: toHex({ ...color.rgb, a: 1 }) }} role="slider" tabIndex={0} aria-label="饱和度与明度" aria-valuetext={`饱和度 ${Math.round(hsv.s * 100)}%，明度 ${Math.round(hsv.v * 100)}%`} aria-valuenow={Math.round(hsv.v * 100)}
+        <span className="at-color-picker__area-handle" style={{ left: `${hsv.s * 100}%`, top: `${(1 - hsv.v) * 100}%`, backgroundColor: toHex({ ...color.rgb, a: 1 }) }} role="slider" tabIndex={0} aria-label={t('color.saturationBrightness')} aria-valuetext={t('color.values', { saturation: Math.round(hsv.s * 100), brightness: Math.round(hsv.v * 100) })} aria-valuenow={Math.round(hsv.v * 100)}
           onKeyDown={(event) => {
             const delta = event.shiftKey ? 0.1 : 0.01;
             if (event.key === 'ArrowLeft') apply({ ...hsv, s: clamp(hsv.s - delta, 0, 1) });
@@ -213,7 +217,7 @@ export const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(function
         <div className="at-color-picker__preview" style={{ '--at-swatch': formatColor(color.rgb, 'rgb') } as CSSProperties} aria-hidden="true" />
         <div className="at-color-picker__tracks">
           <div className="at-color-picker__hue" onPointerDown={(event) => drag(event, (x) => apply({ ...hsv, h: x * 360 }))}>
-            <span className="at-color-picker__slider-handle" style={{ left: `${(hsv.h / 360) * 100}%`, backgroundColor: hueColor }} role="slider" tabIndex={0} aria-label="色相" aria-valuemin={0} aria-valuemax={360} aria-valuenow={Math.round(hsv.h)}
+            <span className="at-color-picker__slider-handle" style={{ left: `${(hsv.h / 360) * 100}%`, backgroundColor: hueColor }} role="slider" tabIndex={0} aria-label={t('color.hue')} aria-valuemin={0} aria-valuemax={360} aria-valuenow={Math.round(hsv.h)}
               onKeyDown={(event) => {
                 const delta = event.shiftKey ? 10 : 1;
                 if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') apply({ ...hsv, h: (hsv.h - delta + 360) % 360 });
@@ -223,7 +227,7 @@ export const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(function
               }} />
           </div>
           {showAlpha && <div className="at-color-picker__alpha" style={{ '--at-swatch': toHex({ ...color.rgb, a: 1 }) } as CSSProperties} onPointerDown={(event) => drag(event, (x) => apply({ ...hsv, a: Number(x.toFixed(2)) }))}>
-            <span className="at-color-picker__slider-handle" style={{ left: `${hsv.a * 100}%`, backgroundColor: formatColor(color.rgb, 'rgb') }} role="slider" tabIndex={0} aria-label="透明度" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(hsv.a * 100)}
+            <span className="at-color-picker__slider-handle" style={{ left: `${hsv.a * 100}%`, backgroundColor: formatColor(color.rgb, 'rgb') }} role="slider" tabIndex={0} aria-label={t('color.alpha')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(hsv.a * 100)}
               onKeyDown={(event) => {
                 const delta = event.shiftKey ? 0.1 : 0.01;
                 if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') apply({ ...hsv, a: clamp(hsv.a - delta, 0, 1) });
@@ -236,7 +240,7 @@ export const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(function
       </div>
       <div className="at-color-picker__inputs">
         <span className="at-color-picker__format">{format.toUpperCase()}</span>
-        <input className="at-color-picker__input" value={text} aria-label="颜色值" spellCheck={false} onChange={(event) => setText(event.target.value)} onBlur={commitText} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); commitText(); } }} />
+        <input className="at-color-picker__input" value={text} aria-label={t('color.value')} spellCheck={false} onChange={(event) => setText(event.target.value)} onBlur={commitText} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); commitText(); } }} />
         {showAlpha && <span className="at-color-picker__alpha-text">{Math.round(hsv.a * 100)}%</span>}
       </div>
       {presetGroups.map((group) => <div key={group.label} className="at-color-picker__presets">

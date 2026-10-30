@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type HTMLAttributes, type MouseEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/anchor.css';
@@ -33,6 +34,8 @@ function resolveTarget(href: string) {
 }
 
 export function Anchor({ items, offsetTop = 0, bounds = 5, targetOffset, direction = 'vertical', affix = true, getContainer, replace = false, onChange, onClick, className, style, ...props }: AnchorProps) {
+  const { t } = useLocale();
+
   const [active, setActive] = useState('');
   const [ink, setInk] = useState<CSSProperties | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
@@ -113,7 +116,7 @@ export function Anchor({ items, offsetTop = 0, bounds = 5, targetOffset, directi
   return <nav
     {...props}
     ref={navRef}
-    aria-label={props['aria-label'] ?? '页面锚点'}
+    aria-label={props['aria-label'] ?? t('anchor.label')}
     className={cx('at-anchor', `at-anchor--${direction}`, affix && 'at-anchor--affix', className)}
     style={affix ? { top: offsetTop, ...style } : style}
   >

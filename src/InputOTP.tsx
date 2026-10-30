@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useRef, useState, type ClipboardEvent, type KeyboardEvent } from 'react';
 import './styles/theme.css';
 import './styles/input-otp.css';
@@ -22,9 +23,12 @@ export function InputOTP({
   onComplete,
   disabled = false,
   autoFocus = false,
-  ariaLabel = '验证码',
+  ariaLabel: ariaLabelProp,
   className = '',
 }: InputOTPProps) {
+  const { t } = useLocale();
+  const ariaLabel = ariaLabelProp === undefined ? t('inputOTP.label') : ariaLabelProp;
+
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const [internalValue, setInternalValue] = useState(defaultValue.replace(/\D/g, '').slice(0, length));
   const controlled = value !== undefined;
@@ -85,7 +89,7 @@ export function InputOTP({
           inputMode="numeric"
           pattern="[0-9]*"
           autoComplete={index === 0 ? 'one-time-code' : 'off'}
-          aria-label={`${ariaLabel}第 ${index + 1} 位`}
+          aria-label={t('inputOTP.digit', { label: ariaLabel, index: index + 1 })}
           value={digit}
           disabled={disabled}
           autoFocus={autoFocus && index === 0}

@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { forwardRef, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type HTMLAttributes, type KeyboardEvent } from 'react';
 import './styles/theme.css';
 import './styles/field.css';
@@ -60,10 +61,13 @@ const range = (count: number, step: number) => Array.from({ length: Math.ceil(co
 export const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(function TimePicker(
   {
     value, defaultValue = null, onChange, format = 'HH:mm', hourStep = 1, minuteStep = 1, secondStep = 1, disabledHours, disabledMinutes, disabledSeconds, minTime, maxTime,
-    placeholder = '选择时间', size = 'md', status, label, hint, error, disabled = false, allowClear = true, showNow = true,
+    placeholder: placeholderProp, size = 'md', status, label, hint, error, disabled = false, allowClear = true, showNow = true,
     open: openProp, onOpenChange, placement = 'bottom-start', popupClassName, popupStyle, className, id, onKeyDown, ...rest
   }, ref,
 ) {
+  const { t } = useLocale();
+  const placeholder = placeholderProp === undefined ? t('time.placeholder') : placeholderProp;
+
   const reactId = useId();
   const triggerId = id ?? `at-time-picker-${reactId}`;
   const labelId = label ? `${triggerId}-label` : undefined;
@@ -114,10 +118,10 @@ export const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(function T
   };
 
   const columns: Array<{ key: keyof TimeParts; label: string; values: number[]; isDisabled: (v: number) => boolean }> = [
-    { key: 'hour', label: '时', values: range(24, hourStep), isDisabled: isHourDisabled },
-    { key: 'minute', label: '分', values: range(60, minuteStep), isDisabled: (minute) => isMinuteDisabled(draft.hour, minute) },
+    { key: 'hour', label: t('time.hour'), values: range(24, hourStep), isDisabled: isHourDisabled },
+    { key: 'minute', label: t('time.minute'), values: range(60, minuteStep), isDisabled: (minute) => isMinuteDisabled(draft.hour, minute) },
   ];
-  if (format === 'HH:mm:ss') columns.push({ key: 'second', label: '秒', values: range(60, secondStep), isDisabled: (second) => isSecondDisabled(draft.hour, draft.minute, second) });
+  if (format === 'HH:mm:ss') columns.push({ key: 'second', label: t('time.second'), values: range(60, secondStep), isDisabled: (second) => isSecondDisabled(draft.hour, draft.minute, second) });
 
   const onColumnKeyDown = (column: typeof columns[number]) => (event: KeyboardEvent<HTMLUListElement>) => {
     const enabled = column.values.filter((item) => !column.isDisabled(item));
@@ -184,8 +188,8 @@ export const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>(function T
         </ul>)}
       </div>
       <div className="at-popup__footer at-time-picker__footer">
-        {showNow ? <button type="button" className="at-time-picker__link" onClick={setNow}>此刻</button> : <span />}
-        <button type="button" className="at-time-picker__ok" onClick={() => commit(draft, true)}>确定</button>
+        {showNow ? <button type="button" className="at-time-picker__link" onClick={setNow}>{t('time.now')}</button> : <span />}
+        <button type="button" className="at-time-picker__ok" onClick={() => commit(draft, true)}>{t('common.ok')}</button>
       </div>
     </Popup>
   </FieldShell>;

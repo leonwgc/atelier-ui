@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useState, type HTMLAttributes, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/alert.css';
@@ -21,6 +22,8 @@ const icons: Record<AlertVariant, string> = {
 };
 
 export function Alert({ variant = 'info', title, closable = false, onClose, children, className, ...props }: AlertProps) {
+  const { t } = useLocale();
+
   const [visible, setVisible] = useState(true);
   if (!visible) return null;
 
@@ -31,7 +34,7 @@ export function Alert({ variant = 'info', title, closable = false, onClose, chil
         {title && <strong className="at-alert__title">{title}</strong>}
         {children && <div className="at-alert__description">{children}</div>}
       </div>
-      {closable && <button type="button" className="at-alert__close" aria-label="关闭提示" onClick={() => { setVisible(false); onClose?.(); }}>×</button>}
+      {closable && <button type="button" className="at-alert__close" aria-label={t('common.closeMessage')} onClick={() => { setVisible(false); onClose?.(); }}>×</button>}
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { LocaleContext, resolveLocale, useLocale, type LocaleInput } from './locale';
 import { createElement, forwardRef, useEffect, useId, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createPortal } from 'react-dom';
@@ -23,9 +24,13 @@ export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'
 }
 
 export const Modal = Object.assign(forwardRef<HTMLDivElement, ModalProps>(function Modal(
-  { open, title, description, onClose, onOk, okText = '确定', cancelText = '取消', confirmLoading = false, footer, maskClosable = true, closeOnEscape = true, width = 520, className, children, ...props },
+  { open, title, description, onClose, onOk, okText: okTextProp, cancelText: cancelTextProp, confirmLoading = false, footer, maskClosable = true, closeOnEscape = true, width = 520, className, children, ...props },
   ref,
 ) {
+  const { t, locale } = useLocale();
+  const okText = okTextProp === undefined ? t('common.ok') : okTextProp;
+  const cancelText = cancelTextProp === undefined ? t('common.cancel') : cancelTextProp;
+
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -54,8 +59,8 @@ export const Modal = Object.assign(forwardRef<HTMLDivElement, ModalProps>(functi
   if (!open || typeof document === 'undefined') return null;
   return createPortal(
     <div className="at-modal-mask" onMouseDown={(event) => { if (event.target === event.currentTarget && maskClosable) onClose(); }}>
-      <div {...props} ref={(node) => { if (typeof ref === 'function') ref(node); else if (ref) (ref as unknown as { current: HTMLDivElement | null }).current = node; panelRef.current = node; }} role="dialog" aria-modal="true" aria-labelledby={title ? titleId : undefined} tabIndex={-1} className={cx('at-modal', className)} style={{ width, ...props.style }}>
-        <div className="at-modal__header"><div><h2 id={titleId} className="at-modal__title">{title}</h2>{description && <p className="at-modal__description">{description}</p>}</div><button type="button" className="at-modal__close" onClick={onClose} aria-label="关闭">×</button></div>
+      <div {...props} ref={(node) => { if (typeof ref === 'function') ref(node); else if (ref) (ref as unknown as { current: HTMLDivElement | null }).current = node; panelRef.current = node; }} role="dialog" lang={locale} aria-modal="true" aria-labelledby={title ? titleId : undefined} tabIndex={-1} className={cx('at-modal', className)} style={{ width, ...props.style }}>
+        <div className="at-modal__header"><div><h2 id={titleId} className="at-modal__title">{title}</h2>{description && <p className="at-modal__description">{description}</p>}</div><button type="button" className="at-modal__close" onClick={onClose} aria-label={t('common.close')}>×</button></div>
         <div className="at-modal__body">{children}</div>
         {footer !== null && <div className="at-modal__footer">{footer ?? <><Button onClick={onClose}>{cancelText}</Button><Button variant="primary" loading={confirmLoading} onClick={() => void onOk?.()}>{okText}</Button></>}</div>}
       </div>
@@ -67,6 +72,7 @@ export const Modal = Object.assign(forwardRef<HTMLDivElement, ModalProps>(functi
 });
 
 export interface ConfirmOptions {
+  locale?: LocaleInput;
   title: ReactNode;
   content?: ReactNode;
   okText?: string;
@@ -87,15 +93,33 @@ function showConfirm(options: ConfirmOptions) {
     root.unmount();
     mount.remove();
   };
-  const ConfirmDialog = () => createElement(Modal, {
-    open: true,
-    title: options.title,
-    onClose: () => { options.onCancel?.(); close(); },
-    cancelText: options.cancelText,
-    okText: options.okText,
-    onOk: async () => { await options.onOk?.(); close(); },
-    footer: <><Button onClick={() => { options.onCancel?.(); close(); }}>{options.cancelText ?? '取消'}</Button><Button variant={options.danger ? 'danger' : 'primary'} onClick={async () => { await options.onOk?.(); close(); }}>{options.okText ?? '确定'}</Button></>,
-  }, options.content);
+  function ConfirmDialog() {
+    return <LocaleContext.Provider value={resolveLocale(options.locale)}>
+      <Modal
+        open
+        title={options.title}
+        onClose={() => { options.onCancel?.(); close(); }}
+        cancelText={options.cancelText}
+        okText={options.okText}
+        onOk={async () => { await options.onOk?.(); close(); }}
+        footer={options.danger ? <ConfirmFooter options={options} close={close} /> : undefined}
+      >{options.content}</Modal>
+    </LocaleContext.Provider>;
+  }
   root.render(createElement(ConfirmDialog));
   return { destroy: close };
+}
+
+function ConfirmFooter({ options, close }: { options: ConfirmOptions; close: () => void }) {
+  const { t } = useLocale();
+  return <>
+    <Button onClick={() => { options.onCancel?.(); close(); }}>{options.cancelText ?? t('common.cancel')}</Button>
+    <Button variant="danger" onClick={async () => { await options.onOk?.(); close(); }}>{options.okText ?? t('common.ok')}</Button>
+  </>;
+}
+
+/** Provider-bound alternative to the standalone Modal.confirm API. */
+export function useModal() {
+  const pack = useLocale();
+  return { confirm: (options: ConfirmOptions) => showConfirm({ ...options, locale: options.locale ?? pack }) };
 }

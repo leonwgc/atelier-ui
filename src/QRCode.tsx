@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useEffect, useMemo, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/qrcode.css';
@@ -41,7 +42,10 @@ function toPath(matrix: QRMatrix, margin: number) {
   return parts.join('');
 }
 
-export function QRCode({ value, size = 160, type = 'svg', errorLevel, color = '#222438', bgColor = '#ffffff', icon, iconSize, bordered = true, margin = 2, status = 'active', onRefresh, statusRender, title = '二维码', className, style, ...props }: QRCodeProps) {
+export function QRCode({ value, size = 160, type = 'svg', errorLevel, color = '#222438', bgColor = '#ffffff', icon, iconSize, bordered = true, margin = 2, status = 'active', onRefresh, statusRender, title: titleProp, className, style, ...props }: QRCodeProps) {
+  const { t } = useLocale();
+  const title = titleProp === undefined ? t('qrcode.label') : titleProp;
+
   const level: QRErrorLevel = errorLevel ?? (icon ? 'H' : 'M');
   const matrix = useMemo(() => { try { return encodeQR(value, level); } catch { return null; } }, [value, level]);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -81,13 +85,13 @@ export function QRCode({ value, size = 160, type = 'svg', errorLevel, color = '#
   }, [type, matrix, size, total, margin, color, bgColor, icon, resolvedIconSize]);
 
   const overlay = status !== 'active' && (statusRender ? statusRender(status, { onRefresh }) : <div className="at-qrcode__status" role="status">
-    {status === 'loading' && <><span className="at-qrcode__spinner" aria-hidden="true" /><span>加载中…</span></>}
-    {status === 'expired' && <><span>二维码已过期</span>{onRefresh && <button type="button" className="at-qrcode__refresh" onClick={onRefresh}>点击刷新</button>}</>}
-    {status === 'scanned' && <><span className="at-qrcode__check" aria-hidden="true">✓</span><span>已扫描</span></>}
+    {status === 'loading' && <><span className="at-qrcode__spinner" aria-hidden="true" /><span>{t('qrcode.loading')}</span></>}
+    {status === 'expired' && <><span>{t('qrcode.expired')}</span>{onRefresh && <button type="button" className="at-qrcode__refresh" onClick={onRefresh}>{t('qrcode.refresh')}</button>}</>}
+    {status === 'scanned' && <><span className="at-qrcode__check" aria-hidden="true">✓</span><span>{t('qrcode.scanned')}</span></>}
   </div>);
 
   return <div {...props} className={cx('at-qrcode', bordered && 'at-qrcode--bordered', status !== 'active' && 'at-qrcode--masked', className)} style={{ width: size, height: size, backgroundColor: bgColor, ...style }} role="img" aria-label={`${title}：${value}`}>
-    {!matrix && <div className="at-qrcode__error">内容过长，无法生成</div>}
+    {!matrix && <div className="at-qrcode__error">{t('qrcode.error')}</div>}
     {matrix && type === 'svg' && <svg className="at-qrcode__svg" viewBox={`0 0 ${total} ${total}`} width={size} height={size} shapeRendering="crispEdges" aria-hidden="true">
       <rect width={total} height={total} fill={bgColor} />
       <path d={toPath(matrix, margin)} fill={color} />

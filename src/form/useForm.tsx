@@ -1,3 +1,4 @@
+import { useLocale } from '../locale';
 import { createContext, useContext, useEffect, useMemo, useRef, useSyncExternalStore, type ReactNode } from 'react';
 import { getPathValue } from '../utils';
 import { FormControl } from './control';
@@ -6,7 +7,9 @@ import type { Control, FieldValues, FormControlInstance, UseFormOptions, UseForm
 const FormContext = createContext<Control | null>(null);
 
 export function useForm<TValues extends FieldValues = FieldValues>(options: UseFormOptions<TValues> = {}): UseFormReturn<TValues> {
-  const control = useMemo(() => new FormControl(options), []);
+  const { t } = useLocale();
+  const control = useMemo(() => new FormControl(options, t), []);
+  useEffect(() => control.setTranslator(t), [control, t]);
   const formState = useSyncExternalStore(control.subscribe, control.getSnapshot, control.getSnapshot);
   return {
     register: control.register,

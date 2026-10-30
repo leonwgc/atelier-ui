@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { forwardRef, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type InputHTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/field.css';
@@ -51,9 +52,12 @@ export const AutoComplete = forwardRef<HTMLInputElement, AutoCompleteProps>(func
     options, value, defaultValue = '', onChange, onSelect, onSearch, filterOption = true, highlight = true,
     size = 'md', status, label, hint, error, allowClear = false, prefix, suffix, notFoundContent = null,
     open: openProp, defaultOpen = false, onOpenChange, placement = 'bottom-start', popupClassName, popupStyle, popupMatchSelectWidth = true, popupRender, optionRender,
-    className, id, disabled, placeholder = '输入以搜索…', onFocus, onBlur, onKeyDown, ...inputProps
+    className, id, disabled, placeholder: placeholderProp, onFocus, onBlur, onKeyDown, ...inputProps
   }, ref,
 ) {
+  const { t } = useLocale();
+  const placeholder = placeholderProp === undefined ? t('autocomplete.placeholder') : placeholderProp;
+
   const reactId = useId();
   const inputId = id ?? `at-autocomplete-${reactId}`;
   const listId = `${inputId}-listbox`;
@@ -155,7 +159,7 @@ export const AutoComplete = forwardRef<HTMLInputElement, AutoCompleteProps>(func
         onClick={() => { if (!open) setOpen(true); }}
         onKeyDown={handleKeyDown}
       />
-      {allowClear && current && !disabled && <button type="button" className="at-input-wrap__clear at-autocomplete__clear" aria-label="清空输入" onMouseDown={(event) => event.preventDefault()} onClick={() => { setCurrent(''); onSearch?.(''); inputRef.current?.focus(); }}><Close size={12} /></button>}
+      {allowClear && current && !disabled && <button type="button" className="at-input-wrap__clear at-autocomplete__clear" aria-label={t('common.clearInput')} onMouseDown={(event) => event.preventDefault()} onClick={() => { setCurrent(''); onSearch?.(''); inputRef.current?.focus(); }}><Close size={12} /></button>}
       {suffix && <span className="at-input-wrap__adornment">{suffix}</span>}
     </div>
     <Popup open={showPopup} panelRef={panelRef} position={position} placement={placement} className={cx(`at-popup--${size}`, 'at-autocomplete__popup', popupClassName)} style={popupStyle}>

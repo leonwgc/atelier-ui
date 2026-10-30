@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { createContext, useContext, useEffect, useRef, useState, type CSSProperties, type HTMLAttributes, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/menu.css';
@@ -204,9 +205,12 @@ function SubMenuSwitch({ item, depth, inFlyout, onActivate }: { item: MenuItem; 
 }
 
 export function Menu({
-  items, mode = 'inline', selectedKey, defaultSelectedKey, onSelect, openKeys, defaultOpenKeys, onOpenChange, collapsed = false, theme = 'light', inlineIndent = 20, selectable = true, label = '菜单',
+  items, mode = 'inline', selectedKey, defaultSelectedKey, onSelect, openKeys, defaultOpenKeys, onOpenChange, collapsed = false, theme = 'light', inlineIndent = 20, selectable = true, label: labelProp,
   className, style, onKeyDown, ...props
 }: MenuProps) {
+  const { t } = useLocale();
+  const label = labelProp === undefined ? t('menu.label') : labelProp;
+
   const [selected, setSelected] = useControllableState<string | undefined>(selectedKey, defaultSelectedKey, (key) => { if (key !== undefined) onSelect?.(key, findItem(items, key)!); });
   const [open, setOpen] = useControllableState<string[]>(openKeys, defaultOpenKeys ?? [], onOpenChange);
   const rootRef = useRef<HTMLUListElement | null>(null);

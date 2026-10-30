@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useEffect, useState, type HTMLAttributes } from 'react';
 import './styles/theme.css';
 import './styles/avatar.css';
@@ -11,12 +12,14 @@ export interface AvatarProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'chil
 }
 
 export function Avatar({ src, alt, name, size = 'md', className, ...props }: AvatarProps) {
+  const { t } = useLocale();
+
   const [imageFailed, setImageFailed] = useState(false);
   useEffect(() => setImageFailed(false), [src]);
   const fallback = name?.trim().slice(0, 1).toUpperCase() || '?';
 
   return (
-    <span {...props} className={cx('at-avatar', `at-avatar--${size}`, className)} aria-label={alt ?? name ?? '用户'}>
+    <span {...props} className={cx('at-avatar', `at-avatar--${size}`, className)} aria-label={alt ?? name ?? t('avatar.label')}>
       {src && !imageFailed
         ? <img className="at-avatar__image" src={src} alt={alt ?? name ?? ''} onError={() => setImageFailed(true)} />
         : <span className="at-avatar__fallback" aria-hidden="true">{fallback}</span>}

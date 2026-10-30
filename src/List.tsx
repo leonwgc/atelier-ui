@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useEffect, useMemo, useRef, useState, type HTMLAttributes, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/list.css';
@@ -47,8 +48,11 @@ function useColumnCount(grid: ListGridConfig | undefined, element: HTMLElement |
 }
 
 export function List<T>({
-  dataSource, renderItem, rowKey, header, footer, bordered = false, split = true, size = 'md', loading = false, loadingRows = 3, emptyText = '暂无数据', grid, pagination = false, onEndReached, height, className, style, ...props
+  dataSource, renderItem, rowKey, header, footer, bordered = false, split = true, size = 'md', loading = false, loadingRows = 3, emptyText: emptyTextProp, grid, pagination = false, onEndReached, height, className, style, ...props
 }: ListProps<T>) {
+  const { t } = useLocale();
+  const emptyText = emptyTextProp === undefined ? t('common.noData') : emptyTextProp;
+
   const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
   const columns = useColumnCount(grid, rootElement);
   const paginationConfig: ListPaginationConfig | null = pagination ? (pagination === true ? {} : pagination) : null;
@@ -76,7 +80,7 @@ export function List<T>({
   const position = paginationConfig?.position ?? 'bottom';
 
   const body = loading
-    ? <div className="at-list__skeletons" aria-busy="true" aria-label="加载中">{Array.from({ length: loadingRows }, (_, index) => <div key={index} className="at-list__item"><Skeleton active avatar title paragraph={{ rows: 1 }} /></div>)}</div>
+    ? <div className="at-list__skeletons" aria-busy="true" aria-label={t('common.loading')}>{Array.from({ length: loadingRows }, (_, index) => <div key={index} className="at-list__item"><Skeleton active avatar title paragraph={{ rows: 1 }} /></div>)}</div>
     : items.length === 0
       ? <div className="at-list__empty"><Empty description={emptyText} /></div>
       : <ul className={cx('at-list__items', grid && 'at-list__items--grid')} style={grid ? { gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: grid.gutter ?? 16 } : undefined}>

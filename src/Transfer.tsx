@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useId, useMemo, useState, type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/transfer.css';
@@ -29,9 +30,15 @@ export interface TransferProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onC
 }
 
 export function Transfer({
-  dataSource, targetKeys, defaultTargetKeys = [], onChange, selectedKeys, onSelectChange, titles = ['可选项目', '已选项目'], operations = ['移至已选', '移回可选'],
-  showSearch = false, searchPlaceholder = '搜索…', filterOption, render, footer, showSelectAll = true, oneWay = false, disabled = false, listStyle, notFoundContent = '暂无数据', className, ...props
+  dataSource, targetKeys, defaultTargetKeys = [], onChange, selectedKeys, onSelectChange, titles: titlesProp, operations: operationsProp,
+  showSearch = false, searchPlaceholder: searchPlaceholderProp, filterOption, render, footer, showSelectAll = true, oneWay = false, disabled = false, listStyle, notFoundContent: notFoundContentProp, className, ...props
 }: TransferProps) {
+  const { t } = useLocale();
+  const titles = titlesProp === undefined ? [t('transfer.source'), t('transfer.target')] : titlesProp;
+  const operations = operationsProp === undefined ? [t('transfer.moveRight'), t('transfer.moveLeft')] : operationsProp;
+  const searchPlaceholder = searchPlaceholderProp === undefined ? t('common.search') : searchPlaceholderProp;
+  const notFoundContent = notFoundContentProp === undefined ? t('common.noData') : notFoundContentProp;
+
   const id = useId();
   const [targets, setTargets] = useControllableState<string[]>(targetKeys, defaultTargetKeys, undefined);
   const [selectedInternal, setSelectedInternal] = useState<string[]>([]);
@@ -80,11 +87,11 @@ export function Transfer({
     const canRemoveInline = oneWay && direction === 'right';
     return <section className={cx('at-transfer__panel', disabled && 'at-transfer__panel--disabled')} style={listStyle} aria-labelledby={`${panelId}-title`}>
       <header className="at-transfer__header">
-        {showSelectAll && !canRemoveInline && <input type="checkbox" className="at-transfer__checkbox" aria-label={`全选${typeof title === 'string' ? title : ''}`} checked={allChecked} disabled={disabled || !selectable.length} ref={(node) => { if (node) node.indeterminate = indeterminate; }} onChange={(event) => updateSelected(event.target.checked ? [...new Set([...selected, ...selectable.map((item) => item.key)])] : selected.filter((key) => !selectable.some((item) => item.key === key)))} />}
+        {showSelectAll && !canRemoveInline && <input type="checkbox" className="at-transfer__checkbox" aria-label={t('transfer.selectAll', { title: typeof title === 'string' ? title : '' })} checked={allChecked} disabled={disabled || !selectable.length} ref={(node) => { if (node) node.indeterminate = indeterminate; }} onChange={(event) => updateSelected(event.target.checked ? [...new Set([...selected, ...selectable.map((item) => item.key)])] : selected.filter((key) => !selectable.some((item) => item.key === key)))} />}
         <strong id={`${panelId}-title`}>{title}</strong>
-        <span className="at-transfer__count">{selectedHere.length ? `${selectedHere.length}/${all.length}` : all.length} 项</span>
+        <span className="at-transfer__count">{selectedHere.length ? `${selectedHere.length}/${all.length}` : all.length} {t('transfer.items')}</span>
       </header>
-      {showSearch && <label className="at-transfer__search"><Search size={14} /><input value={queries[direction]} placeholder={searchPlaceholder} aria-label={`搜索${typeof title === 'string' ? title : ''}`} disabled={disabled} onChange={(event) => setQueries((current) => ({ ...current, [direction]: event.target.value }))} />{queries[direction] && <button type="button" aria-label="清空搜索" onClick={() => setQueries((current) => ({ ...current, [direction]: '' }))}><Close size={10} /></button>}</label>}
+      {showSearch && <label className="at-transfer__search"><Search size={14} /><input value={queries[direction]} placeholder={searchPlaceholder} aria-label={t('transfer.search', { title: typeof title === 'string' ? title : '' })} disabled={disabled} onChange={(event) => setQueries((current) => ({ ...current, [direction]: event.target.value }))} />{queries[direction] && <button type="button" aria-label={t('common.clearSearch')} onClick={() => setQueries((current) => ({ ...current, [direction]: '' }))}><Close size={10} /></button>}</label>}
       <ul className="at-transfer__list" role="list">
         {visible.length === 0 && <li className="at-transfer__empty">{notFoundContent}</li>}
         {visible.map((item) => {
@@ -95,7 +102,7 @@ export function Transfer({
               {!canRemoveInline && <input type="checkbox" className="at-transfer__checkbox" checked={checked} disabled={disabled || item.disabled} onChange={(event) => updateSelected(event.target.checked ? [...selected, item.key] : selected.filter((key) => key !== item.key))} />}
               <span className="at-transfer__text">{content}{item.description && <small>{item.description}</small>}</span>
             </label>
-            {canRemoveInline && <button type="button" className="at-transfer__remove" aria-label={`移除 ${item.title}`} disabled={disabled || item.disabled} onClick={() => move('left', [item.key])}><Close size={12} /></button>}
+            {canRemoveInline && <button type="button" className="at-transfer__remove" aria-label={t('common.removeItem', { name: item.title })} disabled={disabled || item.disabled} onClick={() => move('left', [item.key])}><Close size={12} /></button>}
           </li>;
         })}
       </ul>

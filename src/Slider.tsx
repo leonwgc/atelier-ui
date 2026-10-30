@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type HTMLAttributes, type KeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/slider.css';
@@ -36,8 +37,11 @@ function toPair(value: SliderValue): [number, number] {
 
 export function Slider<T extends SliderValue = number>({
   value, defaultValue, onChange, onChangeComplete, min = 0, max = 100, step = 1, range = false, marks, tooltip = 'auto', tooltipFormatter,
-  disabled = false, vertical = false, size = 'md', label = '数值', showValue = false, included = true, className, style, ...props
+  disabled = false, vertical = false, size = 'md', label: labelProp, showValue = false, included = true, className, style, ...props
 }: SliderProps<T>) {
+  const { t } = useLocale();
+  const label = labelProp === undefined ? t('slider.label') : labelProp;
+
   const id = useId();
   const fallback = (range ? [min, min] : min) as T;
   const [current, setCurrent] = useControllableState<T>(value, defaultValue ?? fallback, onChange);
@@ -160,7 +164,7 @@ export function Slider<T extends SliderValue = number>({
           style={vertical ? { bottom: `${percent(point)}%` } : { left: `${percent(point)}%` }}
           role="slider"
           tabIndex={disabled ? -1 : 0}
-          aria-label={range ? `${label}${index === 0 ? '起始' : '结束'}` : label}
+          aria-label={range ? t(index === 0 ? 'slider.start' : 'slider.end', { label }) : label}
           aria-labelledby={showValue && !range ? `${id}-label` : undefined}
           aria-valuemin={range && index === 1 ? values[0] : min}
           aria-valuemax={range && index === 0 ? values[1] : max}

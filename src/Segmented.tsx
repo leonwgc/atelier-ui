@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/segmented.css';
@@ -20,8 +21,11 @@ export interface SegmentedProps<T extends string = string> extends Omit<HTMLAttr
 }
 
 export function Segmented<T extends string = string>({
-  options, value, defaultValue, onChange, size = 'md', block = false, disabled = false, vertical = false, shape = 'default', label = '视图切换', className, ...props
+  options, value, defaultValue, onChange, size = 'md', block = false, disabled = false, vertical = false, shape = 'default', label: labelProp, className, ...props
 }: SegmentedProps<T>) {
+  const { t } = useLocale();
+  const label = labelProp === undefined ? t('segmented.label') : labelProp;
+
   const items = options.map((option) => (typeof option === 'string' ? { label: option, value: option } as SegmentedOption<T> : option));
   const [current, setCurrent] = useControllableState<T | undefined>(value, defaultValue ?? items.find((item) => !item.disabled)?.value, (next) => { if (next !== undefined) onChange?.(next); });
   const rootRef = useRef<HTMLDivElement | null>(null);

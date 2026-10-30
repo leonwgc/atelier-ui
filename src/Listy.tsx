@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState, forwardRef, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 import './styles/theme.css';
 import './styles/listy.css';
@@ -25,8 +26,11 @@ export interface ListyProps<T> extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
 }
 
 function ListyInner<T>({
-  items, renderItem, itemKey, height = 320, itemHeight = 44, dynamicHeight = false, overscan = 4, onEndReached, endReachedThreshold = 120, onVisibleRangeChange, emptyText = '暂无数据', footer, split = true, className, style, ...props
+  items, renderItem, itemKey, height = 320, itemHeight = 44, dynamicHeight = false, overscan = 4, onEndReached, endReachedThreshold = 120, onVisibleRangeChange, emptyText: emptyTextProp, footer, split = true, className, style, ...props
 }: ListyProps<T>, ref: Ref<ListyRef>) {
+  const { t } = useLocale();
+  const emptyText = emptyTextProp === undefined ? t('common.noData') : emptyTextProp;
+
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const [scrollTop, setScrollTop] = useState(0);
   const [heights, setHeights] = useState<Record<number, number>>({});

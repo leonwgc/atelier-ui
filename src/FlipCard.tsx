@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import './styles/theme.css';
 import './styles/flip-card.css';
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
@@ -20,6 +21,8 @@ export function FlipCard({
   style,
   ...props
 }: FlipCardProps) {
+  const { t } = useLocale();
+
   const frontRef = useRef<HTMLDivElement>(null);
   const backRef = useRef<HTMLDivElement>(null);
   const cardStyle = {
@@ -38,7 +41,7 @@ export function FlipCard({
       className={cx('at-flip-card', flipped && 'at-flip-card--flipped', className)}
       style={cardStyle}
       role={props.role ?? 'group'}
-      aria-label={props['aria-label'] ?? 'Flip card'}
+      aria-label={props['aria-label'] ?? t('flipCard.label')}
     >
       <div className="at-flip-card__inner">
         <div ref={frontRef} className="at-flip-card__face at-flip-card__face--front" aria-hidden={flipped}>

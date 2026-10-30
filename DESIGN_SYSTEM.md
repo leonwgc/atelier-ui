@@ -107,6 +107,10 @@ These rules describe observable behavior that a framework adapter must preserve.
 - Map `className` and `style` to Vue `class` and `style`. Keep the `at-` class prefix and CSS custom properties stable. Forward attributes to the same semantic root element unless the module documents otherwise.
 - Expose imperative methods only when the current public interface already provides them. Do not expose internal state or implementation nodes as a substitute for a clear contract.
 
+### Localization
+
+Built-in text and accessible labels use the typed locale catalog in `src/locale/`. `ConfigProvider` selects a language pack, inherits missing configuration from its parent, and accepts message overrides and custom packs. Preserve explicit component text props and the default `zh-CN` behavior. Calendar and numeric formatting follow the pack's `formatLocale`. React portals preserve the locale context and expose `lang`; standalone APIs require a bound hook or an explicit locale. Adapters must preserve these precedence and fallback rules without translating application-owned data.
+
 ### Accessibility and overlays
 
 - Use native buttons, inputs, links, lists, and headings whenever their semantics fit. Associate labels, descriptions, and errors with their controls.

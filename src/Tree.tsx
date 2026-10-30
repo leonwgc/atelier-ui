@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { createContext, useContext, useMemo, useRef, useState, type CSSProperties, type HTMLAttributes, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/tree.css';
@@ -102,6 +103,8 @@ function conduct(nodes: TreeNode[], raw: Set<string>) {
 }
 
 function TreeNodeItem({ node, level, isLast, ancestorsLast }: { node: TreeNode; level: number; isLast: boolean; ancestorsLast: boolean[] }) {
+  const { t } = useLocale();
+
   const tree = useContext(TreeContext)!;
   const leaf = isLeaf(node);
   const expanded = tree.expandedKeys.includes(node.key);
@@ -134,7 +137,7 @@ function TreeNodeItem({ node, level, isLast, ancestorsLast }: { node: TreeNode; 
         type="button"
         tabIndex={-1}
         aria-hidden={leaf}
-        aria-label={expanded ? '收起' : '展开'}
+        aria-label={expanded ? t('common.collapse') : t('common.expand')}
         className={cx('at-tree__switcher', leaf && 'at-tree__switcher--leaf', expanded && 'at-tree__switcher--open', loading && 'at-tree__switcher--loading')}
         onClick={(event) => { event.stopPropagation(); if (!leaf) tree.toggleExpand(node); }}
       >{loading ? <span className="at-tree__spinner" /> : !leaf && (tree.switcherIcon ?? <ChevronRight size={14} />)}</button>
@@ -157,8 +160,11 @@ function TreeNodeItem({ node, level, isLast, ancestorsLast }: { node: TreeNode; 
 export function Tree({
   treeData, checkable = false, checkStrictly = false, selectable = true, multiple = false, expandedKeys: expandedProp, defaultExpandedKeys, defaultExpandAll = false, onExpand,
   selectedKeys: selectedProp, defaultSelectedKeys = [], onSelect, checkedKeys: checkedProp, defaultCheckedKeys = [], onCheck, showLine = false, showIcon = false, icon, switcherIcon, titleRender,
-  filterValue = '', loadData, expandAction = false, blockNode = false, label = '树形控件', className, onKeyDown, ...props
+  filterValue = '', loadData, expandAction = false, blockNode = false, label: labelProp, className, onKeyDown, ...props
 }: TreeProps) {
+  const { t } = useLocale();
+  const label = labelProp === undefined ? t('tree.label') : labelProp;
+
   const allBranchKeys = useMemo(() => { const keys: string[] = []; walk(treeData, (node) => { if (!isLeaf(node)) keys.push(node.key); }); return keys; }, [treeData]);
   const parentOf = useMemo(() => { const map = new Map<string, string | null>(); walk(treeData, (node, parent) => map.set(node.key, parent?.key ?? null)); return map; }, [treeData]);
   const [expanded, setExpanded] = useControllableState<string[]>(expandedProp, defaultExpandedKeys ?? (defaultExpandAll ? allBranchKeys : []), undefined);

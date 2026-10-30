@@ -1,9 +1,10 @@
+import { DemoLanguageProvider, useDemoLocale, translateDemoValue } from './locale';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   Alert, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, CheckboxGroup, Collapse, Controller, DatePicker, Descriptions, Divider, Drawer, Empty, Input, Modal, Pagination, Progress, RadioGroup,
   Select, Skeleton, Spin, Steps, Switch, Table, Tabs, Tag, Textarea, Timeline, Tooltip, Upload, useFieldArray, useForm, useWatch,
-  type TableColumn,
+  useModal, type TableColumn,
 } from '../src';
 import { additionalComponents, AdditionalComponentPage, isAdditionalPageId, type AdditionalPageId } from './AdditionalPages';
 import { dataEntryPages, DataEntryPage, isDataEntryPageId, type DataEntryPageId } from './DataEntryPages';
@@ -52,6 +53,9 @@ const navigation: Array<{ id: PageId; title: string; icon: string; group: string
 ];
 
 function App() {
+  const { t: dt, locale, setLocale } = useDemoLocale();
+  const localizedNavigation = useMemo(() => translateDemoValue(navigation, dt), [dt]);
+
   const [page, setPage] = useState<PageId>('overview');
   const [mobileMenu, setMobileMenu] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -61,12 +65,12 @@ function App() {
   const [activeResult, setActiveResult] = useState(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
-  const currentPage = navigation.find((item) => item.id === page)!;
-  const groups = [...new Set(navigation.map((item) => item.group))];
+  const currentPage = localizedNavigation.find((item) => item.id === page)!;
+  const groups = [...new Set(localizedNavigation.map((item) => item.group))];
   const searchResults = useMemo(() => {
     const query = searchQuery.trim().toLocaleLowerCase();
-    return navigation.filter((item) => !query || `${item.title} ${item.group}`.toLocaleLowerCase().includes(query));
-  }, [searchQuery]);
+    return localizedNavigation.filter((item) => !query || `${item.title} ${item.group}`.toLocaleLowerCase().includes(query));
+  }, [searchQuery, localizedNavigation]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -85,7 +89,7 @@ function App() {
     if (searchOpen) searchInputRef.current?.focus();
   }, [searchOpen]);
 
-  const navigateTo = (item: typeof navigation[number]) => {
+  const navigateTo = (item: typeof localizedNavigation[number]) => {
     setPage(item.id);
     setMobileMenu(false);
     setCollapsedGroups((current) => current.filter((group) => group !== item.group));
@@ -102,25 +106,28 @@ function App() {
         <span className="brand__mark"><span /><span /><span /><span /></span>
         <span className="brand__name">atelier<span>ui</span><small>DESIGN SYSTEM</small></span>
       </a>
-      <div className="sidebar__version"><span>组件手册</span><span className="version-pill">v0.1.0</span></div>
-      <nav className="side-nav" aria-label="组件导航">
+      <div className="sidebar__version"><span>{dt("组件手册")}</span><span className="version-pill">v0.1.0</span></div>
+      <nav className="side-nav" aria-label={dt("组件导航")}>
         {groups.map((group, groupIndex) => {
           const isCollapsed = collapsedGroups.includes(group);
           const groupId = `nav-group-${groupIndex}`;
           return <div className="side-nav__group" key={group}>
-          <button type="button" className="side-nav__label" aria-label={`${group} 分类`} aria-expanded={!isCollapsed} aria-controls={groupId} title={sidebarCollapsed ? group : undefined} onClick={() => setCollapsedGroups((current) => isCollapsed ? current.filter((item) => item !== group) : [...current, group])}>
+          <button type="button" className="side-nav__label" aria-label={dt("{0} 分类", { 0: group })} aria-expanded={!isCollapsed} aria-controls={groupId} title={sidebarCollapsed ? group : undefined} onClick={() => setCollapsedGroups((current) => isCollapsed ? current.filter((item) => item !== group) : [...current, group])}>
             <span>{sidebarCollapsed ? group.slice(0, 1) : group}</span><span className={`side-nav__chevron ${isCollapsed ? 'side-nav__chevron--collapsed' : ''}`} aria-hidden="true">⌄</span>
           </button>
           <div className="side-nav__items" id={groupId} hidden={isCollapsed}>
-            {navigation.filter((item) => item.group === group).map((item) => <button type="button" key={item.id} title={sidebarCollapsed ? item.title : undefined} aria-label={item.title} className={`side-nav__item ${page === item.id ? 'side-nav__item--active' : ''}`} onClick={() => navigateTo(item)}><span className="side-nav__icon">{item.icon}</span><span className="side-nav__item-label">{item.title}</span>{item.id === 'form' && <span className="nav-tag">NEW</span>}</button>)}
+            {localizedNavigation.filter((item) => item.group === group).map((item) => <button type="button" key={item.id} title={sidebarCollapsed ? item.title : undefined} aria-label={item.title} className={`side-nav__item ${page === item.id ? 'side-nav__item--active' : ''}`} onClick={() => navigateTo(item)}><span className="side-nav__icon">{item.icon}</span><span className="side-nav__item-label">{item.title}</span>{item.id === 'form' && <span className="nav-tag">NEW</span>}</button>)}
           </div>
           </div>;
         })}
       </nav>
-      <div className="sidebar__bottom"><div className="sidebar-note"><span className="sidebar-note__spark">✳</span><div><strong>精心打磨每个细节</strong><span>为产品界面而生的组件</span></div></div><div className="sidebar__copyright">Made for thoughtful interfaces <span>✦</span></div></div>
+      <div className="sidebar__bottom"><div className="sidebar-note"><span className="sidebar-note__spark">✳</span><div><strong>{dt("精心打磨每个细节")}</strong><span>{dt("为产品界面而生的组件")}</span></div></div><div className="sidebar__copyright">Made for thoughtful interfaces <span>✦</span></div></div>
     </aside>
     <main className="main-area" id="top">
-      <header className="topbar"><button className="sidebar-toggle" type="button" aria-label={sidebarCollapsed ? '展开侧边栏' : '收起侧边栏'} title={sidebarCollapsed ? '展开侧边栏' : '收起侧边栏'} onClick={() => setSidebarCollapsed((collapsed) => !collapsed)}><span aria-hidden="true">{sidebarCollapsed ? '›' : '‹'}</span></button><button className="mobile-menu" type="button" aria-label={mobileMenu ? '关闭导航' : '打开导航'} onClick={() => { setSidebarCollapsed(false); setMobileMenu((open) => !open); }}>☰</button><div className="breadcrumbs"><span>组件手册</span><span className="crumb-separator">/</span><strong>{currentPage.title}</strong></div><div className="topbar__right"><button ref={searchButtonRef} className="search-trigger" type="button" onClick={() => { setSearchQuery(''); setActiveResult(0); setSearchOpen(true); }} aria-label="全局搜索，Command 加 K"><span aria-hidden="true">⌕</span><kbd>⌘ K</kbd></button><span className="topbar__status"><i /> 所有组件已就绪</span></div></header>
+      <header className="topbar"><button className="sidebar-toggle" type="button" aria-label={sidebarCollapsed ? dt("展开侧边栏") : dt("收起侧边栏")} title={sidebarCollapsed ? dt("展开侧边栏") : dt("收起侧边栏")} onClick={() => setSidebarCollapsed((collapsed) => !collapsed)}><span aria-hidden="true">{sidebarCollapsed ? '›' : '‹'}</span></button><button className="mobile-menu" type="button" aria-label={mobileMenu ? dt("关闭导航") : dt("打开导航")} onClick={() => { setSidebarCollapsed(false); setMobileMenu((open) => !open); }}>☰</button><div className="breadcrumbs"><span>{dt("组件手册")}</span><span className="crumb-separator">/</span><strong>{currentPage.title}</strong></div><div className="topbar__right"><div className="language-switch" role="group" aria-label={locale === 'zh-CN' ? '文档语言' : 'Documentation language'}>
+        <button type="button" lang="zh-CN" aria-pressed={locale === 'zh-CN'} onClick={() => setLocale('zh-CN')}>中文</button>
+        <button type="button" lang="en-US" aria-pressed={locale === 'en-US'} onClick={() => setLocale('en-US')}>English</button>
+      </div><button ref={searchButtonRef} className="search-trigger" type="button" onClick={() => { setSearchQuery(''); setActiveResult(0); setSearchOpen(true); }} aria-label={dt("全局搜索，Command 加 K")}><span aria-hidden="true">⌕</span><kbd>⌘ K</kbd></button><span className="topbar__status"><i /> {dt("所有组件已就绪")}</span></div></header>
       <div className="content-wrap">
         {page === 'overview' && <Overview onNavigate={setPage} />}
         {page === 'form' && <FormPage />}
@@ -155,22 +162,22 @@ function App() {
         {isDataDisplayPageId(page) && <DataDisplayPage id={page} />}
         {isAdditionalPageId(page) && <AdditionalComponentPage id={page} />}
         {isAnimationPageId(page) && <AnimationPage id={page} />}
-        <footer className="site-footer"><span>Atelier UI · 让界面细节自然发生</span><span>React 18 · TypeScript</span></footer>
+        <footer className="site-footer"><span>{dt("Atelier UI · 让界面细节自然发生")}</span><span>React 18 · TypeScript</span></footer>
       </div>
     </main>
     {searchOpen && <div className="search-overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) closeSearch(); }}>
       <section className="global-search" role="dialog" aria-modal="true" aria-labelledby="global-search-title">
-        <h2 id="global-search-title" className="sr-only">搜索组件</h2>
+        <h2 id="global-search-title" className="sr-only">{dt("搜索组件")}</h2>
         <div className="global-search__input-wrap"><span aria-hidden="true">⌕</span><input ref={searchInputRef} value={searchQuery} onChange={(event) => { setSearchQuery(event.target.value); setActiveResult(0); }} onKeyDown={(event) => {
           if (event.key === 'Escape') { event.preventDefault(); closeSearch(); }
           if (event.key === 'ArrowDown' && searchResults.length) { event.preventDefault(); setActiveResult((index) => Math.min(index + 1, searchResults.length - 1)); }
           if (event.key === 'ArrowUp' && searchResults.length) { event.preventDefault(); setActiveResult((index) => Math.max(index - 1, 0)); }
           if (event.key === 'Enter' && searchResults[activeResult]) { event.preventDefault(); navigateTo(searchResults[activeResult]); }
-        }} placeholder="搜索组件或分类…" aria-label="搜索组件或分类" aria-controls="global-search-results" aria-activedescendant={searchResults[activeResult] ? `search-result-${searchResults[activeResult].id}` : undefined} autoComplete="off" /><kbd>ESC</kbd></div>
-        <div className="global-search__results" id="global-search-results" role="listbox" aria-label="搜索结果">
-          {searchResults.length ? searchResults.map((item, index) => <button type="button" role="option" aria-selected={activeResult === index} id={`search-result-${item.id}`} key={item.id} className={`global-search__result ${activeResult === index ? 'global-search__result--active' : ''}`} onMouseEnter={() => setActiveResult(index)} onClick={() => navigateTo(item)}><span className="global-search__result-icon">{item.icon}</span><span className="global-search__result-copy"><strong>{item.title}</strong><small>{item.group}</small></span><kbd>↵</kbd></button>) : <p className="global-search__empty">没有找到匹配的组件</p>}
+        }} placeholder={dt("搜索组件或分类…")} aria-label={dt("搜索组件或分类")} aria-controls="global-search-results" aria-activedescendant={searchResults[activeResult] ? `search-result-${searchResults[activeResult].id}` : undefined} autoComplete="off" /><kbd>ESC</kbd></div>
+        <div className="global-search__results" id="global-search-results" role="listbox" aria-label={dt("搜索结果")}>
+          {searchResults.length ? searchResults.map((item, index) => <button type="button" role="option" aria-selected={activeResult === index} id={`search-result-${item.id}`} key={item.id} className={`global-search__result ${activeResult === index ? 'global-search__result--active' : ''}`} onMouseEnter={() => setActiveResult(index)} onClick={() => navigateTo(item)}><span className="global-search__result-icon">{item.icon}</span><span className="global-search__result-copy"><strong>{item.title}</strong><small>{item.group}</small></span><kbd>↵</kbd></button>) : <p className="global-search__empty">{dt("没有找到匹配的组件")}</p>}
         </div>
-        <footer className="global-search__footer"><span>↑ ↓ 选择</span><span>Enter 打开</span><span>Esc 关闭</span></footer>
+        <footer className="global-search__footer"><span>{dt("↑ ↓ 选择")}</span><span>{dt("Enter 打开")}</span><span>{dt("Esc 关闭")}</span></footer>
       </section>
     </div>}
   </div>;
@@ -971,21 +978,23 @@ export function ProjectDrawer() {
 } as const;
 
 function Overview({ onNavigate }: { onNavigate: (page: PageId) => void }) {
+  const { t: dt } = useDemoLocale();
+
   return <>
     <section className="hero">
-      <div className="hero__copy"><div className="hero__kicker"><span>✦</span> A small system for thoughtful products</div><h1>好组件，<em>让界面<br />自然发生。</em></h1><p>一套从零构建的 React 组件库。清晰的 API、克制的视觉与灵活的 Hooks，让产品界面从基础到细节都恰到好处。</p><div className="hero__actions"><Button variant="primary" onClick={() => onNavigate('form')}>探索 Form Hooks <span>↗</span></Button><Button onClick={() => onNavigate('buttons')}>浏览基础组件</Button></div><div className="hero__meta"><span><b className="meta-dot meta-dot--purple" /> React 18</span><span><b className="meta-dot meta-dot--green" /> TypeScript</span><span><b className="meta-dot meta-dot--orange" /> CSS Variables</span></div></div>
-      <div className="hero-art" aria-label="组件库示例卡片"><div className="hero-art__halo" /><div className="floating-chip floating-chip--top"><i>✦</i> Thoughtful by design</div><div className="hero-card"><div className="hero-card__top"><span className="hero-card__tag">NEW PROJECT</span><span className="hero-card__more">···</span></div><div className="hero-card__title">Create a workspace</div><div className="hero-card__sub">Tell us a little about your team.</div><div className="mock-label">Workspace name</div><div className="mock-input"><span>✳</span> Northstar Studio</div><div className="mock-label mock-label--spaced">Plan</div><div className="mock-select"><span className="mock-avatar">✦</span><span><b>Studio</b><small>For growing teams</small></span><span className="mock-check">✓</span></div><div className="mock-footer"><span>Step 1 of 3</span><Button variant="primary" size="sm">Continue <span>→</span></Button></div></div><div className="floating-chip floating-chip--bottom"><span className="avatar-stack"><i>J</i><i>M</i><i>A</i></span> Built for real work</div><span className="hero-art__star hero-art__star--one">✳</span><span className="hero-art__star hero-art__star--two">✦</span></div>
+      <div className="hero__copy"><div className="hero__kicker"><span>✦</span> A small system for thoughtful products</div><h1>{dt("好组件，")}<em>{dt("让界面")}<br />{dt("自然发生。")}</em></h1><p>{dt("一套从零构建的 React 组件库。清晰的 API、克制的视觉与灵活的 Hooks，让产品界面从基础到细节都恰到好处。")}</p><div className="hero__actions"><Button variant="primary" onClick={() => onNavigate('form')}>{dt("探索 Form Hooks")}<span>↗</span></Button><Button onClick={() => onNavigate('buttons')}>{dt("浏览基础组件")}</Button></div><div className="hero__meta"><span><b className="meta-dot meta-dot--purple" /> React 18</span><span><b className="meta-dot meta-dot--green" /> TypeScript</span><span><b className="meta-dot meta-dot--orange" /> CSS Variables</span></div></div>
+      <div className="hero-art" aria-label={dt("组件库示例卡片")}><div className="hero-art__halo" /><div className="floating-chip floating-chip--top"><i>✦</i> Thoughtful by design</div><div className="hero-card"><div className="hero-card__top"><span className="hero-card__tag">NEW PROJECT</span><span className="hero-card__more">···</span></div><div className="hero-card__title">Create a workspace</div><div className="hero-card__sub">Tell us a little about your team.</div><div className="mock-label">Workspace name</div><div className="mock-input"><span>✳</span> Northstar Studio</div><div className="mock-label mock-label--spaced">Plan</div><div className="mock-select"><span className="mock-avatar">✦</span><span><b>Studio</b><small>For growing teams</small></span><span className="mock-check">✓</span></div><div className="mock-footer"><span>Step 1 of 3</span><Button variant="primary" size="sm">Continue <span>→</span></Button></div></div><div className="floating-chip floating-chip--bottom"><span className="avatar-stack"><i>J</i><i>M</i><i>A</i></span> Built for real work</div><span className="hero-art__star hero-art__star--one">✳</span><span className="hero-art__star hero-art__star--two">✦</span></div>
     </section>
-    <section className="stats-strip"><div><strong>94</strong><span>公开组件模块</span></div><i /><div><strong>01</strong><span>灵活的表单 Hooks</span></div><i /><div><strong>100<span>%</span></strong><span>TypeScript 类型支持</span></div><i /><div><strong>CSS</strong><span>变量驱动的主题系统</span></div></section>
-    <div className="section-intro"><div><div className="eyebrow"><span className="eyebrow__dot" /> COMPONENT LIBRARY</div><h2>从基础控件，到完整体验</h2><p>每个组件都经过精心设计，准备好成为你产品的一部分。</p></div><span className="section-index">01 — 04</span></div>
+    <section className="stats-strip"><div><strong>94</strong><span>{dt("公开组件模块")}</span></div><i /><div><strong>01</strong><span>{dt("灵活的表单 Hooks")}</span></div><i /><div><strong>100<span>%</span></strong><span>{dt("TypeScript 类型支持")}</span></div><i /><div><strong>CSS</strong><span>{dt("变量驱动的主题系统")}</span></div></section>
+    <div className="section-intro"><div><div className="eyebrow"><span className="eyebrow__dot" /> COMPONENT LIBRARY</div><h2>{dt("从基础控件，到完整体验")}</h2><p>{dt("每个组件都经过精心设计，准备好成为你产品的一部分。")}</p></div><span className="section-index">01 — 04</span></div>
     <div className="overview-grid">
-      <OverviewTile index="01" title="Form Hooks" subtitle="灵活管理表单状态" color="lavender" icon="⌘" onClick={() => onNavigate('form')}><div className="tile-form-preview"><div className="tile-form-preview__label">项目名称 <i>*</i></div><div className="tile-form-preview__input">Aurora workspace <span>⌁</span></div><div className="tile-form-preview__hint">名称清晰，团队更易找到</div></div><span className="tile-tag">useForm · Controller · useFieldArray</span></OverviewTile>
-      <OverviewTile index="02" title="基础组件" subtitle="一切从好的细节开始" color="peach" icon="◉" onClick={() => onNavigate('buttons')}><div className="tile-button-preview"><span className="tile-mock-button tile-mock-button--primary">Create project</span><span className="tile-mock-button">Cancel</span><span className="tile-mock-button tile-mock-button--text">Learn more ↗</span></div><span className="tile-tag">Button · Input · Select · Switch</span></OverviewTile>
-      <OverviewTile index="03" title="反馈体验" subtitle="适时出现，恰好表达" color="mint" icon="▣" onClick={() => onNavigate('feedback')}><div className="tile-feedback-preview"><span className="success-mark">✓</span><span><b>更改已保存</b><small>你的工作区已更新</small></span><span className="feedback-time">刚刚</span></div><span className="tile-tag">Modal · Confirm · Loading</span></OverviewTile>
-      <OverviewTile index="04" title="数据展示" subtitle="让信息更清晰有序" color="sky" icon="▦" onClick={() => onNavigate('table')}><div className="tile-table-preview"><div><i /><b>可见性</b><span>成员</span><em>最近更新</em></div><div><i /><b>仅团队</b><span>12 人</span><em>3 分钟前</em></div><div><i /><b>公开</b><span>28 人</span><em>昨天</em></div></div><span className="tile-tag">Table · Pagination · Selection</span></OverviewTile>
+      <OverviewTile index="01" title="Form Hooks" subtitle={dt("灵活管理表单状态")} color="lavender" icon="⌘" onClick={() => onNavigate('form')}><div className="tile-form-preview"><div className="tile-form-preview__label">{dt("项目名称")}<i>*</i></div><div className="tile-form-preview__input">Aurora workspace <span>⌁</span></div><div className="tile-form-preview__hint">{dt("名称清晰，团队更易找到")}</div></div><span className="tile-tag">useForm · Controller · useFieldArray</span></OverviewTile>
+      <OverviewTile index="02" title={dt("基础组件")} subtitle={dt("一切从好的细节开始")} color="peach" icon="◉" onClick={() => onNavigate('buttons')}><div className="tile-button-preview"><span className="tile-mock-button tile-mock-button--primary">Create project</span><span className="tile-mock-button">Cancel</span><span className="tile-mock-button tile-mock-button--text">Learn more ↗</span></div><span className="tile-tag">Button · Input · Select · Switch</span></OverviewTile>
+      <OverviewTile index="03" title={dt("反馈体验")} subtitle={dt("适时出现，恰好表达")} color="mint" icon="▣" onClick={() => onNavigate('feedback')}><div className="tile-feedback-preview"><span className="success-mark">✓</span><span><b>{dt("更改已保存")}</b><small>{dt("你的工作区已更新")}</small></span><span className="feedback-time">{dt("刚刚")}</span></div><span className="tile-tag">Modal · Confirm · Loading</span></OverviewTile>
+      <OverviewTile index="04" title={dt("数据展示")} subtitle={dt("让信息更清晰有序")} color="sky" icon="▦" onClick={() => onNavigate('table')}><div className="tile-table-preview"><div><i /><b>{dt("可见性")}</b><span>{dt("成员")}</span><em>{dt("最近更新")}</em></div><div><i /><b>{dt("仅团队")}</b><span>{dt("12 人")}</span><em>{dt("3 分钟前")}</em></div><div><i /><b>{dt("公开")}</b><span>{dt("28 人")}</span><em>{dt("昨天")}</em></div></div><span className="tile-tag">Table · Pagination · Selection</span></OverviewTile>
     </div>
-    <section className="principles"><div className="principles__intro"><div className="eyebrow"><span className="eyebrow__dot" /> THE PRINCIPLES</div><h2>设计从不止于<br /><em>看起来不错。</em></h2><p>好用的组件，应该把正确的默认值、可靠的状态管理与柔和的视觉融合在一起。</p><Button variant="tertiary" onClick={() => onNavigate('form')}>了解表单设计理念 <span>→</span></Button></div><div className="principle-list"><Principle number="01" title="清晰而有力的 API" text="熟悉的心智模型，减少学习成本，让你专注于产品本身。" /><Principle number="02" title="状态管理不打扰" text="订阅式更新与受控接入，字段变化只更新真正相关的内容。" /><Principle number="03" title="细节经得起推敲" text="从焦点状态到错误提示，每一次交互都有清楚的回应。" /></div></section>
-    <section className="getting-started"><div><span className="eyebrow"><span className="eyebrow__dot" /> GET STARTED</span><h2>从一个组件开始，<br />搭建属于你的界面。</h2><p>安装后即可使用组件与 Hooks。完整文档、交互示例和 API 说明都在这里。</p></div><div className="install-card"><div className="install-card__top"><span><i /> Terminal</span><span>⌘</span></div><code><b>$</b> npm install ../atelier-ui</code><div className="install-card__line" /><pre><span>import</span> {'{ useForm }'} <span>from</span> <i>'atelier-ui/form'</i></pre><Button variant="primary" onClick={() => onNavigate('buttons')}>开始浏览 <span>↗</span></Button></div></section>
+    <section className="principles"><div className="principles__intro"><div className="eyebrow"><span className="eyebrow__dot" /> THE PRINCIPLES</div><h2>{dt("设计从不止于")}<br /><em>{dt("看起来不错。")}</em></h2><p>{dt("好用的组件，应该把正确的默认值、可靠的状态管理与柔和的视觉融合在一起。")}</p><Button variant="tertiary" onClick={() => onNavigate('form')}>{dt("了解表单设计理念")}<span>→</span></Button></div><div className="principle-list"><Principle number="01" title={dt("清晰而有力的 API")} text={dt("熟悉的心智模型，减少学习成本，让你专注于产品本身。")} /><Principle number="02" title={dt("状态管理不打扰")} text={dt("订阅式更新与受控接入，字段变化只更新真正相关的内容。")} /><Principle number="03" title={dt("细节经得起推敲")} text={dt("从焦点状态到错误提示，每一次交互都有清楚的回应。")} /></div></section>
+    <section className="getting-started"><div><span className="eyebrow"><span className="eyebrow__dot" /> GET STARTED</span><h2>{dt("从一个组件开始，")}<br />{dt("搭建属于你的界面。")}</h2><p>{dt("安装后即可使用组件与 Hooks。完整文档、交互示例和 API 说明都在这里。")}</p></div><div className="install-card"><div className="install-card__top"><span><i /> Terminal</span><span>⌘</span></div><code><b>$</b> npm install ../atelier-ui</code><div className="install-card__line" /><pre><span>import</span> {'{ useForm }'} <span>from</span> <i>'atelier-ui/form'</i></pre><Button variant="primary" onClick={() => onNavigate('buttons')}>{dt("开始浏览")}<span>↗</span></Button></div></section>
   </>;
 }
 
@@ -998,28 +1007,30 @@ function Principle({ number, title, text }: { number: string; title: string; tex
 }
 
 function FormPage() {
+  const { t: dt } = useDemoLocale();
+
   const form = useForm<{ workspace: string; email: string; plan: string; updates: boolean; members: Array<{ name: string; role: string }> }>({ mode: 'onBlur', defaultValues: { workspace: '', email: '', plan: 'studio', updates: true, members: [{ name: 'Jordan Lee', role: 'Admin' }] } });
   const members = useFieldArray<{ workspace: string; email: string; plan: string; updates: boolean; members: Array<{ name: string; role: string }> }, { name: string; role: string }>({ control: form.control, name: 'members' });
   const watchedPlan = useWatch({ control: form.control, name: 'plan' });
   const onSubmit = form.handleSubmit(async (values) => {
     await new Promise((resolve) => window.setTimeout(resolve, 450));
-    window.alert(`已创建工作区：${values.workspace}`);
+    window.alert(dt("已创建工作区：{0}", { 0: values.workspace }));
   });
   return <>
-    <PageHeading eyebrow="FORM MANAGEMENT" title="Form Hooks" description="以 Hooks 管理表单状态、校验与提交。用原生 form 组织界面，让数据流保持清晰。" badge="Hook-first API" />
-    <div className="docs-callout"><span>✦</span><div><strong>从 useForm 开始</strong><p>字段通过 register 接入；复杂受控组件使用 Controller。字段订阅独立更新，减少不必要的渲染。</p></div><a href="#form-api">API 说明 ↓</a></div>
-    <ExampleCard title="创建工作区" description="结合注册字段、受控 Select、动态成员列表与提交状态。" code={codeSamples.workspaceForm}>
+    <PageHeading eyebrow="FORM MANAGEMENT" title="Form Hooks" description={dt("以 Hooks 管理表单状态、校验与提交。用原生 form 组织界面，让数据流保持清晰。")} badge="Hook-first API" />
+    <div className="docs-callout"><span>✦</span><div><strong>{dt("从 useForm 开始")}</strong><p>{dt("字段通过 register 接入；复杂受控组件使用 Controller。字段订阅独立更新，减少不必要的渲染。")}</p></div><a href="#form-api">{dt("API 说明 ↓")}</a></div>
+    <ExampleCard title={dt("创建工作区")} description={dt("结合注册字段、受控 Select、动态成员列表与提交状态。")} code={codeSamples.workspaceForm}>
       <div className="form-preview-layout"><form className="workspace-form" onSubmit={(event) => void onSubmit(event)} noValidate>
-        <div className="form-preview-heading"><span className="form-preview-icon">✳</span><div><h4>创建你的工作区</h4><p>邀请团队成员，一起开始协作。</p></div></div>
-        <div className="form-fields-grid"><Input label="工作区名称" placeholder="例如：Northstar Studio" error={form.formState.errors.workspace?.message} {...form.register('workspace', { required: '请输入工作区名称', minLength: { value: 3, message: '至少输入 3 个字符' } })} /><Input label="工作邮箱" placeholder="you@company.com" type="email" error={form.formState.errors.email?.message} {...form.register('email', { required: '请输入工作邮箱', pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: '请输入有效的邮箱地址' } })} /></div>
-        <Controller control={form.control} name="plan" render={({ field }) => <Select label="选择套餐" value={String(field.value ?? '')} onChange={(value) => field.onChange(value)} onBlur={field.onBlur} options={[{ label: 'Starter · 个人项目', value: 'starter' }, { label: 'Studio · 成长团队', value: 'studio' }, { label: 'Enterprise · 大型组织', value: 'enterprise' }]} />} />
-        <div className="dynamic-members"><div className="dynamic-members__top"><div><label className="at-field__label">团队成员</label><span>添加一起协作的伙伴</span></div><Button size="sm" onClick={() => members.append({ name: '', role: 'Member' })}>＋ 添加成员</Button></div>{members.fields.map((member, index) => <div className="member-row" key={member.id}><Input aria-label={`成员 ${index + 1} 姓名`} placeholder="姓名" {...form.register(`members.${index}.name`)} /><Select aria-label={`成员 ${index + 1} 角色`} options={[{ label: '管理员', value: 'Admin' }, { label: '成员', value: 'Member' }, { label: '访客', value: 'Guest' }]} {...form.register(`members.${index}.role`)} /><button type="button" className="remove-member" aria-label="移除成员" onClick={() => members.remove(index)}>×</button></div>)}</div>
-        <div className="form-preview-footer"><Checkbox {...form.register('updates')}>接收产品更新和团队灵感</Checkbox><Button type="submit" variant="primary" loading={form.formState.isSubmitting}>创建工作区 <span>→</span></Button></div>
-      </form><aside className="form-state-panel"><div className="state-panel__title"><span>LIVE STATE</span><i /></div><div className="state-row"><span>当前套餐</span><b>{String(watchedPlan ?? '—')}</b></div><div className="state-row"><span>表单状态</span><b className={form.formState.isDirty ? 'state-value--active' : ''}>{form.formState.isDirty ? '已修改' : '初始状态'}</b></div><div className="state-row"><span>校验状态</span><b>{form.formState.isValid ? '无错误' : `${Object.keys(form.formState.errors).length} 个错误`}</b></div><div className="state-json"><span>formState</span><code>{`{\n  isDirty: ${form.formState.isDirty},\n  isSubmitting: ${form.formState.isSubmitting},\n  submitCount: ${form.formState.submitCount}\n}`}</code></div><button type="button" className="reset-link" onClick={() => form.reset()}>↺ 重置所有字段</button></aside></div>
+        <div className="form-preview-heading"><span className="form-preview-icon">✳</span><div><h4>{dt("创建你的工作区")}</h4><p>{dt("邀请团队成员，一起开始协作。")}</p></div></div>
+        <div className="form-fields-grid"><Input label={dt("工作区名称")} placeholder={dt("例如：Northstar Studio")} error={form.formState.errors.workspace?.message} {...form.register('workspace', { required: dt("请输入工作区名称"), minLength: { value: 3, message: dt("至少输入 3 个字符") } })} /><Input label={dt("工作邮箱")} placeholder="you@company.com" type="email" error={form.formState.errors.email?.message} {...form.register('email', { required: dt("请输入工作邮箱"), pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: dt("请输入有效的邮箱地址") } })} /></div>
+        <Controller control={form.control} name="plan" render={({ field }) => <Select label={dt("选择套餐")} value={String(field.value ?? '')} onChange={(value) => field.onChange(value)} onBlur={field.onBlur} options={[{ label: dt("Starter · 个人项目"), value: 'starter' }, { label: dt("Studio · 成长团队"), value: 'studio' }, { label: dt("Enterprise · 大型组织"), value: 'enterprise' }]} />} />
+        <div className="dynamic-members"><div className="dynamic-members__top"><div><label className="at-field__label">{dt("团队成员")}</label><span>{dt("添加一起协作的伙伴")}</span></div><Button size="sm" onClick={() => members.append({ name: '', role: 'Member' })}>{dt("＋ 添加成员")}</Button></div>{members.fields.map((member, index) => <div className="member-row" key={member.id}><Input aria-label={dt("成员 {0} 姓名", { 0: index + 1 })} placeholder={dt("姓名")} {...form.register(`members.${index}.name`)} /><Select aria-label={dt("成员 {0} 角色", { 0: index + 1 })} options={[{ label: dt("管理员"), value: 'Admin' }, { label: dt("成员"), value: 'Member' }, { label: dt("访客"), value: 'Guest' }]} {...form.register(`members.${index}.role`)} /><button type="button" className="remove-member" aria-label={dt("移除成员")} onClick={() => members.remove(index)}>×</button></div>)}</div>
+        <div className="form-preview-footer"><Checkbox {...form.register('updates')}>{dt("接收产品更新和团队灵感")}</Checkbox><Button type="submit" variant="primary" loading={form.formState.isSubmitting}>{dt("创建工作区")}<span>→</span></Button></div>
+      </form><aside className="form-state-panel"><div className="state-panel__title"><span>LIVE STATE</span><i /></div><div className="state-row"><span>{dt("当前套餐")}</span><b>{String(watchedPlan ?? '—')}</b></div><div className="state-row"><span>{dt("表单状态")}</span><b className={form.formState.isDirty ? 'state-value--active' : ''}>{form.formState.isDirty ? dt("已修改") : dt("初始状态")}</b></div><div className="state-row"><span>{dt("校验状态")}</span><b>{form.formState.isValid ? dt("无错误") : dt("{0} 个错误", { 0: Object.keys(form.formState.errors).length })}</b></div><div className="state-json"><span>formState</span><code>{`{\n  isDirty: ${form.formState.isDirty},\n  isSubmitting: ${form.formState.isSubmitting},\n  submitCount: ${form.formState.submitCount}\n}`}</code></div><button type="button" className="reset-link" onClick={() => form.reset()}>{dt("↺ 重置所有字段")}</button></aside></div>
     </ExampleCard>
-    <div className="section-heading-row" id="form-api"><div><div className="eyebrow"><span className="eyebrow__dot" /> CORE API</div><h2>让表单状态有迹可循</h2></div><span className="section-index">01 — 03</span></div>
-    <div className="api-grid"><ApiCard title="useForm" text="创建并配置表单实例，返回字段注册、提交处理和状态控制方法。" tags={['register', 'handleSubmit', 'reset', 'trigger']} /><ApiCard title="Controller" text="连接 Select 等受控组件，统一提供 value、onChange、onBlur 与字段状态。" tags={['field', 'fieldState', 'formState']} /><ApiCard title="useFieldArray" text="管理动态增删的字段数组，并提供 append、remove、move 等操作。" tags={['append', 'remove', 'move', 'replace']} /></div>
-    <div className="implementation-note"><span>✦</span><p><strong>校验按需触发。</strong>默认在提交时校验，也可以配置为输入或失焦时校验。内置规则覆盖必填、长度、数值范围、正则与异步自定义校验；Resolver 可连接 Zod 或 Yup。</p></div>
+    <div className="section-heading-row" id="form-api"><div><div className="eyebrow"><span className="eyebrow__dot" /> CORE API</div><h2>{dt("让表单状态有迹可循")}</h2></div><span className="section-index">01 — 03</span></div>
+    <div className="api-grid"><ApiCard title="useForm" text={dt("创建并配置表单实例，返回字段注册、提交处理和状态控制方法。")} tags={['register', 'handleSubmit', 'reset', 'trigger']} /><ApiCard title="Controller" text={dt("连接 Select 等受控组件，统一提供 value、onChange、onBlur 与字段状态。")} tags={['field', 'fieldState', 'formState']} /><ApiCard title="useFieldArray" text={dt("管理动态增删的字段数组，并提供 append、remove、move 等操作。")} tags={['append', 'remove', 'move', 'replace']} /></div>
+    <div className="implementation-note"><span>✦</span><p><strong>{dt("校验按需触发。")}</strong>{dt("默认在提交时校验，也可以配置为输入或失焦时校验。内置规则覆盖必填、长度、数值范围、正则与异步自定义校验；Resolver 可连接 Zod 或 Yup。")}</p></div>
   </>;
 }
 
@@ -1028,53 +1039,64 @@ function ApiCard({ title, text, tags }: { title: string; text: string; tags: str
 }
 
 function ButtonPage() {
+  const { t: dt } = useDemoLocale();
+
   const [loading, setLoading] = useState(false);
-  return <><PageHeading eyebrow="FOUNDATIONS" title="Button 按钮" description="清楚表达操作优先级，在需要的时候给出恰到好处的反馈。" badge="Button" />
-    <ExampleCard title="按钮类型" description="根据操作的重要程度，选择合适的视觉权重。" code={codeSamples.buttonTypes}><div className="component-row"><Button variant="primary">创建项目 <span>→</span></Button><Button variant="secondary">取消</Button><Button variant="tertiary">了解更多 ↗</Button><Button variant="danger">删除项目</Button><Button variant="ghost">更多操作</Button></div></ExampleCard>
-    <ExampleCard title="尺寸与状态" description="提供三种尺寸，并支持加载和禁用状态。" code={codeSamples.buttonStates}><div className="component-row component-row--align-end"><Button size="sm">小号按钮</Button><Button size="md">默认尺寸</Button><Button size="lg" variant="primary">主要操作</Button><Button loading variant="primary">正在保存</Button><Button disabled>暂不可用</Button></div></ExampleCard>
-    <ExampleCard title="交互示例" description="点击按钮体验异步加载状态。" code={codeSamples.buttonLoading}><div className="component-row"><Button variant="primary" loading={loading} onClick={() => { setLoading(true); window.setTimeout(() => setLoading(false), 1200); }}>保存设置</Button><span className="demo-hint">点击后显示 1.2 秒加载状态</span></div></ExampleCard>
+  return <><PageHeading eyebrow="FOUNDATIONS" title={dt("Button 按钮")} description={dt("清楚表达操作优先级，在需要的时候给出恰到好处的反馈。")} badge="Button" />
+    <ExampleCard title={dt("按钮类型")} description={dt("根据操作的重要程度，选择合适的视觉权重。")} code={codeSamples.buttonTypes}><div className="component-row"><Button variant="primary">{dt("创建项目")}<span>→</span></Button><Button variant="secondary">{dt("取消")}</Button><Button variant="tertiary">{dt("了解更多 ↗")}</Button><Button variant="danger">{dt("删除项目")}</Button><Button variant="ghost">{dt("更多操作")}</Button></div></ExampleCard>
+    <ExampleCard title={dt("尺寸与状态")} description={dt("提供三种尺寸，并支持加载和禁用状态。")} code={codeSamples.buttonStates}><div className="component-row component-row--align-end"><Button size="sm">{dt("小号按钮")}</Button><Button size="md">{dt("默认尺寸")}</Button><Button size="lg" variant="primary">{dt("主要操作")}</Button><Button loading variant="primary">{dt("正在保存")}</Button><Button disabled>{dt("暂不可用")}</Button></div></ExampleCard>
+    <ExampleCard title={dt("交互示例")} description={dt("点击按钮体验异步加载状态。")} code={codeSamples.buttonLoading}><div className="component-row"><Button variant="primary" loading={loading} onClick={() => { setLoading(true); window.setTimeout(() => setLoading(false), 1200); }}>{dt("保存设置")}</Button><span className="demo-hint">{dt("点击后显示 1.2 秒加载状态")}</span></div></ExampleCard>
     <ApiTable rows={[["variant", "primary | secondary | tertiary | danger | ghost", "secondary"], ["size", "sm | md | lg", "md"], ["loading", "boolean", "false"], ["fullWidth", "boolean", "false"], ["icon", "ReactNode", "—"]]} />
   </>;
 }
 
 function InputPage() {
+  const { t: dt } = useDemoLocale();
+
   const [query, setQuery] = useState('');
-  return <><PageHeading eyebrow="DATA ENTRY" title="Input 输入组件" description="为文本与多行内容提供清晰、友好的输入体验。" badge="Input · Textarea" />
-    <ExampleCard title="Input 输入框" description="支持标签、提示、错误状态、前后缀和清空操作。" code={codeSamples.inputs}><div className="input-demo-grid"><Input label="项目名称" placeholder="请输入项目名称" /><Input label="搜索成员" placeholder="按姓名或邮箱搜索" prefix={<span className="search-icon">⌕</span>} clearable value={query} onChange={(event) => setQuery(event.target.value)} /><Input label="工作邮箱" placeholder="name@company.com" error="请输入有效的邮箱地址" /><Input label="只读字段" value="workspace-id-1842" readOnly hint="此字段由系统自动生成" /></div></ExampleCard>
-    <ExampleCard title="Textarea 多行输入" description="适合备注、描述等较长内容。" code={codeSamples.textarea}><div className="textarea-demo"><Textarea label="项目简介" placeholder="描述一下这个项目…" rows={4} hint="简单介绍项目目标和团队协作方式" /></div></ExampleCard>
+  return <><PageHeading eyebrow="DATA ENTRY" title={dt("Input 输入组件")} description={dt("为文本与多行内容提供清晰、友好的输入体验。")} badge="Input · Textarea" />
+    <ExampleCard title={dt("Input 输入框")} description={dt("支持标签、提示、错误状态、前后缀和清空操作。")} code={codeSamples.inputs}><div className="input-demo-grid"><Input label={dt("项目名称")} placeholder={dt("请输入项目名称")} /><Input label={dt("搜索成员")} placeholder={dt("按姓名或邮箱搜索")} prefix={<span className="search-icon">⌕</span>} clearable value={query} onChange={(event) => setQuery(event.target.value)} /><Input label={dt("工作邮箱")} placeholder="name@company.com" error={dt("请输入有效的邮箱地址")} /><Input label={dt("只读字段")} value="workspace-id-1842" readOnly hint={dt("此字段由系统自动生成")} /></div></ExampleCard>
+    <ExampleCard title={dt("Textarea 多行输入")} description={dt("适合备注、描述等较长内容。")} code={codeSamples.textarea}><div className="textarea-demo"><Textarea label={dt("项目简介")} placeholder={dt("描述一下这个项目…")} rows={4} hint={dt("简单介绍项目目标和团队协作方式")} /></div></ExampleCard>
     <ApiTable rows={[["label", "string", "—"], ["hint / error", "string", "—"], ["prefix / suffix", "ReactNode", "—"], ["clearable", "boolean", "false"], ["size", "'sm' | 'md' | 'lg'", "'md'"], ["rows", "number", "3"]]} />
   </>;
 }
 
 function SelectionPage() {
+  const { t: dt } = useDemoLocale();
+
   const [topics, setTopics] = useState(['design']);
   const [role, setRole] = useState('member');
   const [enabled, setEnabled] = useState(true);
-  return <><PageHeading eyebrow="DATA ENTRY" title="选择组件" description="Checkbox、Radio 与 Switch，覆盖多选、单选和即时开关状态。" badge="Checkbox · Radio · Switch" />
-    <ExampleCard title="Checkbox 多选" description="独立复选和分组选项都支持受控状态。" code={codeSamples.checkbox}><div className="selection-layout"><div className="selection-block"><span className="demo-label">独立复选</span><Checkbox defaultChecked>同意服务条款</Checkbox><Checkbox disabled>当前不可选</Checkbox></div><div className="selection-block"><span className="demo-label">兴趣主题</span><CheckboxGroup value={topics} onChange={setTopics} options={[{ label: '产品设计', value: 'design' }, { label: '工程实践', value: 'engineering' }, { label: '团队管理', value: 'team' }]} /><span className="demo-hint">已选择：{topics.join('、') || '无'}</span></div></div></ExampleCard>
-    <ExampleCard title="Radio 单选" description="在一组选项中选择一个明确的值。" code={codeSamples.radio}><div className="selection-layout"><div className="selection-block"><span className="demo-label">工作区角色</span><RadioGroup name="role-demo" value={role} onChange={setRole} options={[{ label: '管理员', value: 'admin' }, { label: '成员', value: 'member' }, { label: '访客', value: 'guest' }]} /><span className="demo-hint">当前角色：{role}</span></div></div></ExampleCard>
-    <ExampleCard title="Switch 开关" description="用于立即生效的二元设置。" code={codeSamples.switch}><div className="switch-row"><div><strong>开启产品更新</strong><span>接收功能更新、技巧与灵感</span></div><Switch checked={enabled} onChange={(event) => setEnabled(event.target.checked)} checkedChildren="开" unCheckedChildren="关" /></div></ExampleCard>
+  return <><PageHeading eyebrow="DATA ENTRY" title={dt("选择组件")} description={dt("Checkbox、Radio 与 Switch，覆盖多选、单选和即时开关状态。")} badge="Checkbox · Radio · Switch" />
+    <ExampleCard title={dt("Checkbox 多选")} description={dt("独立复选和分组选项都支持受控状态。")} code={codeSamples.checkbox}><div className="selection-layout"><div className="selection-block"><span className="demo-label">{dt("独立复选")}</span><Checkbox defaultChecked>{dt("同意服务条款")}</Checkbox><Checkbox disabled>{dt("当前不可选")}</Checkbox></div><div className="selection-block"><span className="demo-label">{dt("兴趣主题")}</span><CheckboxGroup value={topics} onChange={setTopics} options={[{ label: dt("产品设计"), value: 'design' }, { label: dt("工程实践"), value: 'engineering' }, { label: dt("团队管理"), value: 'team' }]} /><span className="demo-hint">{dt("已选择：")}{topics.join('、') || dt("无")}</span></div></div></ExampleCard>
+    <ExampleCard title={dt("Radio 单选")} description={dt("在一组选项中选择一个明确的值。")} code={codeSamples.radio}><div className="selection-layout"><div className="selection-block"><span className="demo-label">{dt("工作区角色")}</span><RadioGroup name="role-demo" value={role} onChange={setRole} options={[{ label: dt("管理员"), value: 'admin' }, { label: dt("成员"), value: 'member' }, { label: dt("访客"), value: 'guest' }]} /><span className="demo-hint">{dt("当前角色：")}{role}</span></div></div></ExampleCard>
+    <ExampleCard title={dt("Switch 开关")} description={dt("用于立即生效的二元设置。")} code={codeSamples.switch}><div className="switch-row"><div><strong>{dt("开启产品更新")}</strong><span>{dt("接收功能更新、技巧与灵感")}</span></div><Switch checked={enabled} onChange={(event) => setEnabled(event.target.checked)} checkedChildren={dt("开")} unCheckedChildren={dt("关")} /></div></ExampleCard>
   </>;
 }
 
 function FeedbackPage() {
+  const modal = useModal();
+  const { t: dt } = useDemoLocale();
+
   const [open, setOpen] = useState(false);
-  return <><PageHeading eyebrow="FEEDBACK" title="Modal 弹窗" description="在需要聚焦重要决策时出现，不打断用户理解当前上下文。" badge="Modal" />
-    <ExampleCard title="受控 Modal" description="用于确认、编辑或承载需要专注完成的短流程。" code={codeSamples.modal}><div className="component-row"><Button variant="primary" onClick={() => setOpen(true)}>邀请成员</Button><span className="demo-hint">弹窗支持遮罩关闭、Escape 和焦点管理</span></div><Modal open={open} title="邀请团队成员" description="发送邀请后，对方会收到一封加入工作区的邮件。" onClose={() => setOpen(false)} onOk={() => setOpen(false)}><div className="modal-demo-content"><Input label="邮箱地址" placeholder="name@company.com" /><Select label="成员权限" options={[{ label: '成员 · 可编辑内容', value: 'member' }, { label: '管理员 · 管理工作区', value: 'admin' }, { label: '访客 · 仅查看', value: 'guest' }]} /><p className="modal-demo-note">你可以在成员设置中随时调整权限。</p></div></Modal></ExampleCard>
-    <ExampleCard title="命令式确认" description="删除、归档等需要明确确认的破坏性操作。" code={codeSamples.confirm}><div className="component-row"><Button variant="danger" onClick={() => Modal.confirm({ title: '删除这个项目？', content: '删除后，项目和其中的所有内容都将无法恢复。', danger: true, onOk: () => window.alert('项目已删除') })}>删除项目</Button><span className="demo-hint">点击体验命令式确认弹窗</span></div></ExampleCard>
+  return <><PageHeading eyebrow="FEEDBACK" title={dt("Modal 弹窗")} description={dt("在需要聚焦重要决策时出现，不打断用户理解当前上下文。")} badge="Modal" />
+    <ExampleCard title={dt("受控 Modal")} description={dt("用于确认、编辑或承载需要专注完成的短流程。")} code={codeSamples.modal}><div className="component-row"><Button variant="primary" onClick={() => setOpen(true)}>{dt("邀请成员")}</Button><span className="demo-hint">{dt("弹窗支持遮罩关闭、Escape 和焦点管理")}</span></div><Modal open={open} title={dt("邀请团队成员")} description={dt("发送邀请后，对方会收到一封加入工作区的邮件。")} onClose={() => setOpen(false)} onOk={() => setOpen(false)}><div className="modal-demo-content"><Input label={dt("邮箱地址")} placeholder="name@company.com" /><Select label={dt("成员权限")} options={[{ label: dt("成员 · 可编辑内容"), value: 'member' }, { label: dt("管理员 · 管理工作区"), value: 'admin' }, { label: dt("访客 · 仅查看"), value: 'guest' }]} /><p className="modal-demo-note">{dt("你可以在成员设置中随时调整权限。")}</p></div></Modal></ExampleCard>
+    <ExampleCard title={dt("命令式确认")} description={dt("删除、归档等需要明确确认的破坏性操作。")} code={codeSamples.confirm}><div className="component-row"><Button variant="danger" onClick={() => modal.confirm({ title: dt("删除这个项目？"), content: dt("删除后，项目和其中的所有内容都将无法恢复。"), danger: true, onOk: () => window.alert(dt("项目已删除")) })}>{dt("删除项目")}</Button><span className="demo-hint">{dt("点击体验命令式确认弹窗")}</span></div></ExampleCard>
     <ApiTable rows={[["open", "boolean", "—"], ["onClose", "() => void", "—"], ["onOk", "() => void | Promise<void>", "—"], ["maskClosable", "boolean", "true"], ["closeOnEscape", "boolean", "true"], ["Modal.confirm", "ConfirmOptions → { destroy }", "—"]]} />
   </>;
 }
 
 function AlertPage() {
+  const { t: dt } = useDemoLocale();
+
   return <>
-    <PageHeading eyebrow="FEEDBACK" title="Alert 提示" description="用语义化状态表达成功、提醒和错误信息。" badge="Alert" />
-    <ExampleCard title="提示类型" description="提供信息、成功、警告和错误四种状态。" code={codeSamples.alert}>
+    <PageHeading eyebrow="FEEDBACK" title={dt("Alert 提示")} description={dt("用语义化状态表达成功、提醒和错误信息。")} badge="Alert" />
+    <ExampleCard title={dt("提示类型")} description={dt("提供信息、成功、警告和错误四种状态。")} code={codeSamples.alert}>
       <div className="common-demo-stack">
-        <Alert variant="info" title="即将发布">项目成员会收到一封更新通知。</Alert>
-        <Alert variant="success" title="更改已保存" closable>你的工作区信息已更新。</Alert>
-        <Alert variant="warning" title="存储空间不足">请清理文件或升级套餐后继续上传。</Alert>
-        <Alert variant="error" title="保存失败">网络连接中断，请重试。</Alert>
+        <Alert variant="info" title={dt("即将发布")}>{dt("项目成员会收到一封更新通知。")}</Alert>
+        <Alert variant="success" title={dt("更改已保存")} closable>{dt("你的工作区信息已更新。")}</Alert>
+        <Alert variant="warning" title={dt("存储空间不足")}>{dt("请清理文件或升级套餐后继续上传。")}</Alert>
+        <Alert variant="error" title={dt("保存失败")}>{dt("网络连接中断，请重试。")}</Alert>
       </div>
     </ExampleCard>
     <ApiTable rows={[["variant", "info | success | warning | error", "info"], ["title", "ReactNode", "—"], ["closable", "boolean", "false"], ["onClose", "() => void", "—"]]} />
@@ -1082,13 +1104,15 @@ function AlertPage() {
 }
 
 function TagPage() {
+  const { t: dt } = useDemoLocale();
+
   const [showTag, setShowTag] = useState(true);
   return <>
-    <PageHeading eyebrow="DATA DISPLAY" title="Tag 标签" description="为状态、分类和筛选条件提供紧凑标记。" badge="Tag" />
-    <ExampleCard title="标签类型" description="用颜色区分标签的语义和优先级。" code={codeSamples.tag}>
+    <PageHeading eyebrow="DATA DISPLAY" title={dt("Tag 标签")} description={dt("为状态、分类和筛选条件提供紧凑标记。")} badge="Tag" />
+    <ExampleCard title={dt("标签类型")} description={dt("用颜色区分标签的语义和优先级。")} code={codeSamples.tag}>
       <div className="common-demo-row">
-        <Tag variant="primary">设计中</Tag><Tag variant="success">已发布</Tag><Tag variant="warning">待审核</Tag><Tag variant="danger">已阻塞</Tag>
-        {showTag && <Tag closable onClose={() => setShowTag(false)}>可移除标签</Tag>}
+        <Tag variant="primary">{dt("设计中")}</Tag><Tag variant="success">{dt("已发布")}</Tag><Tag variant="warning">{dt("待审核")}</Tag><Tag variant="danger">{dt("已阻塞")}</Tag>
+        {showTag && <Tag closable onClose={() => setShowTag(false)}>{dt("可移除标签")}</Tag>}
       </div>
     </ExampleCard>
     <ApiTable rows={[["variant", "neutral | primary | success | warning | danger", "neutral"], ["closable", "boolean", "false"], ["onClose", "() => void", "—"]]} />
@@ -1096,12 +1120,14 @@ function TagPage() {
 }
 
 function AvatarPage() {
+  const { t: dt } = useDemoLocale();
+
   return <>
-    <PageHeading eyebrow="DATA DISPLAY" title="Avatar 头像" description="展示成员身份，并在图片不可用时使用姓名首字母。" badge="Avatar" />
-    <ExampleCard title="头像尺寸与回退" description="提供多种尺寸；图片无法加载时显示姓名标记。" code={codeSamples.avatar}>
+    <PageHeading eyebrow="DATA DISPLAY" title={dt("Avatar 头像")} description={dt("展示成员身份，并在图片不可用时使用姓名首字母。")} badge="Avatar" />
+    <ExampleCard title={dt("头像尺寸与回退")} description={dt("提供多种尺寸；图片无法加载时显示姓名标记。")} code={codeSamples.avatar}>
       <div className="common-demo-row common-demo-row--align-end">
-        <Avatar name="林知夏" size="sm" /><Avatar name="陈一川" /><Avatar name="周禾" size="lg" />
-        <span className="demo-hint">图片加载失败时自动回退到姓名标记</span>
+        <Avatar name={dt("林知夏")} size="sm" /><Avatar name={dt("陈一川")} /><Avatar name={dt("周禾")} size="lg" />
+        <span className="demo-hint">{dt("图片加载失败时自动回退到姓名标记")}</span>
       </div>
     </ExampleCard>
     <ApiTable rows={[["src", "string", "—"], ["alt / name", "string", "—"], ["size", "sm | md | lg", "md"]]} />
@@ -1109,13 +1135,15 @@ function AvatarPage() {
 }
 
 function TooltipPage() {
+  const { t: dt } = useDemoLocale();
+
   return <>
-    <PageHeading eyebrow="FEEDBACK" title="Tooltip 文字提示" description="悬停或键盘聚焦时显示简短补充说明。" badge="Tooltip" />
-    <ExampleCard title="提示位置" description="可将提示放在触发元素的上、下、左或右侧。" code={codeSamples.tooltip}>
+    <PageHeading eyebrow="FEEDBACK" title={dt("Tooltip 文字提示")} description={dt("悬停或键盘聚焦时显示简短补充说明。")} badge="Tooltip" />
+    <ExampleCard title={dt("提示位置")} description={dt("可将提示放在触发元素的上、下、左或右侧。")} code={codeSamples.tooltip}>
       <div className="common-demo-row">
-        <Tooltip title="保存后，所有工作区成员都能看到更新。" placement="top"><Button variant="secondary">保存帮助</Button></Tooltip>
-        <Tooltip title="邀请链接将在 7 天后失效。" placement="right"><Button variant="tertiary">邀请说明</Button></Tooltip>
-        <span className="demo-hint">将鼠标移到按钮上，或使用 Tab 键聚焦</span>
+        <Tooltip title={dt("保存后，所有工作区成员都能看到更新。")} placement="top"><Button variant="secondary">{dt("保存帮助")}</Button></Tooltip>
+        <Tooltip title={dt("邀请链接将在 7 天后失效。")} placement="right"><Button variant="tertiary">{dt("邀请说明")}</Button></Tooltip>
+        <span className="demo-hint">{dt("将鼠标移到按钮上，或使用 Tab 键聚焦")}</span>
       </div>
     </ExampleCard>
     <ApiTable rows={[["title", "ReactNode", "required"], ["placement", "top | bottom | left | right", "top"], ["children", "ReactNode", "required"]]} />
@@ -1123,139 +1151,173 @@ function TooltipPage() {
 }
 
 function BadgePage() {
-  return <><PageHeading eyebrow="DATA DISPLAY" title="Badge 徽标" description="在图标、头像等元素旁呈现数量或状态提醒。" badge="Badge" />
-    <ExampleCard title="数量与状态" description="支持数字上限、红点和语义状态。" code={codeSamples.badge}><div className="common-demo-row"><Badge count={5}><Avatar name="林知夏" size="lg" /></Badge><Badge count={128} overflowCount={99}><Button>通知</Button></Badge><Badge dot><Button variant="secondary">消息</Button></Badge><Badge status="success" text="项目运行正常" /></div></ExampleCard>
+  const { t: dt } = useDemoLocale();
+
+  return <><PageHeading eyebrow="DATA DISPLAY" title={dt("Badge 徽标")} description={dt("在图标、头像等元素旁呈现数量或状态提醒。")} badge="Badge" />
+    <ExampleCard title={dt("数量与状态")} description={dt("支持数字上限、红点和语义状态。")} code={codeSamples.badge}><div className="common-demo-row"><Badge count={5}><Avatar name={dt("林知夏")} size="lg" /></Badge><Badge count={128} overflowCount={99}><Button>{dt("通知")}</Button></Badge><Badge dot><Button variant="secondary">{dt("消息")}</Button></Badge><Badge status="success" text={dt("项目运行正常")} /></div></ExampleCard>
     <ApiTable rows={[["count", "ReactNode", "—"], ["dot", "boolean", "false"], ["overflowCount", "number", "99"], ["showZero", "boolean", "false"], ["status", "default | success | processing | warning | error", "default"], ["text", "ReactNode", "—"]]} />
   </>;
 }
 
 function BreadcrumbPage() {
-  return <><PageHeading eyebrow="NAVIGATION" title="Breadcrumb 面包屑" description="展示当前位置，并帮助用户快速返回上级页面。" badge="Breadcrumb" />
-    <ExampleCard title="页面路径" description="通过 href 或 onClick 为上级路径提供导航行为。" code={codeSamples.breadcrumb}><Breadcrumb items={[{ title: '工作区', onClick: () => window.alert('返回工作区') }, { title: '项目列表', onClick: () => window.alert('返回项目列表') }, { title: '品牌视觉升级' }]} /></ExampleCard>
-    <ExampleCard title="自定义分隔符" description="分隔符可以是文本或任意 React 节点。" code={codeSamples.breadcrumbCustom}><Breadcrumb separator="›" items={[{ title: '设计团队' }, { title: '品牌项目' }, { title: '视觉规范' }]} /></ExampleCard>
+  const { t: dt } = useDemoLocale();
+
+  return <><PageHeading eyebrow="NAVIGATION" title={dt("Breadcrumb 面包屑")} description={dt("展示当前位置，并帮助用户快速返回上级页面。")} badge="Breadcrumb" />
+    <ExampleCard title={dt("页面路径")} description={dt("通过 href 或 onClick 为上级路径提供导航行为。")} code={codeSamples.breadcrumb}><Breadcrumb items={[{ title: dt("工作区"), onClick: () => window.alert(dt("返回工作区")) }, { title: dt("项目列表"), onClick: () => window.alert(dt("返回项目列表")) }, { title: dt("品牌视觉升级") }]} /></ExampleCard>
+    <ExampleCard title={dt("自定义分隔符")} description={dt("分隔符可以是文本或任意 React 节点。")} code={codeSamples.breadcrumbCustom}><Breadcrumb separator="›" items={[{ title: dt("设计团队") }, { title: dt("品牌项目") }, { title: dt("视觉规范") }]} /></ExampleCard>
     <ApiTable rows={[["items", "BreadcrumbItem[]", "required"], ["items[].title", "ReactNode", "required"], ["items[].href", "string", "—"], ["items[].onClick", "() => void", "—"], ["separator", "ReactNode", "'/ '"]]} />
   </>;
 }
 
 function DividerPage() {
-  return <><PageHeading eyebrow="FOUNDATIONS" title="Divider 分割线" description="分隔相邻内容，或为相关信息添加轻量标题。" badge="Divider" />
-    <ExampleCard title="水平分割" description="支持普通线、虚线与带标题分割线。" code={codeSamples.divider}><div className="divider-demo"><span>项目概览</span><Divider /><span>成员与权限</span><Divider dashed>团队设置</Divider><span>最近更新</span></div></ExampleCard>
-    <ExampleCard title="垂直分割" code={codeSamples.dividerVertical}><div className="common-demo-row"><span>项目</span><Divider orientation="vertical" /><span>成员</span><Divider orientation="vertical" dashed /><span>设置</span></div></ExampleCard>
+  const { t: dt } = useDemoLocale();
+
+  return <><PageHeading eyebrow="FOUNDATIONS" title={dt("Divider 分割线")} description={dt("分隔相邻内容，或为相关信息添加轻量标题。")} badge="Divider" />
+    <ExampleCard title={dt("水平分割")} description={dt("支持普通线、虚线与带标题分割线。")} code={codeSamples.divider}><div className="divider-demo"><span>{dt("项目概览")}</span><Divider /><span>{dt("成员与权限")}</span><Divider dashed>{dt("团队设置")}</Divider><span>{dt("最近更新")}</span></div></ExampleCard>
+    <ExampleCard title={dt("垂直分割")} code={codeSamples.dividerVertical}><div className="common-demo-row"><span>{dt("项目")}</span><Divider orientation="vertical" /><span>{dt("成员")}</span><Divider orientation="vertical" dashed /><span>{dt("设置")}</span></div></ExampleCard>
     <ApiTable rows={[["orientation", "horizontal | vertical", "horizontal"], ["dashed", "boolean", "false"], ["plain", "boolean", "false"], ["children", "ReactNode", "—"]]} />
   </>;
 }
 
 function EmptyPage() {
-  return <><PageHeading eyebrow="FEEDBACK" title="Empty 空状态" description="在列表、搜索或数据面板中清楚说明当前没有内容。" badge="Empty" />
-    <ExampleCard title="带操作的空状态" description="提供下一步操作，帮助用户从空白状态继续。" code={codeSamples.empty}><Empty description="还没有项目"><Button variant="primary">创建第一个项目</Button></Empty></ExampleCard>
-    <ExampleCard title="自定义描述" code={codeSamples.emptySearch}><Empty description="没有找到符合条件的结果" /></ExampleCard>
-    <ApiTable rows={[["description", "ReactNode", "暂无数据"], ["image", "ReactNode", "默认插画"], ["children", "ReactNode", "—"]]} />
+  const { t: dt } = useDemoLocale();
+
+  return <><PageHeading eyebrow="FEEDBACK" title={dt("Empty 空状态")} description={dt("在列表、搜索或数据面板中清楚说明当前没有内容。")} badge="Empty" />
+    <ExampleCard title={dt("带操作的空状态")} description={dt("提供下一步操作，帮助用户从空白状态继续。")} code={codeSamples.empty}><Empty description={dt("还没有项目")}><Button variant="primary">{dt("创建第一个项目")}</Button></Empty></ExampleCard>
+    <ExampleCard title={dt("自定义描述")} code={codeSamples.emptySearch}><Empty description={dt("没有找到符合条件的结果")} /></ExampleCard>
+    <ApiTable rows={[["description", "ReactNode", dt("暂无数据")], ["image", "ReactNode", dt("默认插画")], ["children", "ReactNode", "—"]]} />
   </>;
 }
 
 function PaginationPage() {
+  const { t: dt } = useDemoLocale();
+
   const [current, setCurrent] = useState(3);
   const [pageSize, setPageSize] = useState(10);
-  return <><PageHeading eyebrow="NAVIGATION" title="Pagination 分页" description="将长列表拆分为清晰、可浏览的数据页。" badge="Pagination" />
-    <ExampleCard title="分页与每页条数" description="支持受控页码、总数提示及每页条数切换。" code={codeSamples.pagination}><Pagination current={current} pageSize={pageSize} total={86} showSizeChanger onChange={(page, size) => { setCurrent(page); setPageSize(size); }} /></ExampleCard>
+  return <><PageHeading eyebrow="NAVIGATION" title={dt("Pagination 分页")} description={dt("将长列表拆分为清晰、可浏览的数据页。")} badge="Pagination" />
+    <ExampleCard title={dt("分页与每页条数")} description={dt("支持受控页码、总数提示及每页条数切换。")} code={codeSamples.pagination}><Pagination current={current} pageSize={pageSize} total={86} showSizeChanger onChange={(page, size) => { setCurrent(page); setPageSize(size); }} /></ExampleCard>
     <ApiTable rows={[["current", "number", "required"], ["pageSize", "number", "required"], ["total", "number", "required"], ["onChange", "(page, pageSize) => void", "required"], ["showSizeChanger", "boolean", "false"], ["pageSizeOptions", "number[]", "[10, 20, 50]"]]} />
   </>;
 }
 
 function ProgressPage() {
+  const { t: dt } = useDemoLocale();
+
   const [percent, setPercent] = useState(68);
-  return <><PageHeading eyebrow="FEEDBACK" title="Progress 进度条" description="用进度和状态让长时间任务保持可见。" badge="Progress" />
-    <ExampleCard title="进度与状态" description="百分比会限制在 0 至 100，并支持自定义文案和颜色。" code={codeSamples.progress}><div className="common-demo-stack"><Progress percent={percent} status="active" label={`上传中 ${percent}%`} /><Progress percent={100} /><Progress percent={42} status="exception" label="上传失败 · 42%" /><Button onClick={() => setPercent((value) => value >= 100 ? 0 : value + 8)}>推进进度</Button></div></ExampleCard>
-    <ApiTable rows={[["percent", "number", "required"], ["status", "normal | active | success | exception", "自动判断"], ["showInfo", "boolean", "true"], ["strokeColor", "string", "主题色"], ["label", "ReactNode", "百分比"]]} />
+  return <><PageHeading eyebrow="FEEDBACK" title={dt("Progress 进度条")} description={dt("用进度和状态让长时间任务保持可见。")} badge="Progress" />
+    <ExampleCard title={dt("进度与状态")} description={dt("百分比会限制在 0 至 100，并支持自定义文案和颜色。")} code={codeSamples.progress}><div className="common-demo-stack"><Progress percent={percent} status="active" label={dt("上传中 {0}%", { 0: percent })} /><Progress percent={100} /><Progress percent={42} status="exception" label={dt("上传失败 · 42%")} /><Button onClick={() => setPercent((value) => value >= 100 ? 0 : value + 8)}>{dt("推进进度")}</Button></div></ExampleCard>
+    <ApiTable rows={[["percent", "number", "required"], ["status", "normal | active | success | exception", dt("自动判断")], ["showInfo", "boolean", "true"], ["strokeColor", "string", dt("主题色")], ["label", "ReactNode", dt("百分比")]]} />
   </>;
 }
 
 function SkeletonPage() {
-  return <><PageHeading eyebrow="FEEDBACK" title="Skeleton 骨架屏" description="内容加载时先展示结构轮廓，减少页面跳动。" badge="Skeleton" />
-    <ExampleCard title="动态骨架" description="支持头像、标题和可配置行数。" code={codeSamples.skeleton}><Skeleton active avatar title paragraph={{ rows: 3 }} /></ExampleCard>
-    <ExampleCard title="简洁占位" code={codeSamples.skeletonSimple}><Skeleton title={false} paragraph={{ rows: 2 }} /></ExampleCard>
+  const { t: dt } = useDemoLocale();
+
+  return <><PageHeading eyebrow="FEEDBACK" title={dt("Skeleton 骨架屏")} description={dt("内容加载时先展示结构轮廓，减少页面跳动。")} badge="Skeleton" />
+    <ExampleCard title={dt("动态骨架")} description={dt("支持头像、标题和可配置行数。")} code={codeSamples.skeleton}><Skeleton active avatar title paragraph={{ rows: 3 }} /></ExampleCard>
+    <ExampleCard title={dt("简洁占位")} code={codeSamples.skeletonSimple}><Skeleton title={false} paragraph={{ rows: 2 }} /></ExampleCard>
     <ApiTable rows={[["active", "boolean", "false"], ["avatar", "boolean", "false"], ["title", "boolean", "true"], ["paragraph", "boolean | { rows?: number }", "true"]]} />
   </>;
 }
 
 function SpinPage() {
+  const { t: dt } = useDemoLocale();
+
   const [spinning, setSpinning] = useState(true);
-  return <><PageHeading eyebrow="FEEDBACK" title="Spin 加载中" description="在请求或局部内容更新期间提供轻量加载反馈。" badge="Spin" />
-    <ExampleCard title="独立加载指示器" description="提供三种尺寸和可选说明。" code={codeSamples.spinSizes}><div className="common-demo-row"><Spin size="sm" /><Spin tip="正在加载项目…" /><Spin size="lg" /></div></ExampleCard>
-    <ExampleCard title="局部内容加载" description="可以遮罩一个容器，保留上下文。" code={codeSamples.spinContent}><div className="spin-demo"><Spin spinning={spinning} tip="正在同步成员…"><div><strong>项目成员</strong><p>林知夏 · 陈一川 · 周禾</p></div></Spin></div><Button onClick={() => setSpinning((value) => !value)}>{spinning ? '显示内容' : '重新加载'}</Button></ExampleCard>
+  return <><PageHeading eyebrow="FEEDBACK" title={dt("Spin 加载中")} description={dt("在请求或局部内容更新期间提供轻量加载反馈。")} badge="Spin" />
+    <ExampleCard title={dt("独立加载指示器")} description={dt("提供三种尺寸和可选说明。")} code={codeSamples.spinSizes}><div className="common-demo-row"><Spin size="sm" /><Spin tip={dt("正在加载项目…")} /><Spin size="lg" /></div></ExampleCard>
+    <ExampleCard title={dt("局部内容加载")} description={dt("可以遮罩一个容器，保留上下文。")} code={codeSamples.spinContent}><div className="spin-demo"><Spin spinning={spinning} tip={dt("正在同步成员…")}><div><strong>{dt("项目成员")}</strong><p>{dt("林知夏 · 陈一川 · 周禾")}</p></div></Spin></div><Button onClick={() => setSpinning((value) => !value)}>{spinning ? dt("显示内容") : dt("重新加载")}</Button></ExampleCard>
     <ApiTable rows={[["spinning", "boolean", "true"], ["size", "sm | md | lg", "md"], ["tip", "ReactNode", "—"], ["children", "ReactNode", "—"]]} />
   </>;
 }
 
 function TabsPage() {
+  const { t: dt } = useDemoLocale();
+
   const [activeKey, setActiveKey] = useState('overview');
-  return <><PageHeading eyebrow="NAVIGATION" title="Tabs 标签页" description="在同一页面内切换相互关联的内容视图。" badge="Tabs" />
-    <ExampleCard title="受控标签页" description="支持受控或默认选中，并提供键盘方向键切换。" code={codeSamples.tabs}><Tabs activeKey={activeKey} onChange={setActiveKey} items={[{ key: 'overview', label: '概览', children: '项目进度和关键指标会显示在这里。' }, { key: 'members', label: '成员', children: '管理项目成员与权限。' }, { key: 'activity', label: '动态', children: '查看项目最近的变更。' }]} /></ExampleCard>
-    <ApiTable rows={[["items", "TabItem[]", "required"], ["items[].key", "string", "required"], ["items[].label", "ReactNode", "required"], ["items[].children", "ReactNode", "required"], ["activeKey", "string", "非受控"], ["onChange", "(key) => void", "—"]]} />
+  return <><PageHeading eyebrow="NAVIGATION" title={dt("Tabs 标签页")} description={dt("在同一页面内切换相互关联的内容视图。")} badge="Tabs" />
+    <ExampleCard title={dt("受控标签页")} description={dt("支持受控或默认选中，并提供键盘方向键切换。")} code={codeSamples.tabs}><Tabs activeKey={activeKey} onChange={setActiveKey} items={[{ key: 'overview', label: dt("概览"), children: dt("项目进度和关键指标会显示在这里。") }, { key: 'members', label: dt("成员"), children: dt("管理项目成员与权限。") }, { key: 'activity', label: dt("动态"), children: dt("查看项目最近的变更。") }]} /></ExampleCard>
+    <ApiTable rows={[["items", "TabItem[]", "required"], ["items[].key", "string", "required"], ["items[].label", "ReactNode", "required"], ["items[].children", "ReactNode", "required"], ["activeKey", "string", dt("非受控")], ["onChange", "(key) => void", "—"]]} />
   </>;
 }
 
 function CardPage() {
-  return <><PageHeading eyebrow="FOUNDATIONS" title="Card 卡片" description="将相关内容、操作和信息组织在独立容器中。" badge="Card" />
-    <ExampleCard title="带标题与操作的卡片" description="支持标题、辅助操作和悬停反馈。" code={codeSamples.card}><div className="card-demo"><Card title="品牌视觉升级" extra={<Button variant="tertiary">查看详情</Button>} hoverable><p>正在为新一季产品更新品牌视觉与设计规范。</p><span>最近更新 · 3 分钟前</span></Card><Card title="快速提示" bordered={false}>卡片可以按需关闭边框，适合嵌入分组内容。</Card></div></ExampleCard>
+  const { t: dt } = useDemoLocale();
+
+  return <><PageHeading eyebrow="FOUNDATIONS" title={dt("Card 卡片")} description={dt("将相关内容、操作和信息组织在独立容器中。")} badge="Card" />
+    <ExampleCard title={dt("带标题与操作的卡片")} description={dt("支持标题、辅助操作和悬停反馈。")} code={codeSamples.card}><div className="card-demo"><Card title={dt("品牌视觉升级")} extra={<Button variant="tertiary">{dt("查看详情")}</Button>} hoverable><p>{dt("正在为新一季产品更新品牌视觉与设计规范。")}</p><span>{dt("最近更新 · 3 分钟前")}</span></Card><Card title={dt("快速提示")} bordered={false}>{dt("卡片可以按需关闭边框，适合嵌入分组内容。")}</Card></div></ExampleCard>
     <ApiTable rows={[["title", "ReactNode", "—"], ["extra", "ReactNode", "—"], ["hoverable", "boolean", "false"], ["bordered", "boolean", "true"], ["children", "ReactNode", "—"]]} />
   </>;
 }
 
 function DescriptionsPage() {
-  const items = [{ key: 'name', label: '项目名称', children: '品牌视觉升级' }, { key: 'owner', label: '负责人', children: '林知夏' }, { key: 'status', label: '项目状态', children: '进行中' }, { key: 'updated', label: '最近更新', children: '3 分钟前' }];
-  return <><PageHeading eyebrow="DATA DISPLAY" title="Descriptions 描述列表" description="以标签和值的形式展示对象属性和详情信息。" badge="Descriptions" />
-    <ExampleCard title="项目详情" description="支持自适应列数和边框布局。" code={codeSamples.descriptions}><Descriptions title="项目详情" bordered column={2} items={items} /></ExampleCard>
+  const { t: dt } = useDemoLocale();
+
+  const items = [{ key: 'name', label: dt("项目名称"), children: dt("品牌视觉升级") }, { key: 'owner', label: dt("负责人"), children: dt("林知夏") }, { key: 'status', label: dt("项目状态"), children: dt("进行中") }, { key: 'updated', label: dt("最近更新"), children: dt("3 分钟前") }];
+  return <><PageHeading eyebrow="DATA DISPLAY" title={dt("Descriptions 描述列表")} description={dt("以标签和值的形式展示对象属性和详情信息。")} badge="Descriptions" />
+    <ExampleCard title={dt("项目详情")} description={dt("支持自适应列数和边框布局。")} code={codeSamples.descriptions}><Descriptions title={dt("项目详情")} bordered column={2} items={items} /></ExampleCard>
     <ApiTable rows={[["items", "DescriptionItem[]", "required"], ["items[].key", "string", "required"], ["items[].label", "ReactNode", "required"], ["items[].children", "ReactNode", "required"], ["column", "number", "3"], ["bordered", "boolean", "false"]]} />
   </>;
 }
 
 function StepsPage() {
+  const { t: dt } = useDemoLocale();
+
   const [current, setCurrent] = useState(1);
-  const items = [{ title: '创建工作区', description: '填写基本信息' }, { title: '邀请成员', description: '与团队协作' }, { title: '完成设置', description: '开始使用' }];
-  return <><PageHeading eyebrow="NAVIGATION" title="Steps 步骤条" description="展示多阶段流程的进度，并帮助用户理解当前步骤。" badge="Steps" />
-    <ExampleCard title="可交互步骤" description="点击步骤切换当前进度，也可仅展示只读状态。" code={codeSamples.steps}><div className="steps-demo"><Steps current={current} onChange={setCurrent} items={items} /><Button onClick={() => setCurrent((step) => (step + 1) % items.length)}>下一步</Button></div></ExampleCard>
-    <ApiTable rows={[["items", "StepItem[]", "required"], ["current", "number", "0"], ["direction", "horizontal | vertical", "horizontal"], ["onChange", "(step) => void", "—"], ["items[].status", "wait | process | finish | error", "自动计算"]]} />
+  const items = [{ title: dt("创建工作区"), description: dt("填写基本信息") }, { title: dt("邀请成员"), description: dt("与团队协作") }, { title: dt("完成设置"), description: dt("开始使用") }];
+  return <><PageHeading eyebrow="NAVIGATION" title={dt("Steps 步骤条")} description={dt("展示多阶段流程的进度，并帮助用户理解当前步骤。")} badge="Steps" />
+    <ExampleCard title={dt("可交互步骤")} description={dt("点击步骤切换当前进度，也可仅展示只读状态。")} code={codeSamples.steps}><div className="steps-demo"><Steps current={current} onChange={setCurrent} items={items} /><Button onClick={() => setCurrent((step) => (step + 1) % items.length)}>{dt("下一步")}</Button></div></ExampleCard>
+    <ApiTable rows={[["items", "StepItem[]", "required"], ["current", "number", "0"], ["direction", "horizontal | vertical", "horizontal"], ["onChange", "(step) => void", "—"], ["items[].status", "wait | process | finish | error", dt("自动计算")]]} />
   </>;
 }
 
 function TimelinePage() {
-  const items = [{ key: 'created', label: '09:30', content: '项目已创建' }, { key: 'invited', label: '10:15', content: '林知夏邀请了 3 位成员' }, { key: 'updated', label: '11:20', content: '更新了项目视觉规范', color: '#48a982' }];
-  return <><PageHeading eyebrow="DATA DISPLAY" title="Timeline 时间轴" description="按时间顺序呈现活动、变更和事件记录。" badge="Timeline" />
-    <ExampleCard title="项目动态" description="支持时间标记、节点颜色和待处理项。" code={codeSamples.timeline}><Timeline items={items} pending="等待下一次更新" /></ExampleCard>
-    <ApiTable rows={[["items", "TimelineItem[]", "required"], ["items[].key", "string", "required"], ["items[].content", "ReactNode", "required"], ["items[].label", "ReactNode", "—"], ["items[].color", "string", "主题色"], ["pending", "ReactNode", "—"]]} />
+  const { t: dt } = useDemoLocale();
+
+  const items = [{ key: 'created', label: '09:30', content: dt("项目已创建") }, { key: 'invited', label: '10:15', content: dt("林知夏邀请了 3 位成员") }, { key: 'updated', label: '11:20', content: dt("更新了项目视觉规范"), color: '#48a982' }];
+  return <><PageHeading eyebrow="DATA DISPLAY" title={dt("Timeline 时间轴")} description={dt("按时间顺序呈现活动、变更和事件记录。")} badge="Timeline" />
+    <ExampleCard title={dt("项目动态")} description={dt("支持时间标记、节点颜色和待处理项。")} code={codeSamples.timeline}><Timeline items={items} pending={dt("等待下一次更新")} /></ExampleCard>
+    <ApiTable rows={[["items", "TimelineItem[]", "required"], ["items[].key", "string", "required"], ["items[].content", "ReactNode", "required"], ["items[].label", "ReactNode", "—"], ["items[].color", "string", dt("主题色")], ["pending", "ReactNode", "—"]]} />
   </>;
 }
 
 function CollapsePage() {
+  const { t: dt } = useDemoLocale();
+
   const [activeKey, setActiveKey] = useState('members');
-  const items = [{ key: 'members', title: '成员与权限', children: '管理工作区成员的访问级别。' }, { key: 'notifications', title: '通知设置', children: '选择项目更新的通知方式。' }, { key: 'archive', title: '归档项目', children: '归档后项目会从活跃列表中移除。' }];
-  return <><PageHeading eyebrow="DATA DISPLAY" title="Collapse 折叠面板" description="按需展开内容，保持长页面结构简洁。" badge="Collapse" />
-    <ExampleCard title="手风琴面板" description="手风琴模式下同一时间只展开一项。" code={codeSamples.collapse}><Collapse accordion activeKey={activeKey} onChange={(key) => setActiveKey(String(key))} items={items} /></ExampleCard>
-    <ApiTable rows={[["items", "CollapseItem[]", "required"], ["accordion", "boolean", "false"], ["activeKey", "string | string[]", "非受控"], ["defaultActiveKey", "string | string[]", "—"], ["onChange", "(activeKey) => void", "—"]]} />
+  const items = [{ key: 'members', title: dt("成员与权限"), children: dt("管理工作区成员的访问级别。") }, { key: 'notifications', title: dt("通知设置"), children: dt("选择项目更新的通知方式。") }, { key: 'archive', title: dt("归档项目"), children: dt("归档后项目会从活跃列表中移除。") }];
+  return <><PageHeading eyebrow="DATA DISPLAY" title={dt("Collapse 折叠面板")} description={dt("按需展开内容，保持长页面结构简洁。")} badge="Collapse" />
+    <ExampleCard title={dt("手风琴面板")} description={dt("手风琴模式下同一时间只展开一项。")} code={codeSamples.collapse}><Collapse accordion activeKey={activeKey} onChange={(key) => setActiveKey(String(key))} items={items} /></ExampleCard>
+    <ApiTable rows={[["items", "CollapseItem[]", "required"], ["accordion", "boolean", "false"], ["activeKey", "string | string[]", dt("非受控")], ["defaultActiveKey", "string | string[]", "—"], ["onChange", "(activeKey) => void", "—"]]} />
   </>;
 }
 
 function DatePickerPage() {
+  const { t: dt } = useDemoLocale();
+
   const [date, setDate] = useState('2026-11-15');
-  return <><PageHeading eyebrow="DATA ENTRY" title="DatePicker 日期选择" description="使用浏览器原生日期控件输入和选择日期。" badge="DatePicker" />
-    <ExampleCard title="发布日期" description="保留原生键盘与平台日期选择交互。" code={codeSamples.datePicker}><div className="common-demo-stack"><DatePicker label="预计发布日期" hint="选择一个工作日作为目标日期" value={date} onChange={(event) => setDate(event.target.value)} /><span className="demo-hint">当前值：{date}</span><DatePicker label="只读日期" defaultValue="2026-10-27" disabled /></div></ExampleCard>
+  return <><PageHeading eyebrow="DATA ENTRY" title={dt("DatePicker 日期选择")} description={dt("使用浏览器原生日期控件输入和选择日期。")} badge="DatePicker" />
+    <ExampleCard title={dt("发布日期")} description={dt("保留原生键盘与平台日期选择交互。")} code={codeSamples.datePicker}><div className="common-demo-stack"><DatePicker label={dt("预计发布日期")} hint={dt("选择一个工作日作为目标日期")} value={date} onChange={(event) => setDate(event.target.value)} /><span className="demo-hint">{dt("当前值：")}{date}</span><DatePicker label={dt("只读日期")} defaultValue="2026-10-27" disabled /></div></ExampleCard>
     <ApiTable rows={[["label", "ReactNode", "—"], ["hint / error", "ReactNode", "—"], ["value / defaultValue", "string", "—"], ["min / max", "string", "—"], ["disabled", "boolean", "false"], ["onChange", "ChangeEvent<HTMLInputElement>", "—"]]} />
   </>;
 }
 
 function UploadPage() {
+  const { t: dt } = useDemoLocale();
+
   const [fileNames, setFileNames] = useState<string[]>([]);
-  return <><PageHeading eyebrow="DATA ENTRY" title="Upload 上传" description="通过选择文件或拖放文件，将本地内容接入业务流程。" badge="Upload" />
-    <ExampleCard title="项目附件" description="支持文件类型过滤、多选、拖放和移除已选文件。" code={codeSamples.upload}><div className="upload-demo"><Upload accept=".pdf,.png,.jpg" multiple onChange={(files) => setFileNames(files.map((file) => file.name))} /><span className="demo-hint">{fileNames.length ? `已选择 ${fileNames.length} 个文件` : '选择的文件仅保存在当前演示状态中'}</span></div></ExampleCard>
+  return <><PageHeading eyebrow="DATA ENTRY" title={dt("Upload 上传")} description={dt("通过选择文件或拖放文件，将本地内容接入业务流程。")} badge="Upload" />
+    <ExampleCard title={dt("项目附件")} description={dt("支持文件类型过滤、多选、拖放和移除已选文件。")} code={codeSamples.upload}><div className="upload-demo"><Upload accept=".pdf,.png,.jpg" multiple onChange={(files) => setFileNames(files.map((file) => file.name))} /><span className="demo-hint">{fileNames.length ? dt("已选择 {0} 个文件", { 0: fileNames.length }) : dt("选择的文件仅保存在当前演示状态中")}</span></div></ExampleCard>
     <ApiTable rows={[["accept", "string", "—"], ["multiple", "boolean", "false"], ["disabled", "boolean", "false"], ["onChange", "(files: File[]) => void", "—"]]} />
   </>;
 }
 
 function DrawerPage() {
+  const { t: dt } = useDemoLocale();
+
   const [open, setOpen] = useState(false);
-  return <><PageHeading eyebrow="FEEDBACK" title="Drawer 抽屉" description="从页面边缘展示辅助内容，同时保留当前页面上下文。" badge="Drawer" />
-    <ExampleCard title="项目详情抽屉" description="支持左右方向、遮罩关闭和 Escape 关闭。" code={codeSamples.drawer}><div className="common-demo-row"><Button variant="primary" onClick={() => setOpen(true)}>查看项目详情</Button><span className="demo-hint">点击打开右侧抽屉</span><Drawer open={open} title="项目详情" onClose={() => setOpen(false)}><p>项目成员、访问权限和最近动态会显示在这里。</p><Descriptions column={1} items={[{ key: 'owner', label: '负责人', children: '林知夏' }, { key: 'status', label: '状态', children: '进行中' }]} /></Drawer></div></ExampleCard>
+  return <><PageHeading eyebrow="FEEDBACK" title={dt("Drawer 抽屉")} description={dt("从页面边缘展示辅助内容，同时保留当前页面上下文。")} badge="Drawer" />
+    <ExampleCard title={dt("项目详情抽屉")} description={dt("支持左右方向、遮罩关闭和 Escape 关闭。")} code={codeSamples.drawer}><div className="common-demo-row"><Button variant="primary" onClick={() => setOpen(true)}>{dt("查看项目详情")}</Button><span className="demo-hint">{dt("点击打开右侧抽屉")}</span><Drawer open={open} title={dt("项目详情")} onClose={() => setOpen(false)}><p>{dt("项目成员、访问权限和最近动态会显示在这里。")}</p><Descriptions column={1} items={[{ key: 'owner', label: dt("负责人"), children: dt("林知夏") }, { key: 'status', label: dt("状态"), children: dt("进行中") }]} /></Drawer></div></ExampleCard>
     <ApiTable rows={[["open", "boolean", "required"], ["title", "ReactNode", "—"], ["placement", "left | right", "right"], ["width", "number | string", "420"], ["onClose", "() => void", "required"], ["maskClosable / closeOnEscape", "boolean", "true"]]} />
   </>;
 }
@@ -1281,14 +1343,18 @@ const projectColumns: TableColumn<Project>[] = [
 ];
 
 function TablePage() {
+  const { t: dt } = useDemoLocale();
+  const localizedProjects = translateDemoValue(projects, dt);
+  const localizedProjectColumns = translateDemoValue(projectColumns, dt);
+
   const [selected, setSelected] = useState<import('react').Key[]>([]);
   const [serverPage, setServerPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const serverData = useMemo(() => projects.slice((serverPage - 1) * 4, serverPage * 4), [serverPage]);
-  return <><PageHeading eyebrow="DATA DISPLAY" title="Table 表格" description="结构化呈现数据，并将排序、筛选和选择等操作保持在用户视线之内。" badge="Table" />
-    <ExampleCard title="项目列表" description="本地分页、排序、筛选与行选择。" code={codeSamples.table}><div className="table-toolbar"><div><strong>所有项目</strong><span>共 9 个项目</span></div><div><Button onClick={() => { setLoading(true); window.setTimeout(() => setLoading(false), 850); }}>↻ 刷新数据</Button><Button variant="primary">＋ 新建项目</Button></div></div><Table<Project> rowKey="id" columns={projectColumns} dataSource={projects} rowSelection={{ selectedRowKeys: selected, onChange: setSelected }} loading={loading} onChange={(change) => console.info('Table change', change)} /><div className="table-selection-note">{selected.length ? `已选择 ${selected.length} 个项目` : '点击行首复选框，选择需要批量操作的项目'}</div></ExampleCard>
-    <ExampleCard title="服务端分页模式" description="通过受控模式将分页和筛选交给业务请求。" code={codeSamples.serverTable}><div className="server-table-toolbar"><span>服务端数据模拟 · 每页 4 条</span><span>当前请求页：<b>{serverPage}</b></span></div><Table<Project> mode="server" rowKey="id" columns={projectColumns} dataSource={serverData} currentPage={serverPage} total={projects.length} pageSize={4} pageSizeOptions={[4]} onChange={(change) => { setServerPage(change.page); }} /></ExampleCard>
+  const serverData = useMemo(() => localizedProjects.slice((serverPage - 1) * 4, serverPage * 4), [serverPage]);
+  return <><PageHeading eyebrow="DATA DISPLAY" title={dt("Table 表格")} description={dt("结构化呈现数据，并将排序、筛选和选择等操作保持在用户视线之内。")} badge="Table" />
+    <ExampleCard title={dt("项目列表")} description={dt("本地分页、排序、筛选与行选择。")} code={codeSamples.table}><div className="table-toolbar"><div><strong>{dt("所有项目")}</strong><span>{dt("共 9 个项目")}</span></div><div><Button onClick={() => { setLoading(true); window.setTimeout(() => setLoading(false), 850); }}>{dt("↻ 刷新数据")}</Button><Button variant="primary">{dt("＋ 新建项目")}</Button></div></div><Table<Project> rowKey="id" columns={localizedProjectColumns} dataSource={localizedProjects} rowSelection={{ selectedRowKeys: selected, onChange: setSelected }} loading={loading} onChange={(change) => console.info('Table change', change)} /><div className="table-selection-note">{selected.length ? dt("已选择 {0} 个项目", { 0: selected.length }) : dt("点击行首复选框，选择需要批量操作的项目")}</div></ExampleCard>
+    <ExampleCard title={dt("服务端分页模式")} description={dt("通过受控模式将分页和筛选交给业务请求。")} code={codeSamples.serverTable}><div className="server-table-toolbar"><span>{dt("服务端数据模拟 · 每页 4 条")}</span><span>{dt("当前请求页：")}<b>{serverPage}</b></span></div><Table<Project> mode="server" rowKey="id" columns={localizedProjectColumns} dataSource={serverData} currentPage={serverPage} total={localizedProjects.length} pageSize={4} pageSizeOptions={[4]} onChange={(change) => { setServerPage(change.page); }} /></ExampleCard>
   </>;
 }
 
-createRoot(document.getElementById('root')!).render(<App />);
+createRoot(document.getElementById('root')!).render(<DemoLanguageProvider><App /></DemoLanguageProvider>);

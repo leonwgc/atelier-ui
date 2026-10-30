@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { Children, forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState, type CSSProperties, type HTMLAttributes, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/carousel.css';
@@ -35,8 +36,11 @@ export interface CarouselProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onC
 }
 
 export const Carousel = forwardRef<CarouselRef, CarouselProps>(function Carousel(
-  { children, items, autoplay = false, autoplaySpeed = 4000, pauseOnHover = true, effect = 'slide', dots = true, dotPosition = 'bottom', arrows = false, infinite = true, draggable = true, speed = 450, current: currentProp, defaultCurrent = 0, onChange, beforeChange, afterChange, aspectRatio, label = '轮播', className, style, ...props }, ref,
+  { children, items, autoplay = false, autoplaySpeed = 4000, pauseOnHover = true, effect = 'slide', dots = true, dotPosition = 'bottom', arrows = false, infinite = true, draggable = true, speed = 450, current: currentProp, defaultCurrent = 0, onChange, beforeChange, afterChange, aspectRatio, label: labelProp, className, style, ...props }, ref,
 ) {
+  const { t } = useLocale();
+  const label = labelProp === undefined ? t('carousel.label') : labelProp;
+
   const slides = items ?? Children.toArray(children);
   const count = slides.length;
   const [current, setCurrent] = useControllableState(currentProp, defaultCurrent, onChange);
@@ -128,11 +132,11 @@ export const Carousel = forwardRef<CarouselRef, CarouselProps>(function Carousel
       </div>
     </div>
     {arrows && count > 1 && <>
-      <button type="button" className="at-carousel__arrow at-carousel__arrow--prev" aria-label="上一张" disabled={!canPrev} onClick={prev}><ChevronLeft size={18} /></button>
-      <button type="button" className="at-carousel__arrow at-carousel__arrow--next" aria-label="下一张" disabled={!canNext} onClick={next}><ChevronRight size={18} /></button>
+      <button type="button" className="at-carousel__arrow at-carousel__arrow--prev" aria-label={t('common.previousImage')} disabled={!canPrev} onClick={prev}><ChevronLeft size={18} /></button>
+      <button type="button" className="at-carousel__arrow at-carousel__arrow--next" aria-label={t('common.nextImage')} disabled={!canNext} onClick={next}><ChevronRight size={18} /></button>
     </>}
-    {dots && count > 1 && <div className="at-carousel__dots" role="tablist" aria-label="选择幻灯片">
-      {slides.map((_, index) => <button key={index} type="button" role="tab" aria-selected={index === current} aria-label={`第 ${index + 1} 张`} className={cx('at-carousel__dot', index === current && 'at-carousel__dot--active')} onClick={() => goTo(index)}>
+    {dots && count > 1 && <div className="at-carousel__dots" role="tablist" aria-label={t('carousel.select')}>
+      {slides.map((_, index) => <button key={index} type="button" role="tab" aria-selected={index === current} aria-label={t('carousel.slide', { index: index + 1 })} className={cx('at-carousel__dot', index === current && 'at-carousel__dot--active')} onClick={() => goTo(index)}>
         {autoplay && index === current && !paused && <span className="at-carousel__progress" style={{ animationDuration: `${autoplaySpeed}ms` }} />}
       </button>)}
     </div>}

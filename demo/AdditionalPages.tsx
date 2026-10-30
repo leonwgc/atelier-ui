@@ -1,7 +1,9 @@
+import { useDemoLocale, translateDemoValue } from './locale';
+import ConfigProviderDemo from './ConfigProviderDemo';
 import { useState, type ReactNode } from 'react';
 import { CodeBlock } from './shared';
 import {
-  Button, ConfigProvider, Flex, Grid, GridCol, Icon, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, message, notification, Result, Space,
+  Button, Flex, Grid, GridCol, Icon, InputOTP, Layout, LayoutContent, LayoutFooter, LayoutHeader, LayoutSider, useMessage, useNotification, Result, Space,
 } from '../src';
 
 export type AdditionalPageId =
@@ -142,7 +144,7 @@ export function SaveMessage() {
   return <Button onClick={() => message.success('设置已保存')}>保存设置</Button>;
 }`,
     rows: [['message.success(content, options?)', '(ReactNode, MessageOptions?) => { close }', '—'], ['message.open(content, options?)', '(ReactNode, MessageOptions?) => { close }', 'info'], ['duration', 'number', '4000 ms'], ['message.destroy()', '() => void', '关闭所有消息']],
-    preview: <Button onClick={() => message.success('设置已保存')}>保存设置</Button>,
+    preview: <MessageDemo />,
   },
   {
     id: 'notification', title: 'Notification 通知提醒', icon: '▣', group: '反馈组件', description: '在屏幕角落呈现带标题和描述的详细通知卡片。',
@@ -156,26 +158,34 @@ export function ProjectNotice() {
   })}>查看通知</Button>;
 }`,
     rows: [['notification.open(options)', 'NotificationOptions => { close }', '—'], ['title', 'ReactNode', 'required'], ['description', 'ReactNode', '—'], ['type', "'success' | 'info' | 'warning' | 'error'", 'info'], ['placement', "'top-right' | 'bottom-right' | 'top-left' | 'bottom-left'", 'top-right'], ['notification.destroy()', '() => void', '关闭所有通知']],
-    preview: <Button onClick={() => notification.success({ title: '成员已加入', description: '林知夏已加入 Aurora workspace。' })}>查看通知</Button>,
+    preview: <NotificationDemo />,
   },
   {
     id: 'configProvider', title: 'ConfigProvider 全局化配置', icon: '⚙', group: '通用组件', description: '在子树范围统一配置前缀、方向、尺寸、语言和主题变量。',
     code: `import { ConfigProvider } from 'atelier-ui/config-provider';
-import { Button } from 'atelier-ui/button';
+import { createLocale, enUS } from 'atelier-ui/locale';
+import { Empty } from 'atelier-ui/empty';
+import { Select } from 'atelier-ui/select';
 
-export function BrandedSection() {
+const jaJP = createLocale('ja-JP', {
+  'common.noData': 'データがありません',
+  'common.select': '選択してください…',
+}, enUS);
+
+export default function Example() {
   return (
-    <ConfigProvider
-      size="large"
-      locale="zh-CN"
-      theme={{ primaryColor: '#2f9472', borderRadius: '12px' }}
-    >
-      <Button variant="primary">保存更改</Button>
+    <ConfigProvider locale="en-US" locales={{ 'ja-JP': jaJP }}>
+      <Select options={[]} />
+      <Empty />
+      <ConfigProvider messages={{ 'common.noData': 'Nothing here yet' }}>
+        <Empty />
+      </ConfigProvider>
+      <ConfigProvider locale="ja-JP"><Empty /></ConfigProvider>
     </ConfigProvider>
   );
 }`,
-    rows: [['prefixCls', 'string', 'at'], ['direction', "'ltr' | 'rtl'", 'ltr'], ['size', "'small' | 'middle' | 'large'", 'middle'], ['locale', "'zh-CN' | 'en-US'", 'zh-CN'], ['theme.primaryColor', 'string', '—'], ['theme.borderRadius', 'string', '—'], ['useConfig()', 'UIConfig', '读取上下文']],
-    preview: <ConfigProvider size="large" locale="zh-CN" theme={{ primaryColor: '#2f9472' }}><Button variant="primary">保存更改</Button></ConfigProvider>,
+    rows: [['prefixCls', 'string', 'at'], ['direction', "'ltr' | 'rtl'", 'ltr'], ['size', "'small' | 'middle' | 'large'", 'middle'], ['locale', 'string | Locale', '继承父级 / zh-CN'], ['locales', 'Record<string, Locale>', '内置 zh-CN / en-US'], ['messages', 'LocaleOverrides', '覆盖当前语言的部分文案'], ['createLocale(code, messages, base?)', 'Locale', '以 enUS 为默认回退'], ['useLocale()', '{ locale, formatLocale, messages, t }', '读取当前语言与翻译函数'], ['theme.primaryColor', 'string', '—'], ['theme.borderRadius', 'string', '—'], ['useConfig()', 'UIConfig', '读取上下文']],
+    preview: <ConfigProviderDemo />,
   },
 ];
 
@@ -186,8 +196,23 @@ export function isAdditionalPageId(id: string): id is AdditionalPageId {
 }
 
 export function AdditionalComponentPage({ id }: { id: AdditionalPageId }) {
+  const { t: dt } = useDemoLocale();
+  const localizedAdditionalComponents = translateDemoValue(additionalComponents, dt);
+
   const [showCode, setShowCode] = useState(false);
-  const item = additionalComponents.find((component) => component.id === id);
+  const item = localizedAdditionalComponents.find((component) => component.id === id);
   if (!item) return null;
-  return <><div className="page-heading"><div className="eyebrow"><span className="eyebrow__dot" />{item.group.toLocaleUpperCase()}</div><div className="page-heading__row"><div><h1>{item.title}</h1><p>{item.description}</p></div><span className="heading-badge">{item.title.split(' ')[0]}</span></div></div><section className="example-card"><div className="example-card__heading"><div><h3>交互示例</h3><p>在下方体验组件，再展开查看可直接使用的 TypeScript 示例。</p></div><button type="button" className={`code-toggle ${showCode ? 'code-toggle--active' : ''}`} onClick={() => setShowCode((visible) => !visible)}><span>{`</>`}</span>{showCode ? '收起代码' : '查看完整代码'}</button></div><div className="example-card__preview">{item.preview}</div>{showCode && <CodeBlock code={item.code} />}</section><section className="api-table-section"><div className="eyebrow"><span className="eyebrow__dot" /> API REFERENCE</div><h2>组件属性</h2><div className="api-table-wrap"><table className="api-table"><thead><tr><th>属性</th><th>类型</th><th>默认值</th></tr></thead><tbody>{item.rows.map(([prop, type, fallback]) => <tr key={prop}><td><code>{prop}</code></td><td>{type}</td><td>{fallback}</td></tr>)}</tbody></table></div></section></>;
+  return <><div className="page-heading"><div className="eyebrow"><span className="eyebrow__dot" />{item.group.toLocaleUpperCase()}</div><div className="page-heading__row"><div><h1>{item.title}</h1><p>{item.description}</p></div><span className="heading-badge">{item.title.split(' ')[0]}</span></div></div><section className="example-card"><div className="example-card__heading"><div><h3>{dt("交互示例")}</h3><p>{dt("在下方体验组件，再展开查看可直接使用的 TypeScript 示例。")}</p></div><button type="button" className={`code-toggle ${showCode ? 'code-toggle--active' : ''}`} onClick={() => setShowCode((visible) => !visible)}><span>{`</>`}</span>{showCode ? dt("收起代码") : dt("查看完整代码")}</button></div><div className="example-card__preview">{item.preview}</div>{showCode && <CodeBlock code={item.code} />}</section><section className="api-table-section"><div className="eyebrow"><span className="eyebrow__dot" /> API REFERENCE</div><h2>{dt("组件属性")}</h2><div className="api-table-wrap"><table className="api-table"><thead><tr><th>{dt("属性")}</th><th>{dt("类型")}</th><th>{dt("默认值")}</th></tr></thead><tbody>{item.rows.map(([prop, type, fallback]) => <tr key={prop}><td><code>{prop}</code></td><td>{type}</td><td>{fallback}</td></tr>)}</tbody></table></div></section></>;
+}
+
+function MessageDemo() {
+  const message = useMessage();
+  const { t } = useDemoLocale();
+  return <Button onClick={() => message.success(t('设置已保存'))}>{t('保存设置')}</Button>;
+}
+
+function NotificationDemo() {
+  const notification = useNotification();
+  const { t } = useDemoLocale();
+  return <Button onClick={() => notification.success({ title: t('成员已加入'), description: t('林知夏已加入 Aurora workspace。') })}>{t('查看通知')}</Button>;
 }

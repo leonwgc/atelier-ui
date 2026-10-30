@@ -1,3 +1,4 @@
+import { useLocale } from './locale';
 import { useMemo, useState, type Key, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/table.css';
@@ -42,8 +43,11 @@ export interface TableProps<T extends Record<string, unknown>> {
 }
 
 export function Table<T extends Record<string, unknown>>({
-  columns, dataSource, rowKey, loading = false, emptyText = '暂无数据', mode = 'client', pageSize = 8, currentPage, total, pageSizeOptions = [8, 16, 32], onChange, rowSelection, className,
+  columns, dataSource, rowKey, loading = false, emptyText: emptyTextProp, mode = 'client', pageSize = 8, currentPage, total, pageSizeOptions = [8, 16, 32], onChange, rowSelection, className,
 }: TableProps<T>) {
+  const { t, formatLocale } = useLocale();
+  const emptyText = emptyTextProp === undefined ? t('common.noData') : emptyTextProp;
+
   const [internalPage, setInternalPage] = useState(1);
   const page = currentPage ?? internalPage;
   const [sort, setSort] = useState<TableChange['sort']>();
@@ -60,12 +64,12 @@ export function Table<T extends Record<string, unknown>>({
     if (sort) {
       const column = columns.find((item) => item.key === sort.key);
       next.sort((left, right) => {
-        const result = typeof column?.sorter === 'function' ? column.sorter(left, right) : String(left[column?.dataIndex as keyof T] ?? '').localeCompare(String(right[column?.dataIndex as keyof T] ?? ''), 'zh-CN', { numeric: true });
+        const result = typeof column?.sorter === 'function' ? column.sorter(left, right) : String(left[column?.dataIndex as keyof T] ?? '').localeCompare(String(right[column?.dataIndex as keyof T] ?? ''), formatLocale, { numeric: true });
         return sort.direction === 'asc' ? result : -result;
       });
     }
     return next;
-  }, [columns, dataSource, filters, mode, sort]);
+  }, [columns, dataSource, filters, mode, sort, formatLocale]);
   const totalRows = mode === 'server' ? total ?? dataSource.length : rows.length;
   const totalPages = Math.max(1, Math.ceil(totalRows / activeSize));
   const visibleRows = mode === 'client' ? rows.slice((page - 1) * activeSize, page * activeSize) : rows;
@@ -83,22 +87,22 @@ export function Table<T extends Record<string, unknown>>({
   return <div className={cx('at-table-shell', className)}>
     <div className="at-table-scroll"><table className="at-table">
       <thead><tr>
-        {rowSelection && <th className="at-table__selection"><Checkbox aria-label="选择本页全部行" checked={visibleRows.length > 0 && visibleRows.every((row) => rowSelection.selectedRowKeys.includes(getKey(row)))} onChange={(event) => selectPage(event.target.checked)} /></th>}
+        {rowSelection && <th className="at-table__selection"><Checkbox aria-label={t('table.selectAll')} checked={visibleRows.length > 0 && visibleRows.every((row) => rowSelection.selectedRowKeys.includes(getKey(row)))} onChange={(event) => selectPage(event.target.checked)} /></th>}
         {columns.map((column) => <th key={column.key} style={{ width: column.width, textAlign: column.align }}>
-          <div className="at-table__heading"><span>{column.title}</span>{column.sorter && <button type="button" className="at-table__sort" aria-label={`按${String(column.title)}排序`} onClick={() => { const direction = sort?.key === column.key && sort.direction === 'asc' ? 'desc' : 'asc'; const next = { key: column.key, direction } as const; setSort(next); setInternalPage(1); onChange?.({ page: 1, pageSize: activeSize, sort: next, filters }); }}>↕</button>}
-            {column.filters?.length ? <select className="at-table__filter" aria-label={`筛选${String(column.title)}`} value={filters[column.key] ?? ''} onChange={(event) => { const next = { ...filters, [column.key]: event.target.value }; setFilters(next); setInternalPage(1); onChange?.({ page: 1, pageSize: activeSize, sort, filters: next }); }}><option value="">全部</option>{column.filters.map((filter) => <option key={filter.value} value={filter.value}>{filter.label}</option>)}</select> : null}
+          <div className="at-table__heading"><span>{column.title}</span>{column.sorter && <button type="button" className="at-table__sort" aria-label={t('table.sort', { title: String(column.title) })} onClick={() => { const direction = sort?.key === column.key && sort.direction === 'asc' ? 'desc' : 'asc'; const next = { key: column.key, direction } as const; setSort(next); setInternalPage(1); onChange?.({ page: 1, pageSize: activeSize, sort: next, filters }); }}>↕</button>}
+            {column.filters?.length ? <select className="at-table__filter" aria-label={t('table.filter', { title: String(column.title) })} value={filters[column.key] ?? ''} onChange={(event) => { const next = { ...filters, [column.key]: event.target.value }; setFilters(next); setInternalPage(1); onChange?.({ page: 1, pageSize: activeSize, sort, filters: next }); }}><option value="">{t('table.all')}</option>{column.filters.map((filter) => <option key={filter.value} value={filter.value}>{filter.label}</option>)}</select> : null}
           </div>
         </th>)}
       </tr></thead>
       <tbody>
-        {loading ? <tr><td colSpan={columns.length + (rowSelection ? 1 : 0)}><div className="at-table__status"><span className="at-spinner" />正在加载数据…</div></td></tr>
+        {loading ? <tr><td colSpan={columns.length + (rowSelection ? 1 : 0)}><div className="at-table__status"><span className="at-spinner" />{t('table.loading')}</div></td></tr>
           : visibleRows.length === 0 ? <tr><td colSpan={columns.length + (rowSelection ? 1 : 0)}><div className="at-table__status">{emptyText}</div></td></tr>
             : visibleRows.map((record, rowIndex) => <tr key={getKey(record)}>
-              {rowSelection && <td className="at-table__selection"><Checkbox aria-label={`选择第 ${rowIndex + 1} 行`} checked={rowSelection.selectedRowKeys.includes(getKey(record))} onChange={(event) => { const next = event.target.checked ? [...rowSelection.selectedRowKeys, getKey(record)] : rowSelection.selectedRowKeys.filter((key) => key !== getKey(record)); rowSelection.onChange(next, dataSource.filter((item) => next.includes(getKey(item)))); }} /></td>}
+              {rowSelection && <td className="at-table__selection"><Checkbox aria-label={t('table.selectRow', { row: rowIndex + 1 })} checked={rowSelection.selectedRowKeys.includes(getKey(record))} onChange={(event) => { const next = event.target.checked ? [...rowSelection.selectedRowKeys, getKey(record)] : rowSelection.selectedRowKeys.filter((key) => key !== getKey(record)); rowSelection.onChange(next, dataSource.filter((item) => next.includes(getKey(item)))); }} /></td>}
               {columns.map((column) => <td key={column.key} style={{ textAlign: column.align }}>{column.render ? column.render(column.dataIndex ? record[column.dataIndex as keyof T] : undefined, record, rowIndex) : String(column.dataIndex ? record[column.dataIndex as keyof T] ?? '' : '')}</td>)}
             </tr>)}
       </tbody>
     </table></div>
-    <div className="at-table__pagination"><span>共 {totalRows} 条</span><div className="at-table__page-controls"><label>每页 <select value={activeSize} onChange={(event) => { const nextSize = Number(event.target.value); setActiveSize(nextSize); changePage(1, nextSize); }}>{pageSizeOptions.map((size) => <option key={size} value={size}>{size}</option>)}</select> 条</label><button type="button" disabled={page <= 1} onClick={() => changePage(page - 1)}>上一页</button><span className="at-table__page">{page} / {totalPages}</span><button type="button" disabled={page >= totalPages} onClick={() => changePage(page + 1)}>下一页</button></div></div>
+    <div className="at-table__pagination"><span>{t('pagination.total', { total: totalRows })}</span><div className="at-table__page-controls"><label>{t('pagination.perPage')}<select aria-label={t('pagination.pageSize')} value={activeSize} onChange={(event) => { const nextSize = Number(event.target.value); setActiveSize(nextSize); changePage(1, nextSize); }}>{pageSizeOptions.map((size) => <option key={size} value={size}>{size}</option>)}</select> {t('pagination.items')}</label><button type="button" disabled={page <= 1} onClick={() => changePage(page - 1)}>{t('common.previous')}</button><span className="at-table__page">{page} / {totalPages}</span><button type="button" disabled={page >= totalPages} onClick={() => changePage(page + 1)}>{t('common.next')}</button></div></div>
   </div>;
 }
