@@ -4,6 +4,7 @@ import { createContext, useContext, useMemo, type CSSProperties, type ReactNode 
 
 import { LocaleContext, locales as builtinLocales, mergeMessages, resolveLocale, zhCN, type Locale, type LocaleInput, type LocaleOverrides } from './locale';
 
+export type ColorScheme = 'light' | 'dark';
 export type ConfigSize = 'small' | 'middle' | 'large';
 export type ConfigLocale = string;
 export interface ThemeTokens {
@@ -14,6 +15,7 @@ export interface ThemeTokens {
 	colorBorder?: string;
 }
 export interface UIConfig {
+	colorScheme?: ColorScheme;
 	prefixCls: string;
 	direction: 'ltr' | 'rtl';
 	size: ConfigSize;
@@ -27,6 +29,7 @@ const defaultUIConfig: UIConfig = { prefixCls: 'at', direction: 'ltr', size: 'mi
 const UIConfigContext = createContext<UIConfig>(defaultUIConfig);
 
 export interface ConfigProviderProps {
+	colorScheme?: ColorScheme;
 	children: ReactNode;
 	prefixCls?: string;
 	direction?: UIConfig['direction'];
@@ -37,8 +40,9 @@ export interface ConfigProviderProps {
 	theme?: ThemeTokens;
 }
 
-export function ConfigProvider({ children, prefixCls: prefixProp, direction: directionProp, size: sizeProp, locale: localeProp, locales: localeRegistry, messages, theme: themeProp }: ConfigProviderProps) {
+export function ConfigProvider({ children, colorScheme: colorSchemeProp, prefixCls: prefixProp, direction: directionProp, size: sizeProp, locale: localeProp, locales: localeRegistry, messages, theme: themeProp }: ConfigProviderProps) {
 	const parent = useConfig();
+	const colorScheme = colorSchemeProp ?? parent.colorScheme;
 	const prefixCls = prefixProp ?? parent.prefixCls;
 	const direction = directionProp ?? parent.direction;
 	const size = sizeProp ?? parent.size;
@@ -49,7 +53,7 @@ export function ConfigProvider({ children, prefixCls: prefixProp, direction: dir
 		return { ...base, messages: mergeMessages(base.messages, messages) };
 	}, [localeProp, registry, parent.localePack, messages]);
 	const locale = localePack.locale;
-	const config = useMemo(() => ({ prefixCls, direction, size, locale, localePack, locales: registry, theme }), [prefixCls, direction, size, locale, localePack, registry, theme]);
+	const config = useMemo(() => ({ colorScheme, prefixCls, direction, size, locale, localePack, locales: registry, theme }), [colorScheme, prefixCls, direction, size, locale, localePack, registry, theme]);
 	const sizeHeight = size === 'small' ? '32px' : size === 'large' ? '48px' : '40px';
 	const style: CSSProperties & Record<`--at-${string}`, string> = { '--at-control-height': sizeHeight };
 	if (theme.primaryColor) {
@@ -61,7 +65,7 @@ export function ConfigProvider({ children, prefixCls: prefixProp, direction: dir
 	if (theme.colorBgContainer) style['--at-color-surface'] = theme.colorBgContainer;
 	if (theme.colorText) style['--at-color-text'] = theme.colorText;
 	if (theme.colorBorder) style['--at-color-border'] = theme.colorBorder;
-	return <UIConfigContext.Provider value={config}><LocaleContext.Provider value={localePack}><div className={`${prefixCls}-config`} dir={direction} lang={locale} data-size={size} style={style}>{children}</div></LocaleContext.Provider></UIConfigContext.Provider>;
+	return <UIConfigContext.Provider value={config}><LocaleContext.Provider value={localePack}><div className={`${prefixCls}-config`} data-at-theme={colorScheme} dir={direction} lang={locale} data-size={size} style={style}>{children}</div></LocaleContext.Provider></UIConfigContext.Provider>;
 }
 
 export function useConfig() { return useContext(UIConfigContext); }

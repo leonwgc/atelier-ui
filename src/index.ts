@@ -143,7 +143,7 @@ export type { MessageOptions, MessageProps, MessageType } from './Message';
 export { Notification, notification, useNotification } from './Notification';
 export type { NotificationOptions, NotificationPlacement, NotificationProps } from './Notification';
 export { ConfigProvider, useConfig } from './ConfigProvider';
-export type { ConfigLocale, ConfigProviderProps, ConfigSize, ThemeTokens, UIConfig } from './ConfigProvider';
+export type { ColorScheme, ConfigLocale, ConfigProviderProps, ConfigSize, ThemeTokens, UIConfig } from './ConfigProvider';
 export { BorderBeam } from './BorderBeam';
 export type { BorderBeamProps } from './BorderBeam';
 export { Marquee } from './Marquee';

@@ -6,16 +6,16 @@
 .at-button--md { min-height: 40px; padding: 0 15px; font-size: 17px; }
 .at-button--lg { min-height: 48px; padding: 0 19px; font-size: 18px; }
 .at-button--full { width: 100%; }
-.at-button--primary { color: #fff; background: var(--at-color-primary); box-shadow: 0 4px 10px rgb(104 92 246 / 18%); }
+.at-button--primary { color: var(--at-color-on-accent); background: var(--at-color-primary); box-shadow: 0 4px 10px rgb(104 92 246 / 18%); }
 .at-button--primary:hover:not(:disabled) { background: var(--at-color-primary-hover); box-shadow: 0 6px 16px rgb(104 92 246 / 26%); }
 .at-button--secondary { color: var(--at-color-text); background: var(--at-color-surface); border-color: var(--at-color-border-strong); }
 .at-button--secondary:hover:not(:disabled) { border-color: var(--at-color-primary); color: var(--at-color-primary); background: var(--at-color-primary-soft); }
 .at-button--tertiary { color: var(--at-color-subtle); background: transparent; }
 .at-button--tertiary:hover:not(:disabled), .at-button--ghost:hover:not(:disabled) { color: var(--at-color-primary); background: var(--at-color-primary-soft); }
 .at-button--ghost { color: var(--at-color-subtle); background: transparent; }
-.at-button--danger { color: #fff; background: var(--at-color-danger); }
-.at-button--danger:hover:not(:disabled) { background: #c63d55; }
+.at-button--danger { color: var(--at-color-on-accent); background: var(--at-color-danger); }
+.at-button--danger:hover:not(:disabled) { background: var(--at-color-danger); }
 .at-button__icon { display: inline-flex; align-items: center; font-size: 20px; }
 .at-spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid rgb(104 92 246 / 20%); border-top-color: var(--at-color-primary); border-radius: 50%; animation: at-spin .7s linear infinite; }
-.at-spinner--inline { width: 14px; height: 14px; border-color: rgb(255 255 255 / 38%); border-top-color: #fff; }
+.at-spinner--inline { width: 14px; height: 14px; border-color: rgb(255 255 255 / 38%); border-top-color: var(--at-color-on-accent); }
 @keyframes at-spin { to { transform: rotate(360deg); } }

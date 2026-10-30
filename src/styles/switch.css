@@ -1,6 +1,6 @@
 .at-switch { display: inline-flex; align-items: center; }
 .at-switch__input { position: absolute; width: 1px; height: 1px; opacity: 0; }
-.at-switch__track { position: relative; display: inline-flex; align-items: center; width: 42px; height: 24px; border-radius: 99px; background: #d6d8e2; transition: background var(--at-transition); }
+.at-switch__track { position: relative; display: inline-flex; align-items: center; width: 42px; height: 24px; border-radius: 99px; background: var(--at-color-border-strong); transition: background var(--at-transition); }
 .at-switch__thumb { position: absolute; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgb(0 0 0 / 15%); transition: transform var(--at-transition); }
 .at-switch__input:checked + .at-switch__track { background: var(--at-color-primary); }
 .at-switch__input:checked + .at-switch__track .at-switch__thumb { transform: translateX(18px); }

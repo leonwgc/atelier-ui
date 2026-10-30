@@ -1,6 +1,6 @@
-.at-radio { display: inline-flex; position: relative; align-items: center; gap: 9px; min-height: 22px; color: #50556a; font-size: 15px; cursor: pointer; }
+.at-radio { display: inline-flex; position: relative; align-items: center; gap: 9px; min-height: 22px; color: var(--at-color-subtle); font-size: 15px; cursor: pointer; }
 .at-radio__input { position: absolute; width: 1px; height: 1px; opacity: 0; }
-.at-radio__circle { display: grid; place-items: center; width: 17px; height: 17px; border: 1px solid #cfd2df; border-radius: 50%; background: #fff; }
+.at-radio__circle { display: grid; place-items: center; width: 17px; height: 17px; border: 1px solid var(--at-color-border); border-radius: 50%; background: var(--at-color-surface); }
 .at-radio__input:checked + .at-radio__circle { border: 5px solid var(--at-color-primary); }
 .at-radio__input:disabled + .at-radio__circle { opacity: .5; }
 .at-radio__input:focus-visible + .at-radio__circle { outline: 3px solid rgb(104 92 246 / 24%); outline-offset: 2px; }

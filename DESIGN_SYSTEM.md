@@ -46,6 +46,12 @@ The values below are the current runtime tokens. CSS custom properties are the s
 
 Use semantic tokens rather than hard-coding these values in new styles. A status color should communicate meaning, not decoration.
 
+### Theme modes
+
+The color table lists light-mode defaults. `src/styles/theme.css` also defines a dark palette selected by `data-at-theme="dark"`; an explicit `data-at-theme="light"` resets a nested region to the light palette. `design-tokens.json` records dark variants as `darkValue` on the same tokens. `--at-color-info` is the informational accent and `--at-color-on-accent` is readable foreground text on filled accent controls. Preserve these semantic roles rather than inverting rendered colors.
+
+`ConfigProvider.colorScheme` accepts `light` or `dark` and inherits when omitted. Portals preserve an explicit scheme; standalone APIs accept a scheme or use their provider-bound hooks. Custom token overrides remain authoritative. Native controls use CSS `color-scheme`; intrinsic image and color-picker content is not recolored. The documentation follows system preference until a manual choice is saved, and initializes the document theme before rendering to avoid a light flash.
+
 ### Shape, depth, and type
 
 | Token | CSS variable | Value |

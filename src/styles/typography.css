@@ -20,7 +20,7 @@
 .at-typography--link[aria-disabled='true'] { color: var(--at-color-muted); cursor: not-allowed; text-decoration: none; }
 .at-typography__code { padding: 2px 6px; border: 1px solid var(--at-color-border); border-radius: 6px; background: var(--at-color-surface-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .88em; }
 .at-typography__kbd { padding: 2px 7px; border: 1px solid var(--at-color-border-strong); border-bottom-width: 2px; border-radius: 6px; background: var(--at-color-surface); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .85em; }
-.at-typography__mark { padding: 0 3px; border-radius: 3px; background: #fde8a6; color: inherit; }
+.at-typography__mark { padding: 0 3px; border-radius: 3px; background: color-mix(in srgb, var(--at-color-warning) 30%, var(--at-color-surface)); color: inherit; }
 .at-typography--ellipsis { display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; }
 .at-typography--clamp, .at-typography--paragraph .at-typography--clamp, .at-typography__paragraph-text.at-typography--clamp { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
 .at-typography--paragraph.at-typography--clamp { display: flex; overflow: visible; }

@@ -1,4 +1,5 @@
-import { LocaleContext, resolveLocale, useLocale, type LocaleInput } from './locale';
+import { ConfigProvider, useConfig, type ColorScheme } from './ConfigProvider';
+import { useLocale, type LocaleInput } from './locale';
 import { createElement, forwardRef, useEffect, useId, useRef, type HTMLAttributes, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createPortal } from 'react-dom';
@@ -27,6 +28,7 @@ export const Modal = Object.assign(forwardRef<HTMLDivElement, ModalProps>(functi
   { open, title, description, onClose, onOk, okText: okTextProp, cancelText: cancelTextProp, confirmLoading = false, footer, maskClosable = true, closeOnEscape = true, width = 520, className, children, ...props },
   ref,
 ) {
+  const { colorScheme } = useConfig();
   const { t, locale } = useLocale();
   const okText = okTextProp === undefined ? t('common.ok') : okTextProp;
   const cancelText = cancelTextProp === undefined ? t('common.cancel') : cancelTextProp;
@@ -59,7 +61,7 @@ export const Modal = Object.assign(forwardRef<HTMLDivElement, ModalProps>(functi
   if (!open || typeof document === 'undefined') return null;
   return createPortal(
     <div className="at-modal-mask" onMouseDown={(event) => { if (event.target === event.currentTarget && maskClosable) onClose(); }}>
-      <div {...props} ref={(node) => { if (typeof ref === 'function') ref(node); else if (ref) (ref as unknown as { current: HTMLDivElement | null }).current = node; panelRef.current = node; }} role="dialog" lang={locale} aria-modal="true" aria-labelledby={title ? titleId : undefined} tabIndex={-1} className={cx('at-modal', className)} style={{ width, ...props.style }}>
+      <div {...props} ref={(node) => { if (typeof ref === 'function') ref(node); else if (ref) (ref as unknown as { current: HTMLDivElement | null }).current = node; panelRef.current = node; }} role="dialog" data-at-theme={colorScheme} lang={locale} aria-modal="true" aria-labelledby={title ? titleId : undefined} tabIndex={-1} className={cx('at-modal', className)} style={{ width, ...props.style }}>
         <div className="at-modal__header"><div><h2 id={titleId} className="at-modal__title">{title}</h2>{description && <p className="at-modal__description">{description}</p>}</div><button type="button" className="at-modal__close" onClick={onClose} aria-label={t('common.close')}>×</button></div>
         <div className="at-modal__body">{children}</div>
         {footer !== null && <div className="at-modal__footer">{footer ?? <><Button onClick={onClose}>{cancelText}</Button><Button variant="primary" loading={confirmLoading} onClick={() => void onOk?.()}>{okText}</Button></>}</div>}
@@ -72,6 +74,7 @@ export const Modal = Object.assign(forwardRef<HTMLDivElement, ModalProps>(functi
 });
 
 export interface ConfirmOptions {
+  colorScheme?: ColorScheme;
   locale?: LocaleInput;
   title: ReactNode;
   content?: ReactNode;
@@ -94,7 +97,7 @@ function showConfirm(options: ConfirmOptions) {
     mount.remove();
   };
   function ConfirmDialog() {
-    return <LocaleContext.Provider value={resolveLocale(options.locale)}>
+    return <ConfigProvider locale={options.locale} colorScheme={options.colorScheme}>
       <Modal
         open
         title={options.title}
@@ -104,7 +107,7 @@ function showConfirm(options: ConfirmOptions) {
         onOk={async () => { await options.onOk?.(); close(); }}
         footer={options.danger ? <ConfirmFooter options={options} close={close} /> : undefined}
       >{options.content}</Modal>
-    </LocaleContext.Provider>;
+    </ConfigProvider>;
   }
   root.render(createElement(ConfirmDialog));
   return { destroy: close };
@@ -121,5 +124,6 @@ function ConfirmFooter({ options, close }: { options: ConfirmOptions; close: () 
 /** Provider-bound alternative to the standalone Modal.confirm API. */
 export function useModal() {
   const pack = useLocale();
-  return { confirm: (options: ConfirmOptions) => showConfirm({ ...options, locale: options.locale ?? pack }) };
+  const { colorScheme } = useConfig();
+  return { confirm: (options: ConfirmOptions) => showConfirm({ ...options, locale: options.locale ?? pack, colorScheme: options.colorScheme ?? colorScheme }) };
 }

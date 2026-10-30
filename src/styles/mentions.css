@@ -4,7 +4,7 @@
 .at-mentions--warning { border-color: var(--at-color-warning); }
 .at-mentions--disabled { background: var(--at-color-surface-muted); }
 .at-mentions__input { display: block; width: 100%; min-height: 42px; padding: 10px 12px; border: 0; outline: 0; background: transparent; color: var(--at-color-text); font-size: 16px; line-height: 1.5; resize: vertical; }
-.at-mentions__input::placeholder { color: #a5a9b8; }
+.at-mentions__input::placeholder { color: var(--at-color-muted); }
 .at-mentions__input:disabled { color: var(--at-color-muted); cursor: not-allowed; }
 .at-mentions--sm .at-mentions__input { padding: 7px 10px; font-size: 14px; }
 .at-mentions--lg .at-mentions__input { padding: 12px 14px; font-size: 17px; }

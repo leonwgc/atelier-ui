@@ -1,3 +1,4 @@
+import { DemoThemeProvider, ThemeToggle } from './theme';
 import { DemoLanguageProvider, useDemoLocale, translateDemoValue } from './locale';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -127,7 +128,7 @@ function App() {
       <header className="topbar"><button className="sidebar-toggle" type="button" aria-label={sidebarCollapsed ? dt("展开侧边栏") : dt("收起侧边栏")} title={sidebarCollapsed ? dt("展开侧边栏") : dt("收起侧边栏")} onClick={() => setSidebarCollapsed((collapsed) => !collapsed)}><span aria-hidden="true">{sidebarCollapsed ? '›' : '‹'}</span></button><button className="mobile-menu" type="button" aria-label={mobileMenu ? dt("关闭导航") : dt("打开导航")} onClick={() => { setSidebarCollapsed(false); setMobileMenu((open) => !open); }}>☰</button><div className="breadcrumbs"><span>{dt("组件手册")}</span><span className="crumb-separator">/</span><strong>{currentPage.title}</strong></div><div className="topbar__right"><div className="language-switch" role="group" aria-label={locale === 'zh-CN' ? '文档语言' : 'Documentation language'}>
         <button type="button" lang="zh-CN" aria-pressed={locale === 'zh-CN'} onClick={() => setLocale('zh-CN')}>中文</button>
         <button type="button" lang="en-US" aria-pressed={locale === 'en-US'} onClick={() => setLocale('en-US')}>English</button>
-      </div><button ref={searchButtonRef} className="search-trigger" type="button" onClick={() => { setSearchQuery(''); setActiveResult(0); setSearchOpen(true); }} aria-label={dt("全局搜索，Command 加 K")}><span aria-hidden="true">⌕</span><kbd>⌘ K</kbd></button><span className="topbar__status"><i /> {dt("所有组件已就绪")}</span></div></header>
+      </div><ThemeToggle /><button ref={searchButtonRef} className="search-trigger" type="button" onClick={() => { setSearchQuery(''); setActiveResult(0); setSearchOpen(true); }} aria-label={dt("全局搜索，Command 加 K")}><span aria-hidden="true">⌕</span><kbd>⌘ K</kbd></button><span className="topbar__status"><i /> {dt("所有组件已就绪")}</span></div></header>
       <div className="content-wrap">
         {page === 'overview' && <Overview onNavigate={setPage} />}
         {page === 'form' && <FormPage />}
@@ -1357,4 +1358,4 @@ function TablePage() {
   </>;
 }
 
-createRoot(document.getElementById('root')!).render(<DemoLanguageProvider><App /></DemoLanguageProvider>);
+createRoot(document.getElementById('root')!).render(<DemoThemeProvider><DemoLanguageProvider><App /></DemoLanguageProvider></DemoThemeProvider>);

@@ -1,4 +1,5 @@
 import { useLocale } from './locale';
+import { useConfig } from './ConfigProvider';
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
 import './styles/theme.css';
@@ -55,6 +56,7 @@ export function Tour({
   steps, open = false, onClose, onFinish, current: currentProp, defaultCurrent = 0, onChange, mask = true, type = 'default', arrow = true, gap = 6, radius = 10, closable = true, indicatorsRender, zIndex = 1200, scrollIntoViewOptions = { block: 'center', behavior: 'smooth' }, className,
 }: TourProps) {
   const { t } = useLocale();
+  const { colorScheme } = useConfig();
 
   const id = useId();
   const [current, setCurrent] = useControllableState(currentProp, defaultCurrent, onChange);
@@ -130,7 +132,7 @@ export function Tour({
     : { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' };
 
   return createPortal(
-    <div className={cx('at-tour', `at-tour--${type}`, className)} style={{ zIndex }}>
+    <div data-at-theme={colorScheme} className={cx('at-tour', `at-tour--${type}`, className)} style={{ zIndex }}>
       {showMask && <svg className="at-tour__mask" aria-hidden="true">
         <defs>
           <mask id={maskId}>

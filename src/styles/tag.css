@@ -1,8 +1,8 @@
 .at-tag { display: inline-flex; align-items: center; gap: 5px; border: 1px solid transparent; border-radius: 999px; padding: 3px 9px; font-size: 13px; line-height: 1.4; white-space: nowrap; }
-.at-tag--neutral { border-color: #e5e7ef; color: #656b80; background: #f7f8fb; }
-.at-tag--primary { border-color: #e2defe; color: #675bd5; background: #f1efff; }
-.at-tag--success { border-color: #d5eee2; color: #328264; background: #eff9f4; }
-.at-tag--warning { border-color: #f2e3c8; color: #a0742d; background: #fff8ec; }
-.at-tag--danger { border-color: #f2d8de; color: #c34c61; background: #fff3f5; }
+.at-tag--neutral { border-color: var(--at-color-border); color: var(--at-color-subtle); background: var(--at-color-surface-muted); }
+.at-tag--primary { border-color: var(--at-color-border); color: var(--at-color-primary); background: color-mix(in srgb, var(--at-color-primary) 12%, var(--at-color-surface)); }
+.at-tag--success { border-color: var(--at-color-border); color: var(--at-color-success); background: color-mix(in srgb, var(--at-color-success) 12%, var(--at-color-surface)); }
+.at-tag--warning { border-color: var(--at-color-border); color: var(--at-color-warning); background: color-mix(in srgb, var(--at-color-warning) 12%, var(--at-color-surface)); }
+.at-tag--danger { border-color: var(--at-color-border); color: var(--at-color-danger); background: color-mix(in srgb, var(--at-color-danger) 10%, var(--at-color-surface)); }
 .at-tag__close { border: 0; padding: 0; color: inherit; background: transparent; font-size: 15px; line-height: 1; opacity: .7; }
 .at-tag__close:hover { opacity: 1; }

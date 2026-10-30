@@ -13,6 +13,6 @@
 .at-time-picker__footer { margin-top: 4px; }
 .at-time-picker__link { padding: 4px 6px; border: 0; border-radius: 6px; background: transparent; color: var(--at-color-primary); font-size: 14px; font-weight: 500; }
 .at-time-picker__link:hover { background: var(--at-color-primary-soft); }
-.at-time-picker__ok { padding: 5px 14px; border: 0; border-radius: 7px; background: var(--at-color-primary); color: #fff; font-size: 14px; font-weight: 600; }
+.at-time-picker__ok { padding: 5px 14px; border: 0; border-radius: 7px; background: var(--at-color-primary); color: var(--at-color-on-accent); font-size: 14px; font-weight: 600; }
 .at-time-picker__ok:hover { background: var(--at-color-primary-hover); }
 @media (prefers-reduced-motion: reduce) { .at-time-picker__column { scroll-behavior: auto; } }

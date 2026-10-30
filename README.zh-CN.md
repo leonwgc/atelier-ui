@@ -158,6 +158,26 @@ Atelier UI 是一个从零实现的 React 组件库与配套 Demo 站点。项�
 `ConfigProvider` 用于配置组件前缀、方向、尺寸、语言和主题变量；`useConfig` 用于读取配置。公开工具函数包括 `formatTime`、`parseTime`、`formatCountdown`、`formatStatistic`、`hsvToRgb`、`parseColor`、`rgbToHsv` 和 `toHex`。
 
 
+### 浅色与深色主题
+
+文档站右上角的太阳 / 月亮按钮用于切换浅色和深色模式。首次访问跟随系统偏好，手动选择后保存到 localStorage。切换保留当前语言、页面和表单状态。
+
+```tsx
+import { ConfigProvider } from 'atelier-ui/config-provider';
+import { Button } from 'atelier-ui/button';
+
+export function ThemeExample() {
+  return (
+    <ConfigProvider colorScheme="dark">
+      <Button variant="primary">深色主题</Button>
+      <ConfigProvider colorScheme="light"><Button>浅色区域</Button></ConfigProvider>
+    </ConfigProvider>
+  );
+}
+```
+
+`colorScheme` 默认继承父级 Provider；未显式配置时，组件继承所在的 CSS 主题，默认是浅色。整站也可以在文档根节点设置 `data-at-theme="dark"` 或 `data-at-theme="light"`。下拉浮层和对话框保留显式配置的主题；`useModal`、`useMessage` 和 `useNotification` 将主题传给独立浮层，未绑定的静态 API 可显式传入 `colorScheme`。自定义主题 token 仍然优先。图片、二维码、取色面板等固有内容颜色保持原样。
+
 ### 国际化
 
 所有组件的内置文案和无障碍标签支持简体中文与英文，默认语言为 `zh-CN`。没有内置文案的组件继续渲染调用方提供的内容。显式传入的文案属性优先，包括属性允许的空字符串或 `null`。

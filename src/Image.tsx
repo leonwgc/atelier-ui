@@ -1,3 +1,4 @@
+import { useConfig } from './ConfigProvider';
 import { useLocale } from './locale';
 import { createContext, useCallback, useContext, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type ImgHTMLAttributes, type PointerEvent as ReactPointerEvent, type ReactNode, type WheelEvent } from 'react';
 import { createPortal } from 'react-dom';
@@ -44,6 +45,7 @@ interface PreviewItem { id: string; src: string; previewSrc?: string }
 interface PreviewLayerProps { items: PreviewItem[]; index: number; onIndexChange: (index: number) => void; onClose: () => void }
 
 function PreviewLayer({ items, index, onIndexChange, onClose }: PreviewLayerProps) {
+  const { colorScheme } = useConfig();
   const { t, locale } = useLocale();
 
   const [scale, setScale] = useState(1);
@@ -95,7 +97,7 @@ function PreviewLayer({ items, index, onIndexChange, onClose }: PreviewLayerProp
     <div
       ref={layerRef}
       className="at-image-preview"
-      role="dialog" lang={locale}
+      role="dialog" data-at-theme={colorScheme} lang={locale}
       aria-modal="true"
       aria-label={t('image.preview')}
       tabIndex={-1}

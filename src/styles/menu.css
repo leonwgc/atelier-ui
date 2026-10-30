@@ -19,7 +19,7 @@
   --at-menu-hover-bg: rgb(255 255 255 / 8%);
   --at-menu-hover-color: #fff;
   --at-menu-active-bg: var(--at-color-primary);
-  --at-menu-active-color: #fff;
+  --at-menu-active-color: var(--at-color-on-accent);
   --at-menu-group-color: rgb(255 255 255 / 40%);
   --at-menu-divider: rgb(255 255 255 / 12%);
   border-radius: var(--at-radius-md);
@@ -34,7 +34,7 @@
 .at-menu__item:focus-visible { outline: 2px solid color-mix(in srgb, var(--at-color-primary) 55%, transparent); outline-offset: -2px; }
 .at-menu__item--selected, .at-menu__item--selected:hover { background: var(--at-menu-active-bg); color: var(--at-menu-active-color); font-weight: 600; }
 .at-menu--inline .at-menu__item--selected::before { content: ''; position: absolute; top: 20%; bottom: 20%; left: 0; width: 3px; border-radius: 0 3px 3px 0; background: var(--at-color-primary); }
-.at-menu--dark.at-menu--inline .at-menu__item--selected::before { background: #fff; }
+.at-menu--dark.at-menu--inline .at-menu__item--selected::before { background: var(--at-color-surface); }
 .at-menu__item--danger { color: var(--at-color-danger); }
 .at-menu__item--disabled { color: var(--at-color-muted); opacity: .55; cursor: not-allowed; }
 .at-menu__title--active { color: var(--at-menu-active-color); }

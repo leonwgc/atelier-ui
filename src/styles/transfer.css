@@ -7,7 +7,7 @@
 .at-transfer__search { display: flex; align-items: center; gap: 6px; margin: 8px 8px 0; padding: 0 8px; border: 1px solid var(--at-color-border); border-radius: 8px; color: var(--at-color-muted); transition: border-color var(--at-motion-fast), box-shadow var(--at-motion-fast); }
 .at-transfer__search:focus-within { border-color: var(--at-color-primary); box-shadow: 0 0 0 3px rgb(104 92 246 / 10%); }
 .at-transfer__search input { flex: 1; min-width: 0; height: 30px; border: 0; outline: 0; background: transparent; color: var(--at-color-text); font-size: 13px; }
-.at-transfer__search button { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; padding: 0; border: 0; border-radius: 50%; background: var(--at-color-border); color: #fff; }
+.at-transfer__search button { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; padding: 0; border: 0; border-radius: 50%; background: var(--at-color-border); color: var(--at-color-on-accent); }
 .at-transfer__list { flex: 1; margin: 0; padding: 6px; overflow: auto; list-style: none; }
 .at-transfer__empty { padding: 28px 12px; color: var(--at-color-muted); font-size: 13px; text-align: center; }
 .at-transfer__item { display: flex; align-items: center; border-radius: 8px; transition: background-color var(--at-motion-fast); }
@@ -25,10 +25,10 @@
 .at-transfer__remove:hover:not(:disabled) { background: rgb(217 77 100 / 10%); color: var(--at-color-danger); }
 .at-transfer__footer { padding: 8px 12px; border-top: 1px solid var(--at-color-border); color: var(--at-color-subtle); font-size: 13px; }
 .at-transfer__actions { display: flex; flex-direction: column; justify-content: center; gap: 8px; }
-.at-transfer__move { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 0; border-radius: 9px; background: var(--at-color-primary); color: #fff; box-shadow: 0 4px 12px rgb(104 92 246 / 25%); transition: background-color var(--at-motion-fast), box-shadow var(--at-motion-fast), transform var(--at-motion-fast) var(--at-ease-emphasized); }
+.at-transfer__move { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 0; border-radius: 9px; background: var(--at-color-primary); color: var(--at-color-on-accent); box-shadow: 0 4px 12px rgb(104 92 246 / 25%); transition: background-color var(--at-motion-fast), box-shadow var(--at-motion-fast), transform var(--at-motion-fast) var(--at-ease-emphasized); }
 .at-transfer__move:hover:not(:disabled) { background: var(--at-color-primary-hover); }
 .at-transfer__move:disabled { background: var(--at-color-border); color: var(--at-color-surface); box-shadow: none; }
-.at-transfer__move-count { position: absolute; top: -6px; right: -6px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: var(--at-color-text); color: #fff; font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; animation: at-motion-enter var(--at-motion-fast) var(--at-ease-emphasized) both; }
+.at-transfer__move-count { position: absolute; top: -6px; right: -6px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: var(--at-color-text); color: var(--at-color-on-accent); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; animation: at-motion-enter var(--at-motion-fast) var(--at-ease-emphasized) both; }
 @media (max-width: 560px) {
   .at-transfer { flex-direction: column; }
   .at-transfer__panel { width: 100%; }

@@ -9,7 +9,7 @@
 .at-float-button:active { transform: scale(.96); }
 .at-float-button:focus-visible { outline: 3px solid rgb(104 92 246 / 35%); outline-offset: 3px; }
 .at-float-button--square { border-radius: 14px; }
-.at-float-button--primary { border-color: transparent; background: var(--at-color-primary); color: #fff; box-shadow: 0 12px 28px rgb(104 92 246 / 35%); }
+.at-float-button--primary { border-color: transparent; background: var(--at-color-primary); color: var(--at-color-on-accent); box-shadow: 0 12px 28px rgb(104 92 246 / 35%); }
 .at-float-button--primary:hover { background: var(--at-color-primary-hover); }
 .at-float-button--inline { position: static; }
 .at-float-button--with-description { width: auto; min-width: 48px; min-height: 48px; padding: 6px 10px; border-radius: 14px; }
@@ -17,7 +17,7 @@
 .at-float-button__body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
 .at-float-button__icon { display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
 .at-float-button__description { font-size: 11px; font-weight: 600; line-height: 1.2; }
-.at-float-button__badge { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 5px; border: 2px solid var(--at-color-surface); border-radius: 999px; background: var(--at-color-danger); color: #fff; font-size: 11px; font-weight: 700; line-height: 14px; text-align: center; }
+.at-float-button__badge { position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 5px; border: 2px solid var(--at-color-surface); border-radius: 999px; background: var(--at-color-danger); color: var(--at-color-on-accent); font-size: 11px; font-weight: 700; line-height: 14px; text-align: center; }
 .at-float-button__badge--dot { min-width: 0; width: 10px; height: 10px; padding: 0; }
 .at-float-button--inline, .at-float-button-group .at-float-button { position: relative; right: auto; bottom: auto; }
 

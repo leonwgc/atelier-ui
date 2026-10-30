@@ -1,12 +1,12 @@
 .at-descriptions { width: 100%; }
-.at-descriptions__title { margin: 0 0 12px; color: #484d63; font-size: 15px; font-weight: 600; }
-.at-descriptions__list { display: grid; gap: 1px; margin: 0; border: 1px solid #ececf2; border-radius: 8px; background: #ececf2; overflow: hidden; }
-.at-descriptions__item { min-width: 0; padding: 12px 14px; background: #fff; }
-.at-descriptions__item dt { margin-bottom: 4px; color: #969aac; font-size: 12px; }
-.at-descriptions__item dd { overflow-wrap: anywhere; margin: 0; color: #53586d; font-size: 14px; }
-.at-descriptions--bordered .at-descriptions__list { gap: 0; border: 1px solid #e8e9f0; background: #fff; }
-.at-descriptions--bordered .at-descriptions__item { display: grid; grid-template-columns: minmax(90px, .8fr) 1.4fr; gap: 12px; border-bottom: 1px solid #e8e9f0; padding: 0; }
+.at-descriptions__title { margin: 0 0 12px; color: var(--at-color-subtle); font-size: 15px; font-weight: 600; }
+.at-descriptions__list { display: grid; gap: 1px; margin: 0; border: 1px solid var(--at-color-border); border-radius: 8px; background: var(--at-color-surface-muted); overflow: hidden; }
+.at-descriptions__item { min-width: 0; padding: 12px 14px; background: var(--at-color-surface); }
+.at-descriptions__item dt { margin-bottom: 4px; color: var(--at-color-muted); font-size: 12px; }
+.at-descriptions__item dd { overflow-wrap: anywhere; margin: 0; color: var(--at-color-subtle); font-size: 14px; }
+.at-descriptions--bordered .at-descriptions__list { gap: 0; border: 1px solid var(--at-color-border); background: var(--at-color-surface); }
+.at-descriptions--bordered .at-descriptions__item { display: grid; grid-template-columns: minmax(90px, .8fr) 1.4fr; gap: 12px; border-bottom: 1px solid var(--at-color-border); padding: 0; }
 .at-descriptions--bordered .at-descriptions__item:last-child { border-bottom: 0; }
 .at-descriptions--bordered .at-descriptions__item dt, .at-descriptions--bordered .at-descriptions__item dd { margin: 0; padding: 11px 13px; }
-.at-descriptions--bordered .at-descriptions__item dt { border-right: 1px solid #e8e9f0; background: #fafafd; }
+.at-descriptions--bordered .at-descriptions__item dt { border-right: 1px solid var(--at-color-border); background: var(--at-color-surface); }
 @media (max-width: 640px) { .at-descriptions__list { grid-template-columns: 1fr !important; } }

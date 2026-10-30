@@ -1,11 +1,11 @@
 .at-modal-mask { position: fixed; z-index: 1000; inset: 0; display: grid; place-items: center; padding: 24px; background: rgb(25 27 47 / 42%); animation: at-fade-in 140ms ease both; }
-.at-modal { max-width: min(100%, 720px); max-height: min(90vh, 800px); overflow: auto; border: 1px solid rgb(255 255 255 / 72%); border-radius: var(--at-radius-lg); outline: 0; background: var(--at-color-surface); box-shadow: var(--at-shadow-modal); animation: at-modal-in 170ms ease both; }
+.at-modal { max-width: min(100%, 720px); max-height: min(90vh, 800px); overflow: auto; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-lg); outline: 0; background: var(--at-color-surface); box-shadow: var(--at-shadow-modal); animation: at-modal-in 170ms ease both; }
 .at-modal__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding: 23px 25px 17px; }
 .at-modal__title { margin: 0; font-size: 21px; letter-spacing: -.02em; }
 .at-modal__description { margin: 6px 0 0; color: var(--at-color-subtle); font-size: 15px; }
-.at-modal__close { display: grid; place-items: center; width: 28px; height: 28px; flex: 0 0 auto; border: 0; border-radius: 8px; background: transparent; color: #9095a5; font-size: 27px; line-height: 1; }
+.at-modal__close { display: grid; place-items: center; width: 28px; height: 28px; flex: 0 0 auto; border: 0; border-radius: 8px; background: transparent; color: var(--at-color-muted); font-size: 27px; line-height: 1; }
 .at-modal__close:hover { color: var(--at-color-text); background: var(--at-color-surface-muted); }
 .at-modal__body { padding: 6px 25px 24px; color: var(--at-color-subtle); font-size: 17px; line-height: 1.7; }
-.at-modal__footer { display: flex; justify-content: flex-end; gap: 9px; padding: 15px 25px; border-top: 1px solid #f0f1f5; }
+.at-modal__footer { display: flex; justify-content: flex-end; gap: 9px; padding: 15px 25px; border-top: 1px solid var(--at-color-border); }
 @keyframes at-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes at-modal-in { from { opacity: 0; transform: translateY(10px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }

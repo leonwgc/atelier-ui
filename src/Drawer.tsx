@@ -1,3 +1,4 @@
+import { useConfig } from './ConfigProvider';
 import { useLocale } from './locale';
 import { createPortal } from 'react-dom';
 import { useEffect, useId, useRef, type HTMLAttributes, type ReactNode } from 'react';
@@ -17,6 +18,7 @@ export interface DrawerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title
 }
 
 export function Drawer({ open, title, onClose, placement = 'right', width = 420, maskClosable = true, closeOnEscape = true, className, children, ...props }: DrawerProps) {
+  const { colorScheme } = useConfig();
   const { t, locale } = useLocale();
 
   const titleId = useId();
@@ -44,5 +46,5 @@ export function Drawer({ open, title, onClose, placement = 'right', width = 420,
     return () => { document.body.style.overflow = previousOverflow; document.removeEventListener('keydown', handleKeyDown); previousFocusRef.current?.focus(); };
   }, [open, closeOnEscape]);
   if (!open || typeof document === 'undefined') return null;
-  return createPortal(<div className="at-drawer-mask" onMouseDown={(event) => { if (event.target === event.currentTarget && maskClosable) onClose(); }}><div {...props} ref={panelRef} role="dialog" lang={locale} aria-modal="true" aria-label={props['aria-label'] ?? (title ? undefined : t('drawer.label'))} aria-labelledby={title ? titleId : undefined} tabIndex={-1} className={cx('at-drawer', `at-drawer--${placement}`, className)} style={{ width, ...props.style }}><header className="at-drawer__header"><h2 id={titleId}>{title}</h2><button type="button" aria-label={t('drawer.close')} onClick={onClose}>×</button></header><div className="at-drawer__body">{children}</div></div></div>, document.body);
+  return createPortal(<div className="at-drawer-mask" onMouseDown={(event) => { if (event.target === event.currentTarget && maskClosable) onClose(); }}><div {...props} ref={panelRef} role="dialog" data-at-theme={colorScheme} lang={locale} aria-modal="true" aria-label={props['aria-label'] ?? (title ? undefined : t('drawer.label'))} aria-labelledby={title ? titleId : undefined} tabIndex={-1} className={cx('at-drawer', `at-drawer--${placement}`, className)} style={{ width, ...props.style }}><header className="at-drawer__header"><h2 id={titleId}>{title}</h2><button type="button" aria-label={t('drawer.close')} onClick={onClose}>×</button></header><div className="at-drawer__body">{children}</div></div></div>, document.body);
 }

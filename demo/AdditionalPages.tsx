@@ -184,7 +184,7 @@ export default function Example() {
     </ConfigProvider>
   );
 }`,
-    rows: [['prefixCls', 'string', 'at'], ['direction', "'ltr' | 'rtl'", 'ltr'], ['size', "'small' | 'middle' | 'large'", 'middle'], ['locale', 'string | Locale', '继承父级 / zh-CN'], ['locales', 'Record<string, Locale>', '内置 zh-CN / en-US'], ['messages', 'LocaleOverrides', '覆盖当前语言的部分文案'], ['createLocale(code, messages, base?)', 'Locale', '以 enUS 为默认回退'], ['useLocale()', '{ locale, formatLocale, messages, t }', '读取当前语言与翻译函数'], ['theme.primaryColor', 'string', '—'], ['theme.borderRadius', 'string', '—'], ['useConfig()', 'UIConfig', '读取上下文']],
+    rows: [['colorScheme', "'light' | 'dark'", '继承父级 / CSS 主题'], ['prefixCls', 'string', 'at'], ['direction', "'ltr' | 'rtl'", 'ltr'], ['size', "'small' | 'middle' | 'large'", 'middle'], ['locale', 'string | Locale', '继承父级 / zh-CN'], ['locales', 'Record<string, Locale>', '内置 zh-CN / en-US'], ['messages', 'LocaleOverrides', '覆盖当前语言的部分文案'], ['createLocale(code, messages, base?)', 'Locale', '以 enUS 为默认回退'], ['useLocale()', '{ locale, formatLocale, messages, t }', '读取当前语言与翻译函数'], ['theme.primaryColor', 'string', '—'], ['theme.borderRadius', 'string', '—'], ['useConfig()', 'UIConfig', '读取上下文']],
     preview: <ConfigProviderDemo />,
   },
 ];

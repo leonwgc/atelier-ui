@@ -1,3 +1,4 @@
+import { useConfig } from '../ConfigProvider';
 import { useLocale } from '../locale';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type MutableRefObject, type ReactNode, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
@@ -141,11 +142,13 @@ export interface PopupProps {
 
 /** Portal-rendered floating surface shared by every dropdown-style component. */
 export function Popup({ open, panelRef, position, placement, className, style, children, onMouseDown, keepTriggerFocus = true, ...rest }: PopupProps) {
+  const { colorScheme } = useConfig();
   const { locale } = useLocale();
   if (!open || typeof document === 'undefined') return null;
   const resolved = position?.placement ?? placement;
   return createPortal(
     <div
+      data-at-theme={colorScheme}
       lang={locale}
       {...rest}
       ref={(node) => { panelRef.current = node; }}

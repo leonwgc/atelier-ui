@@ -6,67 +6,92 @@
       "primary": {
         "cssVariable": "--at-color-primary",
         "type": "color",
-        "value": "#685cf6"
+        "value": "#685cf6",
+        "darkValue": "#9a8cff"
       },
       "primaryHover": {
         "cssVariable": "--at-color-primary-hover",
         "type": "color",
-        "value": "#5749e5"
+        "value": "#5749e5",
+        "darkValue": "#b0a5ff"
       },
       "primarySoft": {
         "cssVariable": "--at-color-primary-soft",
         "type": "color",
-        "value": "#f0efff"
+        "value": "#f0efff",
+        "darkValue": "#302a50"
       },
       "text": {
         "cssVariable": "--at-color-text",
         "type": "color",
-        "value": "#222438"
+        "value": "#222438",
+        "darkValue": "#edf0fa"
       },
       "subtle": {
         "cssVariable": "--at-color-subtle",
         "type": "color",
-        "value": "#697087"
+        "value": "#697087",
+        "darkValue": "#b2b9cf"
       },
       "muted": {
         "cssVariable": "--at-color-muted",
         "type": "color",
-        "value": "#9298aa"
+        "value": "#9298aa",
+        "darkValue": "#929cb5"
       },
       "border": {
         "cssVariable": "--at-color-border",
         "type": "color",
-        "value": "#e4e6ef"
+        "value": "#e4e6ef",
+        "darkValue": "#34394f"
       },
       "borderStrong": {
         "cssVariable": "--at-color-border-strong",
         "type": "color",
-        "value": "#d1d4e1"
+        "value": "#d1d4e1",
+        "darkValue": "#4b536e"
       },
       "surface": {
         "cssVariable": "--at-color-surface",
         "type": "color",
-        "value": "#ffffff"
+        "value": "#ffffff",
+        "darkValue": "#1b1e2d"
       },
       "surfaceMuted": {
         "cssVariable": "--at-color-surface-muted",
         "type": "color",
-        "value": "#f7f8fb"
+        "value": "#f7f8fb",
+        "darkValue": "#232737"
       },
       "danger": {
         "cssVariable": "--at-color-danger",
         "type": "color",
-        "value": "#d94d64"
+        "value": "#d94d64",
+        "darkValue": "#ff8299"
       },
       "success": {
         "cssVariable": "--at-color-success",
         "type": "color",
-        "value": "#2f9472"
+        "value": "#2f9472",
+        "darkValue": "#6bcea4"
       },
       "warning": {
         "cssVariable": "--at-color-warning",
         "type": "color",
-        "value": "#c98a29"
+        "value": "#c98a29",
+        "darkValue": "#efbd70"
+      },
+      "info": {
+        "cssVariable": "--at-color-info",
+        "type": "color",
+        "value": "#42608d",
+        "darkValue": "#a4c3ff"
+      },
+      "onAccent": {
+        "cssVariable": "--at-color-on-accent",
+        "type": "color",
+        "value": "#ffffff",
+        "darkValue": "#15131f"
       }
     },
     "radius": {
@@ -90,12 +115,14 @@
       "small": {
         "cssVariable": "--at-shadow-sm",
         "type": "shadow",
-        "value": "0 2px 8px rgb(38 42 75 / 5%)"
+        "value": "0 2px 8px rgb(38 42 75 / 5%)",
+        "darkValue": "0 2px 8px rgb(0 0 0 / 24%)"
       },
       "modal": {
         "cssVariable": "--at-shadow-modal",
         "type": "shadow",
-        "value": "0 24px 80px rgb(28 30 57 / 22%)"
+        "value": "0 24px 80px rgb(28 30 57 / 22%)",
+        "darkValue": "0 24px 80px rgb(0 0 0 / 55%)"
       }
     },
     "typography": {
@@ -124,12 +151,22 @@
       "easingStandard": {
         "cssVariable": "--at-ease-standard",
         "type": "cubicBezier",
-        "value": [0.2, 0.7, 0.2, 1]
+        "value": [
+          0.2,
+          0.7,
+          0.2,
+          1
+        ]
       },
       "easingEmphasized": {
         "cssVariable": "--at-ease-emphasized",
         "type": "cubicBezier",
-        "value": [0.2, 0.85, 0.25, 1]
+        "value": [
+          0.2,
+          0.85,
+          0.25,
+          1
+        ]
       },
       "transition": {
         "cssVariable": "--at-transition",

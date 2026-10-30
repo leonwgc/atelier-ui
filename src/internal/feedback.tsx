@@ -1,3 +1,4 @@
+import { useConfig, type ColorScheme } from '../ConfigProvider';
 import { createTranslator, resolveLocale, useLocale, type Locale, type LocaleInput } from '../locale';
 import { createRoot, type Root } from 'react-dom/client';
 import { useEffect, useSyncExternalStore, type ReactNode } from 'react';
@@ -8,6 +9,7 @@ export type MessageType = 'success' | 'info' | 'warning' | 'error';
 export type NotificationPlacement = 'top-right' | 'bottom-right' | 'top-left' | 'bottom-left';
 
 export interface FeedbackEntry {
+  colorScheme?: ColorScheme;
   locale?: Locale;
   id: number;
   kind: 'message' | 'notification';
@@ -87,13 +89,14 @@ function add(entry: Omit<FeedbackEntry, 'id'>) {
 }
 
 export interface MessageOptions {
+  colorScheme?: ColorScheme;
   locale?: LocaleInput;
   duration?: number;
   onClose?: () => void;
 }
 
 function showMessage(type: MessageType, content: ReactNode, options: MessageOptions = {}) {
-  return add({ locale: options.locale ? resolveLocale(options.locale) : undefined, kind: 'message', type, content, duration: options.duration ?? 4000, placement: 'top-right', onClose: options.onClose });
+  return add({ colorScheme: options.colorScheme, locale: options.locale ? resolveLocale(options.locale) : undefined, kind: 'message', type, content, duration: options.duration ?? 4000, placement: 'top-right', onClose: options.onClose });
 }
 
 export const message = {
@@ -106,6 +109,7 @@ export const message = {
 };
 
 export interface NotificationOptions {
+  colorScheme?: ColorScheme;
   locale?: LocaleInput;
   title: ReactNode;
   description?: ReactNode;
@@ -118,6 +122,7 @@ export interface NotificationOptions {
 export const notification = {
   open(options: NotificationOptions) {
     return add({
+      colorScheme: options.colorScheme,
       locale: options.locale ? resolveLocale(options.locale) : undefined,
       kind: 'notification',
       type: options.type ?? 'info',
@@ -138,6 +143,7 @@ export const notification = {
 
 function addNotification(options: NotificationOptions) {
   return add({
+    colorScheme: options.colorScheme,
     locale: options.locale ? resolveLocale(options.locale) : undefined,
     kind: 'notification',
     type: options.type ?? 'info',
@@ -151,6 +157,7 @@ function addNotification(options: NotificationOptions) {
 }
 
 export function FeedbackHost({ standalone = false }: { standalone?: boolean }) {
+  const { colorScheme } = useConfig();
   const hostLocale = useLocale();
 
   const currentEntries = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
@@ -187,11 +194,11 @@ export function FeedbackHost({ standalone = false }: { standalone?: boolean }) {
           ? { top: `${20 + position * 104}px` }
           : { bottom: `${20 + position * 104}px` };
       return entry.kind === 'message'
-        ? <div key={entry.id} lang={pack.locale} className={`at-message at-message--${entry.type}`} role={entry.type === 'error' ? 'alert' : 'status'} style={style}>
+        ? <div key={entry.id} lang={pack.locale} data-at-theme={entry.colorScheme ?? colorScheme} className={`at-message at-message--${entry.type}`} role={entry.type === 'error' ? 'alert' : 'status'} style={style}>
             <span aria-hidden="true">{entry.type === 'success' ? '✓' : entry.type === 'error' ? '!' : '·'}</span>{entry.content}
             <button type="button" aria-label={t('common.closeMessage')} onClick={() => remove(entry.id)}>×</button>
           </div>
-        : <aside key={entry.id} lang={pack.locale} className={`at-notification at-notification--${entry.placement} at-notification--${entry.type}`} role="status" style={style}>
+        : <aside key={entry.id} lang={pack.locale} data-at-theme={entry.colorScheme ?? colorScheme} className={`at-notification at-notification--${entry.placement} at-notification--${entry.type}`} role="status" style={style}>
             <div><strong>{entry.title}</strong>{entry.description && <p>{entry.description}</p>}</div>
             <button type="button" aria-label={t('common.closeNotification')} onClick={() => remove(entry.id)}>×</button>
           </aside>;
@@ -201,24 +208,26 @@ export function FeedbackHost({ standalone = false }: { standalone?: boolean }) {
 /** Static feedback is rendered in a separate React root; bind the caller's Provider explicitly. */
 export function useMessage() {
   const locale = useLocale();
+  const { colorScheme } = useConfig();
   return {
-    open: (content: ReactNode, options: MessageOptions = {}) => message.open(content, { ...options, locale: options.locale ?? locale }),
-    success: (content: ReactNode, options: MessageOptions = {}) => message.success(content, { ...options, locale: options.locale ?? locale }),
-    info: (content: ReactNode, options: MessageOptions = {}) => message.info(content, { ...options, locale: options.locale ?? locale }),
-    warning: (content: ReactNode, options: MessageOptions = {}) => message.warning(content, { ...options, locale: options.locale ?? locale }),
-    error: (content: ReactNode, options: MessageOptions = {}) => message.error(content, { ...options, locale: options.locale ?? locale }),
+    open: (content: ReactNode, options: MessageOptions = {}) => message.open(content, { ...options, locale: options.locale ?? locale, colorScheme: options.colorScheme ?? colorScheme }),
+    success: (content: ReactNode, options: MessageOptions = {}) => message.success(content, { ...options, locale: options.locale ?? locale, colorScheme: options.colorScheme ?? colorScheme }),
+    info: (content: ReactNode, options: MessageOptions = {}) => message.info(content, { ...options, locale: options.locale ?? locale, colorScheme: options.colorScheme ?? colorScheme }),
+    warning: (content: ReactNode, options: MessageOptions = {}) => message.warning(content, { ...options, locale: options.locale ?? locale, colorScheme: options.colorScheme ?? colorScheme }),
+    error: (content: ReactNode, options: MessageOptions = {}) => message.error(content, { ...options, locale: options.locale ?? locale, colorScheme: options.colorScheme ?? colorScheme }),
     destroy: message.destroy,
   };
 }
 
 export function useNotification() {
   const locale = useLocale();
+  const { colorScheme } = useConfig();
   return {
-    open: (options: NotificationOptions) => notification.open({ ...options, locale: options.locale ?? locale }),
-    success: (options: Omit<NotificationOptions, 'type'>) => notification.success({ ...options, locale: options.locale ?? locale }),
-    info: (options: Omit<NotificationOptions, 'type'>) => notification.info({ ...options, locale: options.locale ?? locale }),
-    warning: (options: Omit<NotificationOptions, 'type'>) => notification.warning({ ...options, locale: options.locale ?? locale }),
-    error: (options: Omit<NotificationOptions, 'type'>) => notification.error({ ...options, locale: options.locale ?? locale }),
+    open: (options: NotificationOptions) => notification.open({ ...options, locale: options.locale ?? locale, colorScheme: options.colorScheme ?? colorScheme }),
+    success: (options: Omit<NotificationOptions, 'type'>) => notification.success({ ...options, locale: options.locale ?? locale, colorScheme: options.colorScheme ?? colorScheme }),
+    info: (options: Omit<NotificationOptions, 'type'>) => notification.info({ ...options, locale: options.locale ?? locale, colorScheme: options.colorScheme ?? colorScheme }),
+    warning: (options: Omit<NotificationOptions, 'type'>) => notification.warning({ ...options, locale: options.locale ?? locale, colorScheme: options.colorScheme ?? colorScheme }),
+    error: (options: Omit<NotificationOptions, 'type'>) => notification.error({ ...options, locale: options.locale ?? locale, colorScheme: options.colorScheme ?? colorScheme }),
     destroy: notification.destroy,
   };
 }

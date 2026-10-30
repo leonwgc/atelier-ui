@@ -1,6 +1,6 @@
 .at-breadcrumb ol { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.at-breadcrumb li { display: inline-flex; align-items: center; gap: 8px; color: #989cad; font-size: 13px; }
-.at-breadcrumb li[aria-current="page"] { color: #454a60; font-weight: 600; }
+.at-breadcrumb li { display: inline-flex; align-items: center; gap: 8px; color: var(--at-color-muted); font-size: 13px; }
+.at-breadcrumb li[aria-current="page"] { color: var(--at-color-subtle); font-weight: 600; }
 .at-breadcrumb a, .at-breadcrumb button { border: 0; padding: 0; color: inherit; background: transparent; font: inherit; text-decoration: none; cursor: pointer; }
-.at-breadcrumb a:hover, .at-breadcrumb button:hover { color: #685cf6; }
-.at-breadcrumb__separator { color: #c2c5d0; font-weight: 400; }
+.at-breadcrumb a:hover, .at-breadcrumb button:hover { color: var(--at-color-primary); }
+.at-breadcrumb__separator { color: var(--at-color-muted); font-weight: 400; }

@@ -158,6 +158,26 @@ This catalog follows the public exports in `src/index.ts`.
 `ConfigProvider` configures component prefixes, direction, size, locale, and theme variables; `useConfig` reads the configuration. Public utilities include `formatTime`, `parseTime`, `formatCountdown`, `formatStatistic`, `hsvToRgb`, `parseColor`, `rgbToHsv`, and `toHex`.
 
 
+### Light and Dark Themes
+
+The documentation site's upper-right sun/moon button switches between light and dark mode. The first visit follows the system preference; a manual selection is remembered in local storage. Language, the current page and form state are preserved when switching.
+
+```tsx
+import { ConfigProvider } from 'atelier-ui/config-provider';
+import { Button } from 'atelier-ui/button';
+
+export function ThemeExample() {
+  return (
+    <ConfigProvider colorScheme="dark">
+      <Button variant="primary">Dark theme</Button>
+      <ConfigProvider colorScheme="light"><Button>Light section</Button></ConfigProvider>
+    </ConfigProvider>
+  );
+}
+```
+
+`colorScheme` inherits from the parent provider. Without an explicit scheme, components inherit the surrounding CSS theme, which defaults to light. For an entire application, set `data-at-theme="dark"` or `data-at-theme="light"` on the document root. Popups and dialogs preserve an explicit provider scheme. Bound `useModal`, `useMessage` and `useNotification` APIs pass it to standalone overlays; unbound APIs can receive a `colorScheme` option. Explicit theme tokens still take priority. Intrinsic image, QR-code and color-picker colors remain unchanged.
+
 ### Internationalization
 
 All built-in component text and accessible labels support Simplified Chinese and English. The default is `zh-CN`. Components without built-in text continue to render the content you supply. Explicit text props take precedence, including an intentional empty string or `null` where the prop permits it.

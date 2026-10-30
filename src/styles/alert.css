@@ -1,8 +1,8 @@
 .at-alert { display: flex; align-items: flex-start; gap: 11px; border: 1px solid transparent; border-radius: var(--at-radius-sm); padding: 13px 15px; }
-.at-alert--info { border-color: #dce6fa; color: #42608d; background: #f3f7ff; }
-.at-alert--success { border-color: #d4eee2; color: #39785e; background: #f0faf5; }
-.at-alert--warning { border-color: #f2e4c8; color: #8c682d; background: #fff9ef; }
-.at-alert--error { border-color: #f3d6dc; color: #9e4756; background: #fff4f6; }
+.at-alert--info { border-color: var(--at-color-border); color: var(--at-color-info); background: color-mix(in srgb, var(--at-color-info) 10%, var(--at-color-surface)); }
+.at-alert--success { border-color: var(--at-color-border); color: var(--at-color-success); background: color-mix(in srgb, var(--at-color-success) 12%, var(--at-color-surface)); }
+.at-alert--warning { border-color: var(--at-color-border); color: var(--at-color-warning); background: color-mix(in srgb, var(--at-color-warning) 12%, var(--at-color-surface)); }
+.at-alert--error { border-color: var(--at-color-border); color: var(--at-color-danger); background: color-mix(in srgb, var(--at-color-danger) 10%, var(--at-color-surface)); }
 .at-alert__icon { display: grid; place-items: center; width: 21px; height: 21px; flex: 0 0 auto; border: 1px solid currentColor; border-radius: 50%; font-size: 13px; font-weight: 700; }
 .at-alert__content { flex: 1; min-width: 0; }
 .at-alert__title { display: block; font-size: 15px; }

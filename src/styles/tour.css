@@ -34,17 +34,17 @@
 .at-tour__card--arrow[data-placement$='-start']::before { left: 22px; }
 .at-tour__card--arrow[data-placement$='-end']::before { right: 22px; }
 
-.at-tour--primary .at-tour__card { border-color: transparent; background: linear-gradient(145deg, var(--at-color-primary), #8b7dff); color: #fff; }
+.at-tour--primary .at-tour__card { border-color: transparent; background: linear-gradient(145deg, var(--at-color-primary), #8b7dff); color: var(--at-color-on-accent); }
 .at-tour--primary .at-tour__card--arrow::before { border-color: transparent; background: var(--at-color-primary); }
-.at-tour--primary .at-tour__description { color: rgb(255 255 255 / 80%); }
-.at-tour--primary .at-tour__close { color: rgb(255 255 255 / 75%); }
-.at-tour--primary .at-tour__close:hover { background: rgb(255 255 255 / 15%); color: #fff; }
+.at-tour--primary .at-tour__description { color: color-mix(in srgb, var(--at-color-on-accent) 80%, transparent); }
+.at-tour--primary .at-tour__close { color: color-mix(in srgb, var(--at-color-on-accent) 75%, transparent); }
+.at-tour--primary .at-tour__close:hover { background: rgb(255 255 255 / 15%); color: var(--at-color-on-accent); }
 .at-tour--primary .at-tour__dot { background: rgb(255 255 255 / 35%); }
 .at-tour--primary .at-tour__dot--active { background: #fff; }
-.at-tour--primary .at-tour__button--next { background: #fff; color: var(--at-color-primary); }
-.at-tour--primary .at-tour__button--next:hover { background: #f3f1ff; }
-.at-tour--primary .at-tour__button:not(.at-tour__button--next) { border-color: transparent; background: rgb(255 255 255 / 16%); color: #fff; }
-.at-tour--primary .at-tour__button:not(.at-tour__button--next):hover { background: rgb(255 255 255 / 26%); color: #fff; }
+.at-tour--primary .at-tour__button--next { background: var(--at-color-surface); color: var(--at-color-primary); }
+.at-tour--primary .at-tour__button--next:hover { background: var(--at-color-surface-muted); }
+.at-tour--primary .at-tour__button:not(.at-tour__button--next) { border-color: transparent; background: rgb(255 255 255 / 16%); color: var(--at-color-on-accent); }
+.at-tour--primary .at-tour__button:not(.at-tour__button--next):hover { background: rgb(255 255 255 / 26%); color: var(--at-color-on-accent); }
 .at-tour--primary .at-tour__spotlight { box-shadow: 0 0 0 2px rgb(255 255 255 / 85%), 0 0 0 8px rgb(255 255 255 / 18%); }
 
 @keyframes at-tour-fade { from { opacity: 0; } to { opacity: 1; } }

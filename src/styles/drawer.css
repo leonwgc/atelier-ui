@@ -1,11 +1,11 @@
 .at-drawer-mask { position: fixed; z-index: 1000; inset: 0; display: flex; justify-content: flex-end; background: rgb(25 27 47 / 38%); animation: at-drawer-fade .14s ease both; }
-.at-drawer { display: flex; max-width: min(100vw, 720px); height: 100%; flex-direction: column; outline: 0; background: #fff; box-shadow: 0 0 36px rgb(25 27 47 / 16%); animation: at-drawer-enter-right .18s ease both; }
+.at-drawer { display: flex; max-width: min(100vw, 720px); height: 100%; flex-direction: column; outline: 0; background: var(--at-color-surface); box-shadow: 0 0 36px rgb(25 27 47 / 16%); animation: at-drawer-enter-right .18s ease both; }
 .at-drawer--left { margin-right: auto; animation-name: at-drawer-enter-left; }
-.at-drawer__header { display: flex; min-height: 58px; justify-content: space-between; align-items: center; gap: 18px; border-bottom: 1px solid #ececf2; padding: 0 20px; }
-.at-drawer__header h2 { margin: 0; color: #484d63; font-size: 17px; font-weight: 600; }
-.at-drawer__header button { display: grid; width: 30px; height: 30px; place-items: center; border: 0; border-radius: 7px; color: #858a9c; background: transparent; font-size: 24px; cursor: pointer; }
-.at-drawer__header button:hover { color: #4d5268; background: #f3f3f8; }
-.at-drawer__body { overflow: auto; flex: 1; padding: 20px; color: #696e82; font-size: 14px; line-height: 1.65; }
+.at-drawer__header { display: flex; min-height: 58px; justify-content: space-between; align-items: center; gap: 18px; border-bottom: 1px solid var(--at-color-border); padding: 0 20px; }
+.at-drawer__header h2 { margin: 0; color: var(--at-color-subtle); font-size: 17px; font-weight: 600; }
+.at-drawer__header button { display: grid; width: 30px; height: 30px; place-items: center; border: 0; border-radius: 7px; color: var(--at-color-muted); background: transparent; font-size: 24px; cursor: pointer; }
+.at-drawer__header button:hover { color: var(--at-color-subtle); background: var(--at-color-surface-muted); }
+.at-drawer__body { overflow: auto; flex: 1; padding: 20px; color: var(--at-color-subtle); font-size: 14px; line-height: 1.65; }
 @keyframes at-drawer-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes at-drawer-enter-right { from { transform: translateX(14px); opacity: .8; } to { transform: translateX(0); opacity: 1; } }
 @keyframes at-drawer-enter-left { from { transform: translateX(-14px); opacity: .8; } to { transform: translateX(0); opacity: 1; } }

@@ -21,7 +21,7 @@
 .at-tree__switcher--leaf { pointer-events: none; }
 .at-tree__switcher--loading { transform: none; }
 .at-tree__spinner { width: 12px; height: 12px; border: 2px solid var(--at-color-border); border-top-color: var(--at-color-primary); border-radius: 50%; animation: at-tree-spin .8s linear infinite; }
-.at-tree__checkbox { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; width: 16px; height: 16px; margin: 0 4px 0 2px; border: 1.5px solid var(--at-color-border-strong); border-radius: 4px; background: var(--at-color-surface); color: #fff; cursor: pointer; transition: background-color var(--at-motion-fast), border-color var(--at-motion-fast), transform var(--at-motion-fast) var(--at-ease-emphasized); }
+.at-tree__checkbox { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; width: 16px; height: 16px; margin: 0 4px 0 2px; border: 1.5px solid var(--at-color-border-strong); border-radius: 4px; background: var(--at-color-surface); color: var(--at-color-on-accent); cursor: pointer; transition: background-color var(--at-motion-fast), border-color var(--at-motion-fast), transform var(--at-motion-fast) var(--at-ease-emphasized); }
 .at-tree__checkbox:hover { border-color: var(--at-color-primary); }
 .at-tree__checkbox--checked { border-color: var(--at-color-primary); background: var(--at-color-primary); animation: at-tree-check 200ms var(--at-ease-emphasized); }
 .at-tree__checkbox--half { border-color: var(--at-color-primary); background: linear-gradient(var(--at-color-primary), var(--at-color-primary)) center / 8px 2px no-repeat; }

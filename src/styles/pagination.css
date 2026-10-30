@@ -1,9 +1,9 @@
-.at-pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: #888da0; font-size: 13px; }
+.at-pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--at-color-muted); font-size: 13px; }
 .at-pagination__total { margin-right: auto; }
-.at-pagination button, .at-pagination select { min-height: 32px; border: 1px solid #e3e5ee; border-radius: 7px; padding: 0 9px; color: #656b80; background: #fff; font: inherit; }
+.at-pagination button, .at-pagination select { min-height: 32px; border: 1px solid var(--at-color-border); border-radius: 7px; padding: 0 9px; color: var(--at-color-subtle); background: var(--at-color-surface); font: inherit; }
 .at-pagination button { cursor: pointer; }
-.at-pagination button:hover:not(:disabled) { border-color: #bcb5fc; color: #685cf6; }
-.at-pagination button:disabled { color: #b8bbc7; cursor: not-allowed; background: #fafafd; }
-.at-pagination button.at-pagination__page--active { border-color: #685cf6; color: #685cf6; background: #f4f2ff; }
+.at-pagination button:hover:not(:disabled) { border-color: var(--at-color-border); color: var(--at-color-primary); }
+.at-pagination button:disabled { color: var(--at-color-muted); cursor: not-allowed; background: var(--at-color-surface); }
+.at-pagination button.at-pagination__page--active { border-color: var(--at-color-primary); color: var(--at-color-primary); background: var(--at-color-surface-muted); }
 .at-pagination__size { display: flex; align-items: center; gap: 6px; }
 .at-pagination select { cursor: pointer; }

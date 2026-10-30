@@ -1,8 +1,8 @@
 .at-date-picker { display: flex; width: min(100%, 320px); flex-direction: column; gap: 6px; }
-.at-date-picker__label { color: #555a70; font-size: 13px; font-weight: 500; }
-.at-date-picker__input { box-sizing: border-box; width: 100%; min-height: 39px; border: 1px solid #dedfe8; border-radius: 7px; padding: 7px 10px; color: #555a70; background: #fff; font: inherit; font-size: 14px; }
-.at-date-picker__input:focus { border-color: #8f84fa; outline: 3px solid rgb(104 92 246 / 13%); }
-.at-date-picker__input:disabled { color: #a9acb9; background: #f7f8fb; cursor: not-allowed; }
-.at-date-picker__input--error { border-color: #df7181; }
-.at-date-picker__help { color: #999dad; font-size: 12px; }
-.at-date-picker__help--error { color: #c34c61; }
+.at-date-picker__label { color: var(--at-color-subtle); font-size: 13px; font-weight: 500; }
+.at-date-picker__input { box-sizing: border-box; width: 100%; min-height: 39px; border: 1px solid var(--at-color-border); border-radius: 7px; padding: 7px 10px; color: var(--at-color-subtle); background: var(--at-color-surface); font: inherit; font-size: 14px; }
+.at-date-picker__input:focus { border-color: var(--at-color-primary); outline: 3px solid rgb(104 92 246 / 13%); }
+.at-date-picker__input:disabled { color: var(--at-color-muted); background: var(--at-color-surface-muted); cursor: not-allowed; }
+.at-date-picker__input--error { border-color: var(--at-color-danger); }
+.at-date-picker__help { color: var(--at-color-muted); font-size: 12px; }
+.at-date-picker__help--error { color: var(--at-color-danger); }

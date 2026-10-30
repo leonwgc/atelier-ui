@@ -1086,5 +1086,8 @@
   "内置 zh-CN / en-US": "Built-in zh-CN / en-US",
   "覆盖当前语言的部分文案": "Override messages for the current language",
   "以 enUS 为默认回退": "Falls back to enUS",
-  "读取当前语言与翻译函数": "Read language and translator"
+  "读取当前语言与翻译函数": "Read language and translator",
+  "切换到浅色模式": "Switch to light mode",
+  "切换到深色模式": "Switch to dark mode",
+  "继承父级 / CSS 主题": "Parent value / CSS theme"
 }

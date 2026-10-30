@@ -4,13 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f6f7fb" />
+    <script>
+      (() => {
+        let saved;
+        try { saved = localStorage.getItem('atelier-ui-docs-theme'); } catch {}
+        const dark = saved === 'dark' || (saved !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.atTheme = dark ? 'dark' : 'light';
+      })();
+    </script>
     <meta name="description" content="Atelier UI — 为产品界面精心打磨的 React 组件。" />
     <title>Atelier UI · 组件实验室</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="/atelier-ui/assets/index-ntVmUt8h.js"></script>
-    <link rel="stylesheet" crossorigin href="/atelier-ui/assets/index-C9-oJS12.css">
+    <script type="module" crossorigin src="/atelier-ui/assets/index-CumavNSN.js"></script>
+    <link rel="stylesheet" crossorigin href="/atelier-ui/assets/index-CrndAtjD.css">
   </head>
   <body>
     <div id="root"></div>
