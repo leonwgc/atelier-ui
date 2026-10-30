@@ -111,6 +111,10 @@ button:focus-visible, a:focus-visible { outline: 3px solid rgb(104 92 246 / 22%)
 .code-token--function { color: #be7b37; }
 .code-token--number { color: #b46e34; }
 .code-token--comment { color: #a2a5b1; font-style: italic; }
+.code-token--selector { color: #3977b9; font-weight: 600; }
+.code-token--property { color: #7967d9; }
+.code-token--variable { color: #be7b37; }
+.code-token--color { color: #3a9070; }
 .code-token--punctuation { color: #9297aa; }
 .side-nav__items { display: flex; flex-direction: column; gap: 3px; }
 .side-nav__label { display: flex; width: 100%; justify-content: space-between; align-items: center; border: 0; border-radius: 6px; padding: 0 10px 6px; color: #a1a4b2; background: transparent; font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: .08em; text-align: left; text-transform: uppercase; cursor: pointer; }

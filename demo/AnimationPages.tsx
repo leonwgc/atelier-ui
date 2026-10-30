@@ -1,4 +1,4 @@
-import { ApiTable, ExampleCard, PageHeading } from './shared';
+import { ApiTable, CodeBlock, ExampleCard, PageHeading } from './shared';
 import { animationExamples } from './animation-examples';
 import exampleStyles from './animation-examples/styles.css?raw';
 
@@ -128,7 +128,7 @@ export function AnimationPage({ id }: { id: AnimationPageId }) {
     </ExampleCard>
     <details className="animation-demo-styles" key={`${id}-styles`}>
       <summary>查看示例配套样式（styles.css）</summary>
-      <pre className="code-panel"><code>{exampleStyles}</code></pre>
+      <CodeBlock code={exampleStyles} language="css" />
     </details>
     <ApiTable rows={item.rows} />
   </>;
