@@ -172,6 +172,16 @@ npm run dev
 
 开发服务器启动后，终端会显示本地访问地址。
 
+单元测试使用 Vitest、React Testing Library 和 jsdom，不需要启动 Demo 或安装浏览器：
+
+```bash
+npm test                 # 一次性运行全部单元测试
+npm run test:watch       # 开发时监听运行
+npm run test:coverage    # 检查覆盖率并生成 coverage/index.html
+```
+
+测试位于 `tests/unit/`，覆盖组件的状态、交互、键盘操作、表单 Hooks 与校验、工具函数、动画计时器和清理行为。覆盖率统计包含全部组件和内部逻辑，排除只做导出的入口及类型声明；最低要求为语句 80%、分支 70%、函数 80%、行 85%。几何尺寸、Canvas 和浏览器观察器在需要时由测试提供模拟，实际布局和样式仍由 Playwright UI 测试验证。
+
 首次运行 UI 测试前，安装 Playwright Chromium 浏览器：
 
 ```bash
@@ -184,6 +194,7 @@ UI 测试会构建生产版 Demo，并检查全部组件样式、导航页面，
 ## 构建与检查
 
 ```bash
+npm test
 npm run typecheck
 npm run build
 ```
@@ -196,6 +207,9 @@ npm run build
 | --- | --- |
 | `npm run dev` | 启动 Demo 开发服务器 |
 | `npm run typecheck` | TypeScript 类型检查 |
+| `npm test` | 运行全部单元测试 |
+| `npm run test:watch` | 监听运行单元测试 |
+| `npm run test:coverage` | 运行单元测试并检查覆盖率 |
 | `npm run test:ui` | 运行 Playwright UI 回归测试 |
 | `npm run build:lib` | 构建组件库 |
 | `npm run build:demo` | 构建 Demo 到 `docs/` |

@@ -155,7 +155,7 @@ export function Image({ src, alt = '', preview = true, fallback, placeholder = t
   useEffect(() => {
     if (!group || !config) return;
     return group.register(id, src, config.src);
-  }, [group, id, src, config?.src, Boolean(config)]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [group?.register, id, src, config?.src, Boolean(config)]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const show = () => {
     if (!config || status === 'error' || failed) return;
@@ -217,15 +217,17 @@ export function ImagePreviewGroup({ items: explicitItems, current, onChange, vis
   const index = current ?? internalIndex;
   const open = visible ?? internalOpen;
 
+  const register = useCallback<GroupContextValue['register']>((id, src, previewSrc) => {
+    order.current = [...order.current.filter((item) => item !== id), id];
+    setRegistered((list) => {
+      const next = [...list.filter((item) => item.id !== id), { id, src, previewSrc }];
+      return next.sort((a, b) => order.current.indexOf(a.id) - order.current.indexOf(b.id));
+    });
+    return () => { order.current = order.current.filter((item) => item !== id); setRegistered((list) => list.filter((item) => item.id !== id)); };
+  }, []);
+
   const context = useMemo<GroupContextValue>(() => ({
-    register: (id, src, previewSrc) => {
-      order.current = [...order.current.filter((item) => item !== id), id];
-      setRegistered((list) => {
-        const next = [...list.filter((item) => item.id !== id), { id, src, previewSrc }];
-        return next.sort((a, b) => order.current.indexOf(a.id) - order.current.indexOf(b.id));
-      });
-      return () => { order.current = order.current.filter((item) => item !== id); setRegistered((list) => list.filter((item) => item.id !== id)); };
-    },
+    register,
     open: (id) => {
       const position = (explicitItems ? items : registered).findIndex((item) => item.id === id);
       const next = position >= 0 ? position : 0;
@@ -234,7 +236,7 @@ export function ImagePreviewGroup({ items: explicitItems, current, onChange, vis
       if (visible === undefined) setInternalOpen(true);
       onVisibleChange?.(true);
     },
-  }), [explicitItems, items, registered, current, onChange, visible, onVisibleChange]);
+  }), [register, explicitItems, items, registered, current, onChange, visible, onVisibleChange]);
 
   const setIndex = (next: number) => { if (current === undefined) setInternalIndex(next); onChange?.(next); };
   const close = () => { if (visible === undefined) setInternalOpen(false); onVisibleChange?.(false); };

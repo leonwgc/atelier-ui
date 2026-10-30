@@ -48,6 +48,8 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
   const [current, setCurrent] = useControllableState<number | null>(value, defaultValue, onChange);
   const resolvedPrecision = precision ?? decimalsOf(step);
   const format = (next: number | null) => (next == null ? '' : formatter ? formatter(next) : next.toFixed(resolvedPrecision));
+  const currentRef = useRef(current);
+  currentRef.current = current;
   const [text, setText] = useState(() => format(current));
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -75,7 +77,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
   };
   const bump = (direction: 1 | -1) => {
     if (disabled || readOnly) return;
-    const base = current ?? (Number.isFinite(min) && min > 0 ? min : 0);
+    const base = currentRef.current ?? (Number.isFinite(min) && min > 0 ? min : 0);
     const next = normalize(base + direction * step);
     setCurrent(next);
     setText(format(next));

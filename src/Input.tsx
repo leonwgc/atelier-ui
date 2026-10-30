@@ -27,7 +27,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       {label && <label className="at-field__label" htmlFor={inputId}>{label}</label>}
       <div className={cx('at-input-wrap', `at-input-wrap--${size}`, error && 'at-input-wrap--error', disabled && 'at-input-wrap--disabled')}>
         {prefix && <span className="at-input-wrap__adornment">{prefix}</span>}
-        <input {...props} id={inputId} ref={ref} className="at-input" value={value} defaultValue={value == null ? defaultValue : undefined} onChange={(event) => { if (value == null) setUncontrolledValue(event.target.value); onChange?.(event); }} disabled={disabled} aria-invalid={Boolean(error) || undefined} />
+        <input {...props} id={inputId} ref={ref} className="at-input" value={currentValue} onChange={(event) => { if (value == null) setUncontrolledValue(event.target.value); onChange?.(event); }} disabled={disabled} aria-invalid={Boolean(error) || undefined} />
         {clearable && hasValue && !disabled && (
           <button type="button" className="at-input-wrap__clear" aria-label="清空输入" onClick={() => { if (value == null) setUncontrolledValue(''); onChange?.({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>); }}>
             ×
