@@ -1,4 +1,7 @@
-.at-textarea { width: 100%; min-height: 94px; resize: vertical; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-sm); outline: 0; padding: 11px 12px; color: var(--at-color-text); background: var(--at-color-surface); font-size: 17px; transition: border var(--at-transition), box-shadow var(--at-transition); }
-.at-textarea:focus-visible { border-color: var(--at-color-primary); box-shadow: 0 0 0 3px rgb(104 92 246 / 10%); outline: 3px solid rgb(104 92 246 / 24%); outline-offset: 2px; }
+.at-textarea { width: 100%; min-height: 94px; resize: vertical; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); outline: 0; padding: 11px 12px; color: var(--at-color-text); background: var(--at-color-surface); font-size: var(--at-font-size-md); transition: border var(--at-transition), box-shadow var(--at-transition); }
+.at-textarea:focus-visible { border-color: var(--at-color-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--at-color-primary) 10%, transparent); outline: 2px solid var(--at-color-primary); outline-offset: 2px; }
 .at-textarea--error { border-color: var(--at-color-danger); }
 .at-textarea::placeholder { color: var(--at-color-muted); }
+
+.at-textarea--error:focus-visible { border-color: var(--at-color-danger); box-shadow: var(--at-focus-ring-danger); outline-color: var(--at-color-danger); }
+.at-textarea:disabled { color: var(--at-color-disabled); background: var(--at-color-disabled-bg); cursor: not-allowed; }

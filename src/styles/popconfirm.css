@@ -4,7 +4,7 @@
 .at-popconfirm__icon { display: inline-flex; flex: 0 0 auto; margin-top: 1px; color: var(--at-color-warning); }
 .at-popconfirm__icon--danger { color: var(--at-color-danger); }
 .at-popconfirm__text { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.at-popconfirm__title { color: var(--at-color-text); font-size: 15px; font-weight: 600; }
+.at-popconfirm__title { color: var(--at-color-text); font-size: var(--at-font-size-md); font-weight: 600; }
 .at-popconfirm__description { color: var(--at-color-subtle); line-height: 1.55; }
 .at-popconfirm__error { color: var(--at-color-danger); font-size: 13px; }
 .at-popconfirm__actions { display: flex; justify-content: flex-end; gap: 8px; }

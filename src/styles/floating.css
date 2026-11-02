@@ -7,9 +7,9 @@
   border: 1px solid var(--at-color-border);
   border-radius: var(--at-radius-md);
   background: var(--at-color-surface);
-  box-shadow: 0 18px 48px rgb(28 30 57 / 14%), 0 2px 8px rgb(28 30 57 / 6%);
+  box-shadow: var(--at-shadow-sm);
   color: var(--at-color-text);
-  font-size: 15px;
+  font-size: var(--at-font-size-md);
   transform-origin: top center;
   animation: at-popup-enter var(--at-motion-base) var(--at-ease-emphasized) both;
 }
@@ -43,7 +43,7 @@
 .at-option__label mark { background: transparent; color: var(--at-color-primary); font-weight: 600; }
 .at-option__description { display: block; margin-top: 2px; color: var(--at-color-muted); font-size: 13px; }
 .at-option__check { display: inline-flex; flex: 0 0 auto; width: 16px; height: 16px; color: var(--at-color-primary); opacity: 0; transform: scale(.6); transition: opacity var(--at-motion-fast) var(--at-ease-standard), transform var(--at-motion-fast) var(--at-ease-emphasized); }
-.at-option--active { background: var(--at-color-surface-muted); }
+.at-option--active { background: var(--at-color-hover); }
 .at-option--selected { color: var(--at-color-primary); font-weight: 600; }
 .at-option--selected .at-option__check { opacity: 1; transform: scale(1); }
 .at-option--active.at-option--selected { background: var(--at-color-primary-soft); }

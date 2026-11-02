@@ -2,7 +2,7 @@
 
 [简体中文](./DESIGN_SYSTEM.zh-CN.md)
 
-This document defines the framework-neutral visual and interaction contract for Atelier UI. It is the reference for future adapters, including a Vue 3+ implementation; it does not add Vue code or change the current React package.
+This document defines the framework-neutral visual and interaction contract for Atelier UI. It is the reference for future adapters, including a Vue 3+ implementation; React and future adapters share the same design contract.
 
 Accessibility rules below are acceptance criteria for future adapters, not an audit claim that every existing React module already satisfies them.
 
@@ -13,9 +13,24 @@ Accessibility rules below are acceptance criteria for future adapters, not an au
 - Component behavior is defined by each public component's TypeScript props and observable behavior. The catalog below is an inventory, not a replacement for those contracts.
 - Component styles remain independently loadable from their component entry. `docs/` is generated output and is not a source location for this specification.
 
+## Neat Design alignment
+
+The visual baseline follows the [Neat Design Playbook](https://bitbucket.org/derbysoft/neat-design-playbook/src/9b11c59b6c2d55af56bd481f76fe808b30c8aa10/skills/neat-design-rules/SKILL.md), especially its styling reference. Values and sizes were checked against locally available `@derbysoft/neat-design@2.2.2` (`es/Button/token/genToken.js`, `es/Input/token/genToken.js`, `es/Table/token/genToken.js`) and `@derbysoft/neat-design-token` (`es/token/powerBlack.js`). The playbook lists a newer 2.4 baseline; this is visual alignment to the checked sources, not a claim of 2.4 parity or an adapter around Neat components. No runtime dependency is added.
+
+| Visual element | Atelier implementation | Neat reference |
+| --- | --- | --- |
+| Main and secondary actions | `Button`, same variants and callbacks | Near-black primary, outlined secondary, 500 weight, 32/40/48px heights |
+| Inputs and selection | `Input`, `Textarea`, shared selector | 14px default text, 6px radius, semantic focus/error rings |
+| Data rows | `Table` | Neutral dividers, 14px text, 16px horizontal padding, aqua hover |
+| Dialogs and popups | Existing overlay components | Neutral surface, shared elevation, token masks |
+| Links and status | `Typography`, `Alert`, `Tag` | Info blue distinct from brand; positive/notice/negative semantics |
+| Documentation | Existing navigation, search, pages and examples | Same runtime tokens in light and dark modes, Inter font stack |
+
+Stable `--at-` variables, published APIs, custom content, controlled state, locale behavior, and per-component imports remain authoritative. Provider and `App.useApp()` rules apply to applications actually using Neat components; Atelier retains its own providers and hooks. Dark values are an Atelier adaptation, not a copied upstream dark palette. Positive and notice text use darker palette steps for readable small text; the original status accents remain available for icons and fills. Explicit user-selected colors, color-picker spectra, image content and demonstration syntax colors retain their meaning.
+
 ## Design principles
 
-1. **Quiet hierarchy.** Use the purple primary color for the main action or selected state; keep supporting surfaces neutral.
+1. **Quiet hierarchy.** Use the near-black primary color for the main action or selected state; use the independent info token for links; keep supporting surfaces neutral.
 2. **Predictable states.** Interactive modules expose clear hover, focus-visible, active, disabled, loading, error, selected, and open states where relevant.
 3. **Semantic first.** Prefer native HTML elements and native keyboard behavior. Add ARIA only to express relationships or states that native semantics do not provide.
 4. **Composable content.** Keep data and behavior in props; allow callers to supply rich content through children or an explicit customization seam.
@@ -30,19 +45,19 @@ The values below are the current runtime tokens. CSS custom properties are the s
 
 | Token | CSS variable | Value | Intended use |
 | --- | --- | --- | --- |
-| Primary | `--at-color-primary` | `#685cf6` | Primary actions, selected states, focus accent |
-| Primary hover | `--at-color-primary-hover` | `#5749e5` | Hovered primary actions |
-| Primary soft | `--at-color-primary-soft` | `#f0efff` | Subtle selected or highlighted surfaces |
-| Text | `--at-color-text` | `#222438` | Main content |
-| Subtle text | `--at-color-subtle` | `#697087` | Supporting content |
-| Muted text | `--at-color-muted` | `#9298aa` | De-emphasized content |
-| Border | `--at-color-border` | `#e4e6ef` | Default separators and outlines |
-| Strong border | `--at-color-border-strong` | `#d1d4e1` | Emphasized separators |
+| Primary | `--at-color-primary` | `#00131c` | Primary actions, selected states, focus accent |
+| Primary hover | `--at-color-primary-hover` | `#49565d` | Hovered primary actions |
+| Primary soft | `--at-color-primary-soft` | `#f6f7f7` | Subtle selected or highlighted surfaces |
+| Text | `--at-color-text` | `#00131c` | Main content |
+| Subtle text | `--at-color-subtle` | `#647075` | Supporting content |
+| Muted text | `--at-color-muted` | `#929a9e` | De-emphasized content |
+| Border | `--at-color-border` | `#b6bcbe` | Default separators and outlines |
+| Strong border | `--at-color-border-strong` | `#929a9e` | Emphasized separators |
 | Surface | `--at-color-surface` | `#ffffff` | Main component surface |
-| Muted surface | `--at-color-surface-muted` | `#f7f8fb` | Secondary surface |
-| Danger | `--at-color-danger` | `#d94d64` | Destructive or invalid state |
-| Success | `--at-color-success` | `#2f9472` | Successful state |
-| Warning | `--at-color-warning` | `#c98a29` | Caution state |
+| Muted surface | `--at-color-surface-muted` | `#f6f7f7` | Secondary surface |
+| Danger | `--at-color-danger` | `#e23a3a` | Destructive or invalid state |
+| Success | `--at-color-success` | `#2abd13` | Successful state |
+| Warning | `--at-color-warning` | `#efa610` | Caution state |
 
 Use semantic tokens rather than hard-coding these values in new styles. A status color should communicate meaning, not decoration.
 
@@ -56,27 +71,27 @@ The color table lists light-mode defaults. `src/styles/theme.css` also defines a
 
 | Token | CSS variable | Value |
 | --- | --- | --- |
-| Small radius | `--at-radius-sm` | `8px` |
-| Medium radius | `--at-radius-md` | `11px` |
-| Large radius | `--at-radius-lg` | `16px` |
-| Small shadow | `--at-shadow-sm` | `0 2px 8px rgb(38 42 75 / 5%)` |
-| Modal shadow | `--at-shadow-modal` | `0 24px 80px rgb(28 30 57 / 22%)` |
-| Font stack | `--at-font` | `'DM Sans', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif` |
+| Small radius | `--at-radius-sm` | `4px` |
+| Medium radius | `--at-radius-md` | `6px` |
+| Large radius | `--at-radius-lg` | `6px` |
+| Small shadow | `--at-shadow-sm` | `0 0.3px 1.8px 0 rgb(0 0 0 / 10%), 0 1.6px 7.2px 0 rgb(0 0 0 / 13%)` |
+| Modal shadow | `--at-shadow-modal` | `0 1.2px 7.2px 0 rgb(0 0 0 / 10%), 0 6.4px 28.8px 0 rgb(0 0 0 / 13%)` |
+| Font stack | `--at-font` | `Inter, 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif` |
 
-Use the small shadow for lightweight elevation and the modal shadow for prominent overlays. The current theme does not yet define shared spacing, font-size, line-height, or z-index tokens. Until those are introduced deliberately, a framework port should preserve the existing component measurements instead of guessing a new scale.
+Use the small shadow for lightweight elevation and the modal shadow for prominent overlays. The theme defines spacing (4/8/12/16/24px), body type (12/14/16px), a 1.5 line height, medium weight (500), and control heights (32/40/48px). Z-index remains component-specific. Preserve existing interaction contracts when adapting these values.
 
 ### Motion and focus
 
 | Token | CSS variable | Value |
 | --- | --- | --- |
-| Fast duration | `--at-motion-fast` | `140ms` |
-| Base duration | `--at-motion-base` | `200ms` |
-| Slow duration | `--at-motion-slow` | `280ms` |
-| Standard easing | `--at-ease-standard` | `cubic-bezier(.2, .7, .2, 1)` |
-| Emphasized easing | `--at-ease-emphasized` | `cubic-bezier(.2, .85, .25, 1)` |
+| Fast duration | `--at-motion-fast` | `110ms` |
+| Base duration | `--at-motion-base` | `150ms` |
+| Slow duration | `--at-motion-slow` | `240ms` |
+| Standard easing | `--at-ease-standard` | `cubic-bezier(.4, 0, .2, 1)` |
+| Emphasized easing | `--at-ease-emphasized` | `cubic-bezier(0, 0, .2, 1)` |
 | Default transition | `--at-transition` | `var(--at-motion-base) var(--at-ease-standard)` |
 
-Keyboard focus uses a visible 2px primary-tinted outline with a 2px offset. Preserve the global `prefers-reduced-motion: reduce` behavior; component-specific animation must not reintroduce long motion when the preference is active. Hover must not steal focus or create a focus/close loop.
+Keyboard focus uses a visible 2px primary-color outline with a 2px offset. Preserve the global `prefers-reduced-motion: reduce` behavior; component-specific animation must not reintroduce long motion when the preference is active. Hover must not steal focus or create a focus/close loop.
 
 ## Component inventory
 

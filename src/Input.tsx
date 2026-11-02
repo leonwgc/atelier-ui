@@ -1,5 +1,5 @@
 import { useLocale } from './locale';
-import { forwardRef, useState, type InputHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useId, useState, type InputHTMLAttributes, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/field.css';
 import './styles/input.css';
@@ -21,7 +21,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 ) {
   const { t } = useLocale();
 
-  const inputId = id ?? (label ? `at-input-${label.replace(/\W+/g, '-').toLowerCase()}` : undefined);
+  const generatedId = useId();
+  const inputId = id ?? `at-input-${generatedId}`;
+  const descriptionId = error || hint ? `${inputId}-description` : undefined;
+  const describedBy = [props['aria-describedby'], descriptionId].filter(Boolean).join(' ') || undefined;
   const [uncontrolledValue, setUncontrolledValue] = useState(String(defaultValue ?? ''));
   const currentValue = value == null ? uncontrolledValue : String(value);
   const hasValue = currentValue.length > 0;
@@ -30,7 +33,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       {label && <label className="at-field__label" htmlFor={inputId}>{label}</label>}
       <div className={cx('at-input-wrap', `at-input-wrap--${size}`, error && 'at-input-wrap--error', disabled && 'at-input-wrap--disabled')}>
         {prefix && <span className="at-input-wrap__adornment">{prefix}</span>}
-        <input {...props} id={inputId} ref={ref} className="at-input" value={currentValue} onChange={(event) => { if (value == null) setUncontrolledValue(event.target.value); onChange?.(event); }} disabled={disabled} aria-invalid={Boolean(error) || undefined} />
+        <input {...props} id={inputId} ref={ref} className="at-input" value={currentValue} onChange={(event) => { if (value == null) setUncontrolledValue(event.target.value); onChange?.(event); }} disabled={disabled} aria-invalid={Boolean(error) || undefined} aria-describedby={describedBy} />
         {clearable && hasValue && !disabled && (
           <button type="button" className="at-input-wrap__clear" aria-label={t('common.clearInput')} onClick={() => { if (value == null) setUncontrolledValue(''); onChange?.({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>); }}>
             ×
@@ -38,7 +41,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         )}
         {suffix && <span className="at-input-wrap__adornment">{suffix}</span>}
       </div>
-      {error ? <span className="at-field__error" role="alert">{error}</span> : hint ? <span className="at-field__hint">{hint}</span> : null}
+      {error ? <span id={descriptionId} className="at-field__error" role="alert">{error}</span> : hint ? <span id={descriptionId} className="at-field__hint">{hint}</span> : null}
     </div>
   );
 });

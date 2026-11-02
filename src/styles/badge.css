@@ -7,5 +7,5 @@
 .at-badge__count--warning, .at-badge__status--warning { background: var(--at-color-warning); }
 .at-badge__count--error, .at-badge__status--error { background: var(--at-color-danger); }
 .at-badge__standalone { display: inline-flex; align-items: center; gap: 8px; color: var(--at-color-subtle); font-size: 13px; }
-.at-badge__status { width: 8px; height: 8px; border-radius: 50%; background: #a0a4b3; }
+.at-badge__status { width: 8px; height: 8px; border-radius: 50%; background: var(--at-color-muted); }
 @keyframes at-badge-pop { from { opacity: 0; scale: .7; } to { opacity: 1; scale: 1; } }

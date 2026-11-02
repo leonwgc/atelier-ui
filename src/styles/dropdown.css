@@ -12,7 +12,7 @@
 }
 .at-dropdown__item--active { background: var(--at-color-primary-soft); color: var(--at-color-primary); }
 .at-dropdown__item--danger { color: var(--at-color-danger); }
-.at-dropdown__item--danger.at-dropdown__item--active { background: rgb(217 77 100 / 10%); color: var(--at-color-danger); }
+.at-dropdown__item--danger.at-dropdown__item--active { background: color-mix(in srgb, var(--at-color-danger) 10%, transparent); color: var(--at-color-danger); }
 .at-dropdown__item--disabled { color: var(--at-color-muted); cursor: not-allowed; }
 .at-dropdown__item--disabled.at-dropdown__item--active { background: transparent; }
 .at-dropdown__icon { display: inline-flex; flex: 0 0 auto; align-items: center; width: 18px; color: var(--at-color-subtle); }

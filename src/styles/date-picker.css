@@ -1,7 +1,7 @@
 .at-date-picker { display: flex; width: min(100%, 320px); flex-direction: column; gap: 6px; }
 .at-date-picker__label { color: var(--at-color-subtle); font-size: 13px; font-weight: 500; }
-.at-date-picker__input { box-sizing: border-box; width: 100%; min-height: 39px; border: 1px solid var(--at-color-border); border-radius: 7px; padding: 7px 10px; color: var(--at-color-subtle); background: var(--at-color-surface); font: inherit; font-size: 14px; }
-.at-date-picker__input:focus { border-color: var(--at-color-primary); outline: 3px solid rgb(104 92 246 / 13%); }
+.at-date-picker__input { box-sizing: border-box; width: 100%; min-height: 39px; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); padding: 7px 10px; color: var(--at-color-subtle); background: var(--at-color-surface); font: inherit; font-size: 14px; }
+.at-date-picker__input:focus { border-color: var(--at-color-primary); outline: 2px solid var(--at-color-primary); }
 .at-date-picker__input:disabled { color: var(--at-color-muted); background: var(--at-color-surface-muted); cursor: not-allowed; }
 .at-date-picker__input--error { border-color: var(--at-color-danger); }
 .at-date-picker__help { color: var(--at-color-muted); font-size: 12px; }

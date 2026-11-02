@@ -22,7 +22,7 @@ export function DemoThemeProvider({ children }: { children: ReactNode }) {
   }, []);
   useEffect(() => {
     document.documentElement.dataset.atTheme = colorScheme;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', colorScheme === 'dark' ? '#11131d' : '#f6f7fb');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', colorScheme === 'dark' ? '#15262e' : '#f6f7f7');
     if (preference) {
       try { localStorage.setItem('atelier-ui-docs-theme', preference); } catch { /* The switch also works without storage. */ }
     }

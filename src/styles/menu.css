@@ -14,7 +14,7 @@
 .at-menu--horizontal { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px; }
 .at-menu--collapsed { width: 64px; }
 .at-menu--dark {
-  --at-menu-bg: #1d1f33;
+  --at-menu-bg: var(--at-color-inverse-surface);
   --at-menu-color: rgb(255 255 255 / 68%);
   --at-menu-hover-bg: rgb(255 255 255 / 8%);
   --at-menu-hover-color: #fff;
@@ -31,7 +31,7 @@
   transition: background-color var(--at-motion-fast) var(--at-ease-standard), color var(--at-motion-fast) var(--at-ease-standard);
 }
 .at-menu__item:hover:not(.at-menu__item--disabled), .at-menu__item:focus-visible { background: var(--at-menu-hover-bg); color: var(--at-menu-hover-color); }
-.at-menu__item:focus-visible { outline: 2px solid color-mix(in srgb, var(--at-color-primary) 55%, transparent); outline-offset: -2px; }
+.at-menu__item:focus-visible { outline: 2px solid var(--at-color-primary); outline-offset: -2px; }
 .at-menu__item--selected, .at-menu__item--selected:hover { background: var(--at-menu-active-bg); color: var(--at-menu-active-color); font-weight: 600; }
 .at-menu--inline .at-menu__item--selected::before { content: ''; position: absolute; top: 20%; bottom: 20%; left: 0; width: 3px; border-radius: 0 3px 3px 0; background: var(--at-color-primary); }
 .at-menu--dark.at-menu--inline .at-menu__item--selected::before { background: var(--at-color-surface); }

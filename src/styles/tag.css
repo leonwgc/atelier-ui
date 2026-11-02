@@ -1,8 +1,8 @@
-.at-tag { display: inline-flex; align-items: center; gap: 5px; border: 1px solid transparent; border-radius: 999px; padding: 3px 9px; font-size: 13px; line-height: 1.4; white-space: nowrap; }
+.at-tag { display: inline-flex; align-items: center; gap: 5px; border: 1px solid transparent; border-radius: var(--at-radius-sm); padding: 3px 9px; font-size: 13px; line-height: 1.4; white-space: nowrap; }
 .at-tag--neutral { border-color: var(--at-color-border); color: var(--at-color-subtle); background: var(--at-color-surface-muted); }
 .at-tag--primary { border-color: var(--at-color-border); color: var(--at-color-primary); background: color-mix(in srgb, var(--at-color-primary) 12%, var(--at-color-surface)); }
-.at-tag--success { border-color: var(--at-color-border); color: var(--at-color-success); background: color-mix(in srgb, var(--at-color-success) 12%, var(--at-color-surface)); }
-.at-tag--warning { border-color: var(--at-color-border); color: var(--at-color-warning); background: color-mix(in srgb, var(--at-color-warning) 12%, var(--at-color-surface)); }
+.at-tag--success { border-color: var(--at-color-border); color: var(--at-color-positive-text); background: color-mix(in srgb, var(--at-color-success) 12%, var(--at-color-surface)); }
+.at-tag--warning { border-color: var(--at-color-border); color: var(--at-color-notice-text); background: color-mix(in srgb, var(--at-color-warning) 12%, var(--at-color-surface)); }
 .at-tag--danger { border-color: var(--at-color-border); color: var(--at-color-danger); background: color-mix(in srgb, var(--at-color-danger) 10%, var(--at-color-surface)); }
-.at-tag__close { border: 0; padding: 0; color: inherit; background: transparent; font-size: 15px; line-height: 1; opacity: .7; }
+.at-tag__close { border: 0; padding: 0; color: inherit; background: transparent; font-size: var(--at-font-size-md); line-height: 1; opacity: .7; }
 .at-tag__close:hover { opacity: 1; }

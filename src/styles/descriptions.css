@@ -1,6 +1,6 @@
 .at-descriptions { width: 100%; }
-.at-descriptions__title { margin: 0 0 12px; color: var(--at-color-subtle); font-size: 15px; font-weight: 600; }
-.at-descriptions__list { display: grid; gap: 1px; margin: 0; border: 1px solid var(--at-color-border); border-radius: 8px; background: var(--at-color-surface-muted); overflow: hidden; }
+.at-descriptions__title { margin: 0 0 12px; color: var(--at-color-subtle); font-size: var(--at-font-size-md); font-weight: 600; }
+.at-descriptions__list { display: grid; gap: 1px; margin: 0; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); background: var(--at-color-surface-muted); overflow: hidden; }
 .at-descriptions__item { min-width: 0; padding: 12px 14px; background: var(--at-color-surface); }
 .at-descriptions__item dt { margin-bottom: 4px; color: var(--at-color-muted); font-size: 12px; }
 .at-descriptions__item dd { overflow-wrap: anywhere; margin: 0; color: var(--at-color-subtle); font-size: 14px; }

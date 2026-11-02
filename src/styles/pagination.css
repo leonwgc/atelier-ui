@@ -1,6 +1,6 @@
 .at-pagination { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; color: var(--at-color-muted); font-size: 13px; }
 .at-pagination__total { margin-right: auto; }
-.at-pagination button, .at-pagination select { min-height: 32px; border: 1px solid var(--at-color-border); border-radius: 7px; padding: 0 9px; color: var(--at-color-subtle); background: var(--at-color-surface); font: inherit; }
+.at-pagination button, .at-pagination select { min-height: 32px; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-md); padding: 0 9px; color: var(--at-color-subtle); background: var(--at-color-surface); font: inherit; }
 .at-pagination button { cursor: pointer; }
 .at-pagination button:hover:not(:disabled) { border-color: var(--at-color-border); color: var(--at-color-primary); }
 .at-pagination button:disabled { color: var(--at-color-muted); cursor: not-allowed; background: var(--at-color-surface); }

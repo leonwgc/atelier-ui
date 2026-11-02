@@ -13,12 +13,12 @@
 .at-slider__handle {
   position: absolute; top: 50%; width: var(--at-slider-handle); height: var(--at-slider-handle);
   border: 2px solid var(--at-color-primary); border-radius: 50%; background: var(--at-color-surface);
-  box-shadow: 0 2px 6px rgb(104 92 246 / 25%); cursor: grab; touch-action: none; transform: translate(-50%, -50%);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--at-color-primary) 25%, transparent); cursor: grab; touch-action: none; transform: translate(-50%, -50%);
   transition: left var(--at-motion-fast) linear, box-shadow var(--at-motion-fast), transform var(--at-motion-fast) var(--at-ease-emphasized);
 }
-.at-slider__handle:hover, .at-slider__handle--active { transform: translate(-50%, -50%) scale(1.12); box-shadow: 0 0 0 5px rgb(104 92 246 / 14%), 0 2px 6px rgb(104 92 246 / 25%); }
+.at-slider__handle:hover, .at-slider__handle--active { transform: translate(-50%, -50%) scale(1.12); box-shadow: 0 0 0 5px color-mix(in srgb, var(--at-color-primary) 14%, transparent), 0 2px 6px color-mix(in srgb, var(--at-color-primary) 25%, transparent); }
 .at-slider__handle--active { cursor: grabbing; }
-.at-slider__handle:focus-visible { outline: 0; box-shadow: 0 0 0 5px rgb(104 92 246 / 22%), 0 2px 6px rgb(104 92 246 / 25%); }
+.at-slider__handle:focus-visible { outline: 0; box-shadow: 0 0 0 5px color-mix(in srgb, var(--at-color-primary) 22%, transparent), 0 2px 6px color-mix(in srgb, var(--at-color-primary) 25%, transparent); }
 .at-slider__tooltip {
   position: absolute; bottom: calc(100% + 10px); left: 50%; padding: 3px 8px; border-radius: 6px;
   background: var(--at-color-text); color: var(--at-color-on-accent); font-size: 12px; font-weight: 600; line-height: 1.4; white-space: nowrap; font-variant-numeric: tabular-nums;

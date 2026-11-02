@@ -17,6 +17,6 @@
 .at-splitter__bar:hover .at-splitter__grip, .at-splitter__bar--active .at-splitter__grip { background: var(--at-color-primary); }
 .at-splitter__collapse { position: absolute; display: flex; gap: 2px; }
 .at-splitter--horizontal .at-splitter__collapse { flex-direction: column; }
-.at-splitter__collapse-button { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; padding: 0; border: 1px solid var(--at-color-border); border-radius: 5px; background: var(--at-color-surface); color: var(--at-color-subtle); box-shadow: var(--at-shadow-sm); opacity: 0; transition: opacity var(--at-motion-fast), color var(--at-motion-fast), border-color var(--at-motion-fast); }
+.at-splitter__collapse-button { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; padding: 0; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-sm); background: var(--at-color-surface); color: var(--at-color-subtle); box-shadow: var(--at-shadow-sm); opacity: 0; transition: opacity var(--at-motion-fast), color var(--at-motion-fast), border-color var(--at-motion-fast); }
 .at-splitter__bar:hover .at-splitter__collapse-button, .at-splitter__bar:focus-within .at-splitter__collapse-button { opacity: 1; }
 .at-splitter__collapse-button:hover { border-color: var(--at-color-primary); color: var(--at-color-primary); }

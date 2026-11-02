@@ -1,5 +1,5 @@
 .at-mentions { position: relative; display: flex; border: 1px solid var(--at-color-border); border-radius: var(--at-radius-sm); background: var(--at-color-surface); transition: border-color var(--at-transition), box-shadow var(--at-transition); }
-.at-mentions:focus-within, .at-mentions--open { border-color: var(--at-color-primary); box-shadow: 0 0 0 3px rgb(104 92 246 / 10%); }
+.at-mentions:focus-within, .at-mentions--open { border-color: var(--at-color-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--at-color-primary) 10%, transparent); }
 .at-mentions--error { border-color: var(--at-color-danger); }
 .at-mentions--warning { border-color: var(--at-color-warning); }
 .at-mentions--disabled { background: var(--at-color-surface-muted); }

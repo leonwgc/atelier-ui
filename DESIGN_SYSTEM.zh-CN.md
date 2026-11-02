@@ -2,7 +2,7 @@
 
 [English](./DESIGN_SYSTEM.md)
 
-本文定义 Atelier UI 框架无关的视觉与交互契约，可作为未来适配器（包括 Vue 3+ 版本）的参考。本次只补充规范，不新增 Vue 代码，也不改动现有 React 包。
+本文定义 Atelier UI 框架无关的视觉与交互契约，可作为未来适配器（包括 Vue 3+ 版本）的参考。React 与未来适配器共享同一设计契约。
 
 下文的无障碍要求是未来适配器的验收标准，并不表示所有现有 React 模块都已完成相应审计或满足全部要求。
 
@@ -13,9 +13,24 @@
 - 模块行为由各公开模块的 TypeScript 属性及其可观察行为定义。下方目录仅用于索引，不替代模块契约。
 - 每个模块的样式应能从其独立入口加载。`docs/` 是构建生成目录，不是本规范的源文件目录。
 
+## Neat Design 对齐
+
+视觉基线遵循 [Neat Design Playbook](https://bitbucket.org/derbysoft/neat-design-playbook/src/9b11c59b6c2d55af56bd481f76fe808b30c8aa10/skills/neat-design-rules/SKILL.md)，重点参考样式章节。数值和尺寸已核对本机 `@derbysoft/neat-design@2.2.2` 的 `es/Button/token/genToken.js`、`es/Input/token/genToken.js`、`es/Table/token/genToken.js`，以及 `@derbysoft/neat-design-token` 的 `es/token/powerBlack.js`。Playbook 列出的基线为更新的 2.4；本次对齐已核对来源的视觉，不宣称与 2.4 完全一致，也不将组件改为 Neat 包装器，不新增运行时依赖。
+
+| 视觉元素 | Atelier 实现 | Neat 参考 |
+| --- | --- | --- |
+| 主要和次级操作 | `Button`，保留变体与回调 | 近黑主色、次级描边、500 字重、32/40/48px 高度 |
+| 输入与选择 | `Input`、`Textarea`、共享选择器 | 默认 14px 字号、6px 圆角、语义焦点和错误光环 |
+| 数据行 | `Table` | 中性分隔线、14px 字号、16px 水平内边距、浅青悬停 |
+| 弹窗与浮层 | 现有浮层组件 | 中性表面、共享阴影、token 遮罩 |
+| 链接与状态 | `Typography`、`Alert`、`Tag` | 信息蓝与主色分离，成功／警告／危险语义 |
+| 文档站 | 现有导航、搜索、页面和示例 | 深浅模式共用运行时 token、Inter 字体栈 |
+
+继续保留 `--at-` 变量、公开 API、自定义内容、受控状态、语言行为和独立组件入口。Provider 和 `App.useApp()` 等规则适用于实际使用 Neat 组件的应用；Atelier 继续使用自身 Provider 和 Hook。深色值是 Atelier 的语义适配，并非上游深色调色板。成功和警告文字使用更深的色阶以保证小字可读，图标与填充仍可使用原始状态色。显式自定义颜色、取色器光谱、图片内容和示例代码语法色保留自身含义。
+
 ## 设计原则
 
-1. **层次克制。** 紫色主色用于主要操作或选中状态，辅助区域保持中性。
+1. **层次克制。** 近黑主色用于主要操作或选中状态，链接使用独立的信息蓝，辅助区域保持中性。
 2. **状态可预测。** 交互模块应在适用时清晰呈现悬停、键盘焦点、按下、禁用、加载、错误、选中和展开等状态。
 3. **语义优先。** 优先使用原生 HTML 元素及其键盘行为。只有在原生语义无法表达关系或状态时才添加 ARIA。
 4. **内容可组合。** 数据和行为通过属性传入；调用方可通过子内容或明确的自定义接缝提供丰富内容。
@@ -30,19 +45,19 @@
 
 | Token | CSS 变量 | 数值 | 用途 |
 | --- | --- | --- | --- |
-| 主色 | `--at-color-primary` | `#685cf6` | 主要操作、选中状态、焦点强调 |
-| 主色悬停态 | `--at-color-primary-hover` | `#5749e5` | 主操作的悬停状态 |
-| 浅主色 | `--at-color-primary-soft` | `#f0efff` | 轻量选中或高亮背景 |
-| 正文 | `--at-color-text` | `#222438` | 主要内容 |
-| 次级文字 | `--at-color-subtle` | `#697087` | 辅助内容 |
-| 弱化文字 | `--at-color-muted` | `#9298aa` | 弱化显示的内容 |
-| 边框 | `--at-color-border` | `#e4e6ef` | 默认分隔线和轮廓 |
-| 强调边框 | `--at-color-border-strong` | `#d1d4e1` | 强调分隔线 |
+| 主色 | `--at-color-primary` | `#00131c` | 主要操作、选中状态、焦点强调 |
+| 主色悬停态 | `--at-color-primary-hover` | `#49565d` | 主操作的悬停状态 |
+| 浅主色 | `--at-color-primary-soft` | `#f6f7f7` | 轻量选中或高亮背景 |
+| 正文 | `--at-color-text` | `#00131c` | 主要内容 |
+| 次级文字 | `--at-color-subtle` | `#647075` | 辅助内容 |
+| 弱化文字 | `--at-color-muted` | `#929a9e` | 弱化显示的内容 |
+| 边框 | `--at-color-border` | `#b6bcbe` | 默认分隔线和轮廓 |
+| 强调边框 | `--at-color-border-strong` | `#929a9e` | 强调分隔线 |
 | 表面 | `--at-color-surface` | `#ffffff` | 组件主表面 |
-| 弱化表面 | `--at-color-surface-muted` | `#f7f8fb` | 次级表面 |
-| 危险 | `--at-color-danger` | `#d94d64` | 危险操作或无效状态 |
-| 成功 | `--at-color-success` | `#2f9472` | 成功状态 |
-| 警告 | `--at-color-warning` | `#c98a29` | 警示状态 |
+| 弱化表面 | `--at-color-surface-muted` | `#f6f7f7` | 次级表面 |
+| 危险 | `--at-color-danger` | `#e23a3a` | 危险操作或无效状态 |
+| 成功 | `--at-color-success` | `#2abd13` | 成功状态 |
+| 警告 | `--at-color-warning` | `#efa610` | 警示状态 |
 
 新增样式应使用语义 token，而不是硬编码这些颜色。状态色应传达含义，而不是仅用于装饰。
 
@@ -56,24 +71,24 @@
 
 | Token | CSS 变量 | 数值 |
 | --- | --- | --- |
-| 小圆角 | `--at-radius-sm` | `8px` |
-| 中圆角 | `--at-radius-md` | `11px` |
-| 大圆角 | `--at-radius-lg` | `16px` |
-| 小阴影 | `--at-shadow-sm` | `0 2px 8px rgb(38 42 75 / 5%)` |
-| 弹窗阴影 | `--at-shadow-modal` | `0 24px 80px rgb(28 30 57 / 22%)` |
-| 字体栈 | `--at-font` | `'DM Sans', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif` |
+| 小圆角 | `--at-radius-sm` | `4px` |
+| 中圆角 | `--at-radius-md` | `6px` |
+| 大圆角 | `--at-radius-lg` | `6px` |
+| 小阴影 | `--at-shadow-sm` | `0 0.3px 1.8px 0 rgb(0 0 0 / 10%), 0 1.6px 7.2px 0 rgb(0 0 0 / 13%)` |
+| 弹窗阴影 | `--at-shadow-modal` | `0 1.2px 7.2px 0 rgb(0 0 0 / 10%), 0 6.4px 28.8px 0 rgb(0 0 0 / 13%)` |
+| 字体栈 | `--at-font` | `Inter, 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif` |
 
-轻量浮层使用小阴影，较突出的弹窗使用弹窗阴影。当前主题尚未定义统一的间距、字号、行高或 z-index token。在正式引入这些 token 之前，框架移植应保留现有模块的尺寸，不要自行推测或新建一套尺度。
+轻量浮层使用小阴影，较突出的弹窗使用弹窗阴影。主题定义间距（4/8/12/16/24px）、正文字号（12/14/16px）、1.5 行高、500 中等字重和控件高度（32/40/48px）。z-index 仍由组件管理，适配时保留现有交互契约。
 
 ### 动效与焦点
 
 | Token | CSS 变量 | 数值 |
 | --- | --- | --- |
-| 快速时长 | `--at-motion-fast` | `140ms` |
-| 基础时长 | `--at-motion-base` | `200ms` |
-| 慢速时长 | `--at-motion-slow` | `280ms` |
-| 标准缓动 | `--at-ease-standard` | `cubic-bezier(.2, .7, .2, 1)` |
-| 强调缓动 | `--at-ease-emphasized` | `cubic-bezier(.2, .85, .25, 1)` |
+| 快速时长 | `--at-motion-fast` | `110ms` |
+| 基础时长 | `--at-motion-base` | `150ms` |
+| 慢速时长 | `--at-motion-slow` | `240ms` |
+| 标准缓动 | `--at-ease-standard` | `cubic-bezier(.4, 0, .2, 1)` |
+| 强调缓动 | `--at-ease-emphasized` | `cubic-bezier(0, 0, .2, 1)` |
 | 默认过渡 | `--at-transition` | `var(--at-motion-base) var(--at-ease-standard)` |
 
 键盘焦点使用带主色调的 2px 可见轮廓，并留出 2px 偏移。保留全局 `prefers-reduced-motion: reduce` 行为；模块专属动画不得在用户启用减少动态效果后重新引入较长动画。悬停不能抢夺焦点，也不能造成焦点与关闭逻辑循环。

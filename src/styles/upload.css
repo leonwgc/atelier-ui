@@ -1,9 +1,9 @@
-.at-upload { border: 1px dashed var(--at-color-border); border-radius: 9px; padding: 17px; background: var(--at-color-surface); transition: border-color .16s ease, background .16s ease; }
+.at-upload { border: 1px dashed var(--at-color-border); border-radius: var(--at-radius-md); padding: 17px; background: var(--at-color-surface); transition: border-color .16s ease, background .16s ease; }
 .at-upload:hover { border-color: var(--at-color-border); background: var(--at-color-surface); }
 .at-upload--disabled { opacity: .55; cursor: not-allowed; }
 .at-upload__input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .at-upload__prompt { display: flex; align-items: center; gap: 12px; color: var(--at-color-subtle); }
-.at-upload__icon { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 9px; color: var(--at-color-primary); background: color-mix(in srgb, var(--at-color-primary) 12%, var(--at-color-surface)); font-size: 19px; }
+.at-upload__icon { display: grid; width: 34px; height: 34px; place-items: center; border-radius: var(--at-radius-md); color: var(--at-color-primary); background: color-mix(in srgb, var(--at-color-primary) 12%, var(--at-color-surface)); font-size: 19px; }
 .at-upload__prompt > div { display: flex; flex-direction: column; gap: 4px; }
 .at-upload__prompt strong { font-size: 13px; font-weight: 500; }
 .at-upload__prompt span:not(.at-upload__icon) { color: var(--at-color-muted); font-size: 11px; }

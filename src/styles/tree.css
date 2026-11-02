@@ -3,7 +3,7 @@
 .at-tree__node { outline: 0; }
 .at-tree__row { display: flex; align-items: center; gap: 2px; min-height: 32px; padding: 2px 6px 2px calc(6px + var(--at-tree-level, 0) * 22px); border-radius: var(--at-radius-sm); cursor: default; transition: background-color var(--at-motion-fast) var(--at-ease-standard); }
 .at-tree--line .at-tree__row { padding-left: 6px; }
-.at-tree__node:focus-visible > .at-tree__row { outline: 2px solid color-mix(in srgb, var(--at-color-primary) 55%, transparent); outline-offset: -2px; }
+.at-tree__node:focus-visible > .at-tree__row { outline: 2px solid var(--at-color-primary); outline-offset: -2px; }
 .at-tree__node--disabled > .at-tree__row { color: var(--at-color-muted); }
 .at-tree__title { display: inline-flex; align-items: center; min-height: 24px; padding: 0 6px; border-radius: 6px; line-height: 1.5; transition: background-color var(--at-motion-fast), color var(--at-motion-fast); }
 .at-tree__title--selectable { cursor: pointer; }

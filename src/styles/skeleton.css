@@ -1,6 +1,6 @@
 .at-skeleton { width: 100%; }
 .at-skeleton__avatar-row { display: flex; align-items: flex-start; gap: 14px; }
-.at-skeleton__avatar, .at-skeleton__title, .at-skeleton__paragraph span { display: block; border-radius: 5px; background: var(--at-color-surface-muted); }
+.at-skeleton__avatar, .at-skeleton__title, .at-skeleton__paragraph span { display: block; border-radius: var(--at-radius-sm); background: var(--at-color-surface-muted); }
 .at-skeleton__avatar { width: 42px; height: 42px; flex: 0 0 auto; border-radius: 50%; }
 .at-skeleton__body { flex: 1; min-width: 0; }
 .at-skeleton__title { width: 42%; height: 16px; margin-bottom: 14px; }

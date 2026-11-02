@@ -1,5 +1,5 @@
 .at-autocomplete { cursor: text; }
-.at-autocomplete--open { border-color: var(--at-color-primary); box-shadow: 0 0 0 3px rgb(104 92 246 / 10%); }
+.at-autocomplete--open { border-color: var(--at-color-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--at-color-primary) 10%, transparent); }
 .at-input-wrap--warning { border-color: var(--at-color-warning); }
 .at-autocomplete__clear { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; padding: 0; border-radius: 50%; background: var(--at-color-border); color: var(--at-color-surface); opacity: 0; transition: opacity var(--at-motion-fast), background-color var(--at-motion-fast); }
 .at-autocomplete:hover .at-autocomplete__clear, .at-autocomplete:focus-within .at-autocomplete__clear { opacity: 1; }

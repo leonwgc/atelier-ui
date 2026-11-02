@@ -11,7 +11,7 @@
   width: var(--at-confetti-size, 8px);
   height: calc(var(--at-confetti-size, 8px) * 0.65);
   border-radius: 2px;
-  background: var(--at-confetti-color, #7c3aed);
+  background: var(--at-confetti-color, var(--at-color-info));
   opacity: 0;
   pointer-events: none;
   animation: at-confetti-burst var(--at-confetti-duration, 1800ms) cubic-bezier(0.16, 1, 0.3, 1) var(--at-confetti-delay, 0ms) both;

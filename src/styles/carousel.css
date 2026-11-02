@@ -1,5 +1,5 @@
 .at-carousel { position: relative; overflow: hidden; border-radius: var(--at-radius-md); background: var(--at-color-surface); outline: 0; }
-.at-carousel:focus-visible { box-shadow: 0 0 0 3px rgb(104 92 246 / 25%); }
+.at-carousel:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--at-color-primary) 25%, transparent); }
 .at-carousel__viewport { position: relative; overflow: hidden; touch-action: pan-y; }
 .at-carousel--vertical .at-carousel__viewport { touch-action: pan-x; }
 .at-carousel[style*='--at-carousel-ratio'] .at-carousel__viewport { aspect-ratio: var(--at-carousel-ratio); }
