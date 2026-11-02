@@ -1,4 +1,5 @@
 export const zhCNMessages = {
+  "modal.confirmFailed": "操作失败，请重试。",
   "common.close": "关闭",
   "common.closeMessage": "关闭提示",
   "common.closeNotification": "关闭通知",

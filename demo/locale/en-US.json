@@ -1088,5 +1088,9 @@
   "读取当前语言与翻译函数": "Read language and translator",
   "切换到浅色模式": "Switch to light mode",
   "切换到深色模式": "Switch to dark mode",
-  "继承父级 / CSS 主题": "Parent value / CSS theme"
+  "继承父级 / CSS 主题": "Parent value / CSS theme",
+  "异步确认与重试": "Async confirmation and retry",
+  "首次模拟失败，再次确认后成功。执行期间禁止重复提交和关闭。": "The first attempt fails; retry to succeed. Submission and dismissal are locked while pending.",
+  "首次模拟失败，再次确认后成功。": "The first attempt fails; retry to succeed.",
+  "保存失败，请重试。": "Could not save. Please try again."
 }

@@ -1,12 +1,15 @@
 import { ConfigProvider, useConfig, type ColorScheme } from './ConfigProvider';
 import { useLocale, type LocaleInput } from './locale';
-import { createElement, forwardRef, useEffect, useId, useRef, type HTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, useEffect, useId, useRef, useState, type HTMLAttributes, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createPortal } from 'react-dom';
 import './styles/theme.css';
 import './styles/modal.css';
 import { Button } from './Button';
 import { cx } from './utils';
+
+const modalStack: HTMLDivElement[] = [];
+let bodyOverflow = '';
 
 export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   open: boolean;
@@ -35,28 +38,46 @@ export const Modal = Object.assign(forwardRef<HTMLDivElement, ModalProps>(functi
 
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   useEffect(() => {
     if (!open) return;
-    const previousOverflow = document.body.style.overflow;
+    const panel = panelRef.current;
+    if (!panel) return;
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    if (!modalStack.length) bodyOverflow = document.body.style.overflow;
+    modalStack.push(panel);
     document.body.style.overflow = 'hidden';
-    panelRef.current?.focus();
+    panel.focus();
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && closeOnEscape) onClose();
+      if (modalStack[modalStack.length - 1] !== panel) return;
+      if (event.key === 'Escape' && closeOnEscape) { event.preventDefault(); onCloseRef.current(); }
       if (event.key === 'Tab') {
-        const focusable = panelRef.current?.querySelectorAll<HTMLElement>('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
-        if (!focusable?.length) return;
+        const focusable = Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+          .filter((element) => {
+            if (element.tabIndex < 0 || element.matches(':disabled') || element.closest('[hidden], [inert]')) return false;
+            if (getComputedStyle(element).visibility !== 'visible') return false;
+            for (let parent: HTMLElement | null = element; parent && parent !== panel; parent = parent.parentElement) {
+              if (getComputedStyle(parent).display === 'none') return false;
+            }
+            return true;
+          });
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
-        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        if (!first) { event.preventDefault(); panel.focus(); }
+        else if (event.shiftKey && (document.activeElement === first || document.activeElement === panel || !panel.contains(document.activeElement))) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && (document.activeElement === last || !panel.contains(document.activeElement))) { event.preventDefault(); first.focus(); }
       }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.body.style.overflow = previousOverflow;
+      const wasTop = modalStack[modalStack.length - 1] === panel;
+      modalStack.splice(modalStack.indexOf(panel), 1);
+      if (!modalStack.length) document.body.style.overflow = bodyOverflow;
       document.removeEventListener('keydown', handleKeyDown);
+      if (wasTop && previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     };
-  }, [open, closeOnEscape, onClose]);
+  }, [open, closeOnEscape]);
 
   if (!open || typeof document === 'undefined') return null;
   return createPortal(
@@ -97,28 +118,42 @@ function showConfirm(options: ConfirmOptions) {
     mount.remove();
   };
   function ConfirmDialog() {
-    return <ConfigProvider locale={options.locale} colorScheme={options.colorScheme}>
-      <Modal
-        open
-        title={options.title}
-        onClose={() => { options.onCancel?.(); close(); }}
-        cancelText={options.cancelText}
-        okText={options.okText}
-        onOk={async () => { await options.onOk?.(); close(); }}
-        footer={options.danger ? <ConfirmFooter options={options} close={close} /> : undefined}
-      >{options.content}</Modal>
-    </ConfigProvider>;
+    const [pending, setPending] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const pendingRef = useRef(false);
+    const pack = useLocale();
+    const cancel = () => {
+      if (pendingRef.current) return;
+      options.onCancel?.();
+      close();
+    };
+    const confirm = async () => {
+      if (pendingRef.current || !open) return;
+      pendingRef.current = true;
+      setPending(true);
+      setError(null);
+      try {
+        await options.onOk?.();
+        close();
+      } catch (reason) {
+        if (open) setError(reason instanceof Error && reason.message ? reason.message : pack.t('modal.confirmFailed'));
+      } finally {
+        pendingRef.current = false;
+        if (open) setPending(false);
+      }
+    };
+    return <Modal
+      open
+      title={options.title}
+      onClose={cancel}
+      footer={<>
+        <Button disabled={pending} onClick={cancel}>{options.cancelText ?? pack.t('common.cancel')}</Button>
+        <Button variant={options.danger ? 'danger' : 'primary'} loading={pending} onClick={() => void confirm()}>{options.okText ?? pack.t('common.ok')}</Button>
+      </>}
+    >{options.content}{error && <p className="at-modal__error" role="alert">{error}</p>}</Modal>;
   }
-  root.render(createElement(ConfirmDialog));
+  root.render(<ConfigProvider locale={options.locale} colorScheme={options.colorScheme}><ConfirmDialog /></ConfigProvider>);
   return { destroy: close };
-}
-
-function ConfirmFooter({ options, close }: { options: ConfirmOptions; close: () => void }) {
-  const { t } = useLocale();
-  return <>
-    <Button onClick={() => { options.onCancel?.(); close(); }}>{options.cancelText ?? t('common.cancel')}</Button>
-    <Button variant="danger" onClick={async () => { await options.onOk?.(); close(); }}>{options.okText ?? t('common.ok')}</Button>
-  </>;
 }
 
 /** Provider-bound alternative to the standalone Modal.confirm API. */

@@ -1,6 +1,7 @@
 import type { LocaleMessages } from './types';
 
 export const enUSMessages: LocaleMessages = {
+  "modal.confirmFailed": "Operation failed. Please try again.",
   "common.close": "Close",
   "common.closeMessage": "Close message",
   "common.closeNotification": "Close notification",

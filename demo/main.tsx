@@ -53,17 +53,24 @@ const navigation: Array<{ id: PageId; title: string; icon: string; group: string
   ...animationPages.map(({ id, title, icon }) => ({ id, title, icon, group: '动画' })),
 ];
 
+function readPage(): PageId {
+  const id = window.location.hash.slice(2);
+  return navigation.find((item) => item.id === id)?.id ?? 'overview';
+}
+
 function App() {
   const { t: dt, locale, setLocale } = useDemoLocale();
   const localizedNavigation = useMemo(() => translateDemoValue(navigation, dt), [dt]);
 
-  const [page, setPage] = useState<PageId>('overview');
+  const [page, setPage] = useState<PageId>(readPage);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<string[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeResult, setActiveResult] = useState(0);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const searchOriginRef = useRef<HTMLElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchButtonRef = useRef<HTMLButtonElement>(null);
   const currentPage = localizedNavigation.find((item) => item.id === page)!;
@@ -77,6 +84,7 @@ function App() {
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
+        if (!document.querySelector('.global-search')) searchOriginRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
         setSearchQuery('');
         setActiveResult(0);
         setSearchOpen(true);
@@ -90,20 +98,49 @@ function App() {
     if (searchOpen) searchInputRef.current?.focus();
   }, [searchOpen]);
 
-  const navigateTo = (item: typeof localizedNavigation[number]) => {
-    setPage(item.id);
+  useEffect(() => {
+    const syncPage = () => {
+      if (window.location.hash && !window.location.hash.startsWith('#/')) return;
+      setPage(readPage());
+      setMobileMenu(false);
+      setSearchOpen(false);
+      setCollapsedGroups([]);
+    };
+    window.addEventListener('hashchange', syncPage);
+    return () => window.removeEventListener('hashchange', syncPage);
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    const heading = contentRef.current?.querySelector('h1');
+    if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
+  }, [page]);
+
+  useEffect(() => {
+    if (searchOpen) document.getElementById(`search-result-${searchResults[activeResult]?.id}`)?.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+  }, [searchOpen, activeResult, searchResults]);
+
+  const navigatePage = (id: PageId) => {
+    window.location.hash = `/${id}`;
+    setPage(id);
     setMobileMenu(false);
-    setCollapsedGroups((current) => current.filter((group) => group !== item.group));
+    setCollapsedGroups([]);
     setSearchOpen(false);
+    requestAnimationFrame(() => {
+      const heading = contentRef.current?.querySelector('h1');
+      if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
+    });
   };
+  const navigateTo = (item: typeof localizedNavigation[number]) => navigatePage(item.id);
   const closeSearch = () => {
     setSearchOpen(false);
-    searchButtonRef.current?.focus();
+    const origin = searchOriginRef.current;
+    (origin?.isConnected ? origin : searchButtonRef.current)?.focus();
   };
 
   return <div className={`site-shell ${sidebarCollapsed ? 'site-shell--sidebar-collapsed' : ''}`}>
     <aside className={`sidebar ${mobileMenu ? 'sidebar--open' : ''} ${sidebarCollapsed ? 'sidebar--collapsed' : ''}`}>
-      <a className="brand" href="#top" onClick={(event) => { event.preventDefault(); setPage('overview'); }}>
+      <a className="brand" href="#top" onClick={(event) => { event.preventDefault(); navigatePage('overview'); }}>
         <span className="brand__mark"><span /><span /><span /><span /></span>
         <span className="brand__name">atelier<span>ui</span><small>DESIGN SYSTEM</small></span>
       </a>
@@ -128,9 +165,9 @@ function App() {
       <header className="topbar"><button className="sidebar-toggle" type="button" aria-label={sidebarCollapsed ? dt("展开侧边栏") : dt("收起侧边栏")} title={sidebarCollapsed ? dt("展开侧边栏") : dt("收起侧边栏")} onClick={() => setSidebarCollapsed((collapsed) => !collapsed)}><span aria-hidden="true">{sidebarCollapsed ? '›' : '‹'}</span></button><button className="mobile-menu" type="button" aria-expanded={mobileMenu} aria-label={mobileMenu ? dt("关闭导航") : dt("打开导航")} onClick={() => { setSidebarCollapsed(false); setMobileMenu((open) => !open); }}>☰</button><div className="breadcrumbs"><span>{dt("组件手册")}</span><span className="crumb-separator">/</span><strong>{currentPage.title}</strong></div><div className="topbar__right"><div className="language-switch" role="group" aria-label={locale === 'zh-CN' ? '文档语言' : 'Documentation language'}>
         <button type="button" lang="zh-CN" aria-pressed={locale === 'zh-CN'} onClick={() => setLocale('zh-CN')}>中文</button>
         <button type="button" lang="en-US" aria-pressed={locale === 'en-US'} onClick={() => setLocale('en-US')}>English</button>
-      </div><ThemeToggle /><button ref={searchButtonRef} className="search-trigger" type="button" onClick={() => { setSearchQuery(''); setActiveResult(0); setSearchOpen(true); }} aria-label={dt("全局搜索，Command 加 K")}><span aria-hidden="true">⌕</span><kbd>⌘ K</kbd></button></div></header>
-      <div className="content-wrap">
-        {page === 'overview' && <Overview onNavigate={setPage} />}
+      </div><ThemeToggle /><button ref={searchButtonRef} className="search-trigger" type="button" onClick={() => { searchOriginRef.current = searchButtonRef.current; setSearchQuery(''); setActiveResult(0); setSearchOpen(true); }} aria-label={dt("全局搜索，Command 加 K")}><span aria-hidden="true">⌕</span><kbd>⌘ K</kbd></button></div></header>
+      <div className="content-wrap" ref={contentRef}>
+        {page === 'overview' && <Overview onNavigate={navigatePage} />}
         {page === 'form' && <FormPage />}
         {page === 'buttons' && <ButtonPage />}
         {page === 'inputs' && <InputPage />}
@@ -167,16 +204,18 @@ function App() {
       </div>
     </main>
     {searchOpen && <div className="search-overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) closeSearch(); }}>
-      <section className="global-search" role="dialog" aria-modal="true" aria-labelledby="global-search-title">
+      <section className="global-search" role="dialog" aria-modal="true" aria-labelledby="global-search-title" onKeyDown={(event) => {
+        if (event.key === 'Escape') { event.preventDefault(); closeSearch(); }
+        if (event.key === 'Tab') { event.preventDefault(); searchInputRef.current?.focus(); }
+      }}>
         <h2 id="global-search-title" className="sr-only">{dt("搜索组件")}</h2>
-        <div className="global-search__input-wrap"><span aria-hidden="true">⌕</span><input ref={searchInputRef} value={searchQuery} onChange={(event) => { setSearchQuery(event.target.value); setActiveResult(0); }} onKeyDown={(event) => {
-          if (event.key === 'Escape') { event.preventDefault(); closeSearch(); }
+        <div className="global-search__input-wrap"><span aria-hidden="true">⌕</span><input role="combobox" aria-expanded="true" aria-autocomplete="list" ref={searchInputRef} value={searchQuery} onChange={(event) => { setSearchQuery(event.target.value); setActiveResult(0); }} onKeyDown={(event) => {
           if (event.key === 'ArrowDown' && searchResults.length) { event.preventDefault(); setActiveResult((index) => Math.min(index + 1, searchResults.length - 1)); }
           if (event.key === 'ArrowUp' && searchResults.length) { event.preventDefault(); setActiveResult((index) => Math.max(index - 1, 0)); }
           if (event.key === 'Enter' && searchResults[activeResult]) { event.preventDefault(); navigateTo(searchResults[activeResult]); }
         }} placeholder={dt("搜索组件或分类…")} aria-label={dt("搜索组件或分类")} aria-controls="global-search-results" aria-activedescendant={searchResults[activeResult] ? `search-result-${searchResults[activeResult].id}` : undefined} autoComplete="off" /><kbd>ESC</kbd></div>
         <div className="global-search__results" id="global-search-results" role="listbox" aria-label={dt("搜索结果")}>
-          {searchResults.length ? searchResults.map((item, index) => <button type="button" role="option" aria-selected={activeResult === index} id={`search-result-${item.id}`} key={item.id} className={`global-search__result ${activeResult === index ? 'global-search__result--active' : ''}`} onMouseEnter={() => setActiveResult(index)} onClick={() => navigateTo(item)}><span className="global-search__result-icon">{item.icon}</span><span className="global-search__result-copy"><strong>{item.title}</strong><small>{item.group}</small></span><kbd>↵</kbd></button>) : <p className="global-search__empty">{dt("没有找到匹配的组件")}</p>}
+          {searchResults.length ? searchResults.map((item, index) => <button type="button" tabIndex={-1} role="option" aria-selected={activeResult === index} id={`search-result-${item.id}`} key={item.id} className={`global-search__result ${activeResult === index ? 'global-search__result--active' : ''}`} onMouseEnter={() => setActiveResult(index)} onClick={() => navigateTo(item)}><span className="global-search__result-icon">{item.icon}</span><span className="global-search__result-copy"><strong>{item.title}</strong><small>{item.group}</small></span><kbd>↵</kbd></button>) : <p className="global-search__empty">{dt("没有找到匹配的组件")}</p>}
         </div>
         <footer className="global-search__footer"><span>{dt("↑ ↓ 选择")}</span><span>{dt("Enter 打开")}</span><span>{dt("Esc 关闭")}</span></footer>
       </section>
@@ -471,6 +510,23 @@ export function InviteMember() {
       </Modal>
     </>
   );
+}`,
+  asyncConfirm: `import { Button } from 'atelier-ui/button';
+import { Modal } from 'atelier-ui/modal';
+
+export default function Demo() {
+  function openConfirm() {
+    let attempts = 0;
+    Modal.confirm({
+      title: '保存设置',
+      content: '首次模拟失败，再次确认后成功。',
+      onOk: async () => {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        if (++attempts === 1) throw new Error('保存失败，请重试。');
+      },
+    });
+  }
+  return <Button onClick={openConfirm}>异步确认与重试</Button>;
 }`,
   confirm: `import { Button } from 'atelier-ui/button';
 import { Modal } from 'atelier-ui/modal';
@@ -1110,6 +1166,15 @@ function FeedbackPage() {
   return <><PageHeading eyebrow="FEEDBACK" title={dt("Modal 弹窗")} description={dt("在需要聚焦重要决策时出现，不打断用户理解当前上下文。")} badge="Modal" />
     <ExampleCard title={dt("受控 Modal")} description={dt("用于确认、编辑或承载需要专注完成的短流程。")} code={codeSamples.modal}><div className="component-row"><Button variant="primary" onClick={() => setOpen(true)}>{dt("邀请成员")}</Button><span className="demo-hint">{dt("弹窗支持遮罩关闭、Escape 和焦点管理")}</span></div><Modal open={open} title={dt("邀请团队成员")} description={dt("发送邀请后，对方会收到一封加入工作区的邮件。")} onClose={() => setOpen(false)} onOk={() => setOpen(false)}><div className="modal-demo-content"><Input label={dt("邮箱地址")} placeholder="name@company.com" /><Select label={dt("成员权限")} options={[{ label: dt("成员 · 可编辑内容"), value: 'member' }, { label: dt("管理员 · 管理工作区"), value: 'admin' }, { label: dt("访客 · 仅查看"), value: 'guest' }]} /><p className="modal-demo-note">{dt("你可以在成员设置中随时调整权限。")}</p></div></Modal></ExampleCard>
     <ExampleCard title={dt("命令式确认")} description={dt("删除、归档等需要明确确认的破坏性操作。")} code={codeSamples.confirm}><div className="component-row"><Button variant="danger" onClick={() => modal.confirm({ title: dt("删除这个项目？"), content: dt("删除后，项目和其中的所有内容都将无法恢复。"), danger: true, onOk: () => window.alert(dt("项目已删除")) })}>{dt("删除项目")}</Button><span className="demo-hint">{dt("点击体验命令式确认弹窗")}</span></div></ExampleCard>
+    <ExampleCard title={dt("异步确认与重试")} description={dt("首次模拟失败，再次确认后成功。执行期间禁止重复提交和关闭。")} code={codeSamples.asyncConfirm}>
+      <Button onClick={() => {
+        let attempts = 0;
+        modal.confirm({ title: dt("保存设置"), content: dt("首次模拟失败，再次确认后成功。"), onOk: async () => {
+          await new Promise((resolve) => window.setTimeout(resolve, 1500));
+          if (++attempts === 1) throw new Error(dt("保存失败，请重试。"));
+        } });
+      }}>{dt("异步确认与重试")}</Button>
+    </ExampleCard>
     <ApiTable rows={[["open", "boolean", "—"], ["onClose", "() => void", "—"], ["onOk", "() => void | Promise<void>", "—"], ["maskClosable", "boolean", "true"], ["closeOnEscape", "boolean", "true"], ["Modal.confirm", "ConfirmOptions → { destroy }", "—"]]} />
   </>;
 }
