@@ -91,7 +91,7 @@
 | 强调缓动 | `--at-ease-emphasized` | `cubic-bezier(0, 0, .2, 1)` |
 | 默认过渡 | `--at-transition` | `var(--at-motion-base) var(--at-ease-standard)` |
 
-键盘焦点使用带主色调的 2px 可见轮廓，并留出 2px 偏移。保留全局 `prefers-reduced-motion: reduce` 行为；模块专属动画不得在用户启用减少动态效果后重新引入较长动画。悬停不能抢夺焦点，也不能造成焦点与关闭逻辑循环。
+键盘焦点使用带主色调的 2px 可见轮廓，并留出 2px 偏移。Select 使用共享焦点光环和强调边框，不额外叠加轮廓；强制颜色模式下保留显式轮廓。保留全局 `prefers-reduced-motion: reduce` 行为；模块专属动画不得在用户启用减少动态效果后重新引入较长动画。悬停不能抢夺焦点，也不能造成焦点与关闭逻辑循环。
 
 ## 模块目录
 

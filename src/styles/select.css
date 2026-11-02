@@ -1,4 +1,8 @@
 .at-select { width: 100%; }
+.at-select.at-selector:focus-visible { outline: none; }
+@media (forced-colors: active) {
+  .at-select.at-selector:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+}
 .at-select--multiple { padding-top: 4px; padding-bottom: 4px; }
 .at-select--searchable.at-selector--open { cursor: text; }
 .at-select__option-icon { display: inline-flex; flex: 0 0 auto; align-items: center; margin-right: 6px; color: var(--at-color-subtle); }

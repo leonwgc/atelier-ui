@@ -91,7 +91,7 @@ Use the small shadow for lightweight elevation and the modal shadow for prominen
 | Emphasized easing | `--at-ease-emphasized` | `cubic-bezier(0, 0, .2, 1)` |
 | Default transition | `--at-transition` | `var(--at-motion-base) var(--at-ease-standard)` |
 
-Keyboard focus uses a visible 2px primary-color outline with a 2px offset. Preserve the global `prefers-reduced-motion: reduce` behavior; component-specific animation must not reintroduce long motion when the preference is active. Hover must not steal focus or create a focus/close loop.
+Keyboard focus uses a visible 2px primary-color outline with a 2px offset. Select uses the shared focus ring and emphasized border without an additional outline to avoid stacked rings; forced-colors mode retains an explicit outline. Preserve the global `prefers-reduced-motion: reduce` behavior; component-specific animation must not reintroduce long motion when the preference is active. Hover must not steal focus or create a focus/close loop.
 
 ## Component inventory
 
