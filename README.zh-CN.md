@@ -26,6 +26,22 @@ Atelier UI 是一个从零实现的 React 组件库与配套 Demo 站点。项�
 - `demo/`：组件手册和交互示例。
 - `docs/`：GitHub Pages 发布目录，由生产构建生成。
 
+## 设计与文档体验
+
+Atelier UI 使用中性表面、近黑色主要操作和语义状态色，间距、字体与焦点状态共用设计 token。浅色和深色主题使用相同的组件 API。运行时 token 以 `src/styles/theme.css` 为准，`design-tokens.json` 同步记录这些数值。
+
+文档站提供：
+
+- 可分享的组件链接，如 `#/select`、`#/feedback`；刷新保留当前页面，并支持浏览器前进和后退。
+- 使用 `Command/Ctrl + K` 打开全局搜索：方向键选择、Enter 跳转、Esc 关闭。当前结果自动滚入可视区，打开期间键盘焦点保持在搜索框内。
+- 响应式导航、中英文内容、交互示例、完整独立 TSX 示例和 API 表格。
+
+### 异步确认
+
+`Modal.confirm` 和绑定 Provider 的 `useModal().confirm` 支持异步 `onOk`。执行期间确认按钮显示 loading，禁止重复提交和用户关闭操作；成功后关闭弹窗，失败时保留弹窗、显示错误并允许重试。抛出 `Error` 时显示其消息，否则使用当前语言的默认错误文案。返回的 `destroy()` 方法仍可主动关闭弹窗。
+
+Modal 关闭后会将焦点恢复到仍在页面中的触发元素。文档站 Modal 页面提供异步失败与重试示例。
+
 ## 组件目录
 
 目录与 `src/index.ts` 的公开导出保持一致。

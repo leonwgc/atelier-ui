@@ -13,11 +13,11 @@
 - 模块行为由各公开模块的 TypeScript 属性及其可观察行为定义。下方目录仅用于索引，不替代模块契约。
 - 每个模块的样式应能从其独立入口加载。`docs/` 是构建生成目录，不是本规范的源文件目录。
 
-## Neat Design 对齐
+## 视觉语言
 
-视觉基线遵循 [Neat Design Playbook](https://bitbucket.org/derbysoft/neat-design-playbook/src/9b11c59b6c2d55af56bd481f76fe808b30c8aa10/skills/neat-design-rules/SKILL.md)，重点参考样式章节。数值和尺寸已核对本机 `@derbysoft/neat-design@2.2.2` 的 `es/Button/token/genToken.js`、`es/Input/token/genToken.js`、`es/Table/token/genToken.js`，以及 `@derbysoft/neat-design-token` 的 `es/token/powerBlack.js`。Playbook 列出的基线为更新的 2.4；本次对齐已核对来源的视觉，不宣称与 2.4 完全一致，也不将组件改为 Neat 包装器，不新增运行时依赖。
+Atelier UI 使用中性表面、近黑色主要操作、语义状态色和紧凑控件。组件与文档站共用 `src/styles/theme.css` 中的运行时 token。
 
-| 视觉元素 | Atelier 实现 | Neat 参考 |
+| 视觉元素 | 组件 | 设计规则 |
 | --- | --- | --- |
 | 主要和次级操作 | `Button`，保留变体与回调 | 近黑主色、次级描边、500 字重、32/40/48px 高度 |
 | 输入与选择 | `Input`、`Textarea`、共享选择器 | 默认 14px 字号、6px 圆角、语义焦点和错误光环 |
@@ -26,7 +26,7 @@
 | 链接与状态 | `Typography`、`Alert`、`Tag` | 信息蓝与主色分离，成功／警告／危险语义 |
 | 文档站 | 现有导航、搜索、页面和示例 | 深浅模式共用运行时 token、Inter 字体栈 |
 
-继续保留 `--at-` 变量、公开 API、自定义内容、受控状态、语言行为和独立组件入口。Provider 和 `App.useApp()` 等规则适用于实际使用 Neat 组件的应用；Atelier 继续使用自身 Provider 和 Hook。深色值是 Atelier 的语义适配，并非上游深色调色板。成功和警告文字使用更深的色阶以保证小字可读，图标与填充仍可使用原始状态色。显式自定义颜色、取色器光谱、图片内容和示例代码语法色保留自身含义。
+`--at-` 变量、公开 API、自定义内容、受控状态、语言行为和独立组件入口共同定义组件契约。主题通过 Atelier 自身的 Provider 和 Hook 配置，深色模式使用语义颜色映射。成功和警告文字使用更深的色阶以保证小字可读，图标与填充仍可使用状态强调色。显式自定义颜色、取色器光谱、图片内容和示例代码语法色保留自身含义。
 
 ## 设计原则
 

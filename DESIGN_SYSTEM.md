@@ -13,11 +13,11 @@ Accessibility rules below are acceptance criteria for future adapters, not an au
 - Component behavior is defined by each public component's TypeScript props and observable behavior. The catalog below is an inventory, not a replacement for those contracts.
 - Component styles remain independently loadable from their component entry. `docs/` is generated output and is not a source location for this specification.
 
-## Neat Design alignment
+## Visual language
 
-The visual baseline follows the [Neat Design Playbook](https://bitbucket.org/derbysoft/neat-design-playbook/src/9b11c59b6c2d55af56bd481f76fe808b30c8aa10/skills/neat-design-rules/SKILL.md), especially its styling reference. Values and sizes were checked against locally available `@derbysoft/neat-design@2.2.2` (`es/Button/token/genToken.js`, `es/Input/token/genToken.js`, `es/Table/token/genToken.js`) and `@derbysoft/neat-design-token` (`es/token/powerBlack.js`). The playbook lists a newer 2.4 baseline; this is visual alignment to the checked sources, not a claim of 2.4 parity or an adapter around Neat components. No runtime dependency is added.
+Atelier UI uses neutral surfaces, near-black primary actions, semantic status colors, and compact controls. Components and documentation share the runtime tokens in `src/styles/theme.css`.
 
-| Visual element | Atelier implementation | Neat reference |
+| Visual element | Components | Design rules |
 | --- | --- | --- |
 | Main and secondary actions | `Button`, same variants and callbacks | Near-black primary, outlined secondary, 500 weight, 32/40/48px heights |
 | Inputs and selection | `Input`, `Textarea`, shared selector | 14px default text, 6px radius, semantic focus/error rings |
@@ -26,7 +26,7 @@ The visual baseline follows the [Neat Design Playbook](https://bitbucket.org/der
 | Links and status | `Typography`, `Alert`, `Tag` | Info blue distinct from brand; positive/notice/negative semantics |
 | Documentation | Existing navigation, search, pages and examples | Same runtime tokens in light and dark modes, Inter font stack |
 
-Stable `--at-` variables, published APIs, custom content, controlled state, locale behavior, and per-component imports remain authoritative. Provider and `App.useApp()` rules apply to applications actually using Neat components; Atelier retains its own providers and hooks. Dark values are an Atelier adaptation, not a copied upstream dark palette. Positive and notice text use darker palette steps for readable small text; the original status accents remain available for icons and fills. Explicit user-selected colors, color-picker spectra, image content and demonstration syntax colors retain their meaning.
+The `--at-` variables, published APIs, custom content, controlled state, locale behavior, and per-component imports define the component contract. Themes are configured through Atelier providers and hooks. Dark mode uses semantic color mappings. Success and warning text use darker palette steps for readable small text; status accents remain available for icons and fills. Explicit user-selected colors, color-picker spectra, image content, and example syntax colors retain their meaning.
 
 ## Design principles
 
