@@ -178,9 +178,7 @@ export const Mentions = forwardRef<HTMLTextAreaElement, MentionsProps>(function 
         disabled={disabled}
         placeholder={placeholder}
         value={current}
-        role="combobox"
         aria-autocomplete="list"
-        aria-expanded={showPopup}
         aria-controls={showPopup ? listId : undefined}
         aria-activedescendant={showPopup && suggestions[activeIndex] ? `${listId}-${activeIndex}` : undefined}
         aria-invalid={resolvedStatus === 'error' || undefined}

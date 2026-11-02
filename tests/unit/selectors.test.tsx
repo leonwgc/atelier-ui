@@ -74,7 +74,7 @@ describe('specialized selectors', () => {
   });
   it('shows mention suggestions after a prefix and inserts a selected mention', () => {
     const change = vi.fn(); render(<Mentions options={[{ value: 'ada', label: 'Ada' }]} onChange={change} />);
-    const input = screen.getByRole('combobox'); fireEvent.change(input, { target: { value: '@a', selectionStart: 2 } });
+    const input = screen.getByRole('textbox'); fireEvent.change(input, { target: { value: '@a', selectionStart: 2 } });
     fireEvent.keyUp(input, { key: 'a' }); fireEvent.keyDown(input, { key: 'ArrowDown' }); fireEvent.keyDown(input, { key: 'Enter' });
     expect(change).toHaveBeenLastCalledWith('@ada ');
   });

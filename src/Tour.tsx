@@ -166,7 +166,7 @@ export function Tour({
           {step.description && <p id={`${id}-description`} className="at-tour__description">{step.description}</p>}
         </div>
         <footer className="at-tour__footer">
-          <div className="at-tour__indicators" aria-label={t('tour.step', { current: index + 1, total })}>
+          <div className="at-tour__indicators" role="group" aria-label={t('tour.step', { current: index + 1, total })}>
             {indicatorsRender ? indicatorsRender(index, total) : steps.map((_, dot) => <span key={dot} className={cx('at-tour__dot', dot === index && 'at-tour__dot--active')} />)}
           </div>
           <div className="at-tour__actions">

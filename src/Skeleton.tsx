@@ -15,5 +15,5 @@ export function Skeleton({ active = false, avatar = false, title = true, paragra
   const { t } = useLocale();
 
   const rows = typeof paragraph === 'object' ? Math.max(1, paragraph.rows ?? 3) : 3;
-  return <div {...props} className={cx('at-skeleton', active && 'at-skeleton--active', className)} aria-busy="true" aria-label={t('common.loadingContent')}><div className="at-skeleton__avatar-row">{avatar && <span className="at-skeleton__avatar" />}{(title || paragraph) && <div className="at-skeleton__body">{title && <span className="at-skeleton__title" />}{paragraph && <div className="at-skeleton__paragraph">{Array.from({ length: rows }, (_, index) => <span key={index} style={{ width: index === rows - 1 ? '62%' : '100%' }} />)}</div>}</div>}</div></div>;
+  return <div {...props} className={cx('at-skeleton', active && 'at-skeleton--active', className)} role="status" aria-busy="true" aria-label={t('common.loadingContent')}><div className="at-skeleton__avatar-row">{avatar && <span className="at-skeleton__avatar" />}{(title || paragraph) && <div className="at-skeleton__body">{title && <span className="at-skeleton__title" />}{paragraph && <div className="at-skeleton__paragraph">{Array.from({ length: rows }, (_, index) => <span key={index} style={{ width: index === rows - 1 ? '62%' : '100%' }} />)}</div>}</div>}</div></div>;
 }
