@@ -87,7 +87,7 @@ describe('numeric and choice controls', () => {
   });
   it('rates, clears and handles half-step keyboard input', () => {
     const change = vi.fn(); render(<Rate defaultValue={2} allowHalf onChange={change} />);
-    fireEvent.click(screen.getByRole('button', { name: '2 星' })); expect(change).toHaveBeenLastCalledWith(0);
+    fireEvent.pointerDown(document.querySelectorAll('.at-rate__star')[1]); expect(change).toHaveBeenLastCalledWith(0);
     fireEvent.keyDown(screen.getByRole('slider'), { key: 'ArrowRight' }); expect(change).toHaveBeenLastCalledWith(.5);
     fireEvent.keyDown(screen.getByRole('slider'), { key: 'End' }); expect(screen.getByRole('slider')).toHaveAttribute('aria-valuenow', '5');
   });

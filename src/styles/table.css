@@ -11,6 +11,14 @@
 .at-table__sort:hover { color: var(--at-color-primary); }
 .at-table__filter { max-width: 92px; padding: 3px 5px; border: 1px solid var(--at-color-border); border-radius: 5px; background: var(--at-color-surface); }
 .at-table__selection { width: 44px; text-align: center; }
+.at-table__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.at-table__fixed { z-index: 1; background: var(--at-color-surface); }
+.at-table__fixed--left.at-table__fixed--edge { box-shadow: 1px 0 0 var(--at-color-border); }
+.at-table__fixed--right.at-table__fixed--edge { box-shadow: -1px 0 0 var(--at-color-border); }
+.at-table__expand { display: inline-grid; place-items: center; width: 24px; height: 24px; border: 0; border-radius: 6px; background: transparent; color: var(--at-color-muted); font-size: 18px; line-height: 1; transition: transform var(--at-motion-fast) var(--at-ease-standard), color var(--at-motion-fast); }
+.at-table__expand:hover { color: var(--at-color-primary); }
+.at-table__expand[aria-expanded='true'] { transform: rotate(90deg); }
+.at-table__expanded-row > td { height: auto; padding: 14px; background: var(--at-color-surface-muted); }
 .at-table__status { display: flex; justify-content: center; align-items: center; gap: 9px; min-height: 112px; color: var(--at-color-muted); }
 .at-table__pagination { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 15px; border-top: 1px solid var(--at-color-border); color: var(--at-color-muted); font-size: 14px; }
 .at-table__page-controls { display: inline-flex; align-items: center; gap: 9px; }

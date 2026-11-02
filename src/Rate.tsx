@@ -1,5 +1,5 @@
 import { useLocale } from './locale';
-import { useId, useState, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
+import { useState, type HTMLAttributes, type KeyboardEvent, type ReactNode } from 'react';
 import './styles/theme.css';
 import './styles/rate.css';
 import { Star } from './internal/icons';
@@ -28,7 +28,6 @@ export function Rate({
   const { t } = useLocale();
   const label = labelProp === undefined ? t('rate.label') : labelProp;
 
-  const id = useId();
   const [current, setCurrent] = useControllableState(value, defaultValue, onChange);
   const [hover, setHover] = useState<number | null>(null);
   const shown = hover ?? current;
@@ -79,23 +78,16 @@ export function Rate({
     >
       {Array.from({ length: count }, (_, index) => {
         const fill = clamp(shown - index, 0, 1);
-        const starLabel = tooltips?.[index] ?? t('rate.stars', { count: index + 1 });
-        return <button
+        return <span
           key={index}
-          type="button"
-          tabIndex={-1}
-          id={`${id}-${index}`}
-          className={cx('at-rate__star', fill === 1 && 'at-rate__star--active', fill > 0 && fill < 1 && 'at-rate__star--half', hover != null && fill > 0 && 'at-rate__star--hover')}
-          aria-label={starLabel}
-          aria-pressed={current > index}
-          disabled={disabled}
+          aria-hidden="true"
+          className={cx('at-rate__star', fill === 1 && 'at-rate__star--active', fill > 0 && fill < 1 && 'at-rate__star--half', hover != null && fill > 0 && 'at-rate__star--hover', current > index && 'at-rate__star--selected')}
           onPointerMove={(event) => updateHover(valueFromPointer(event, index))}
           onPointerDown={(event) => commit(valueFromPointer(event, index))}
-          onClick={(event) => { if (event.detail === 0) commit(index + 1); }}
         >
           <span className="at-rate__base">{glyph(index)}</span>
-          <span className="at-rate__fill" style={{ width: `${fill * 100}%` }} aria-hidden="true">{glyph(index)}</span>
-        </button>;
+          <span className="at-rate__fill" style={{ width: `${fill * 100}%` }}>{glyph(index)}</span>
+        </span>;
       })}
     </div>
     {tooltips && <span className="at-rate__caption" aria-live="polite">{caption || tooltips[Math.ceil(current) - 1] || ''}</span>}

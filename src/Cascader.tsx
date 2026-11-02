@@ -70,6 +70,7 @@ export const Cascader = forwardRef<HTMLDivElement, CascaderProps>(function Casca
   const reactId = useId();
   const triggerId = id ?? `at-cascader-${reactId}`;
   const labelId = label ? `${triggerId}-label` : undefined;
+  const popupId = `${triggerId}-popup`;
   const [current, setCurrent] = useControllableState<string[]>(value, defaultValue, (next) => onChange?.(next, resolvePath(options, next)));
   const [open, setOpen] = useControllableState(openProp, false, onOpenChange);
   const [activePath, setActivePath] = useState<string[]>(current);
@@ -189,6 +190,7 @@ export const Cascader = forwardRef<HTMLDivElement, CascaderProps>(function Casca
       className={cx('at-cascader', showSearch && 'at-cascader--searchable')}
       aria-haspopup="tree"
       aria-expanded={showPopup}
+      aria-controls={showPopup ? popupId : undefined}
       aria-labelledby={labelId}
       aria-invalid={Boolean(error) || status === 'error' || undefined}
       onClick={() => { if (!disabled) setOpen(!open); }}
@@ -199,7 +201,7 @@ export const Cascader = forwardRef<HTMLDivElement, CascaderProps>(function Casca
         : <span className={cx('at-selector__value', !hasValue && 'at-selector__placeholder')}>{display}</span>}
     </Selector>
     <Popup open={showPopup} panelRef={panelRef} position={position} placement={placement} className={cx(`at-popup--${size}`, 'at-cascader__popup', popupClassName)} style={popupStyle}>
-      {query ? <ul className="at-popup__list at-cascader__search-list" role="listbox" aria-label={t('common.searchResults')}>
+      {query ? <ul id={popupId} className="at-popup__list at-cascader__search-list" role="listbox" aria-label={t('common.searchResults')}>
         {searchResults.length === 0 && <li className="at-popup__empty">{notFoundContent}</li>}
         {searchResults.map((path, index) => {
           const key = path.map((item) => item.value).join('/');
@@ -208,7 +210,7 @@ export const Cascader = forwardRef<HTMLDivElement, CascaderProps>(function Casca
             <span className="at-option__label">{highlightMatch(text, query)}</span>
           </li>;
         })}
-      </ul> : <div className="at-cascader__columns">
+      </ul> : <div id={popupId} className="at-cascader__columns">
         {columns.map((column, depth) => <ul key={depth} className="at-cascader__column" role="listbox" aria-label={t('cascader.level', { level: depth + 1 })}>
           {column.length === 0 && <li className="at-popup__empty">{notFoundContent}</li>}
           {column.map((option) => {

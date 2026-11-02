@@ -14,9 +14,9 @@
 .at-carousel--fade .at-carousel__slide { grid-area: 1 / 1; opacity: 0; pointer-events: none; }
 .at-carousel--fade .at-carousel__slide--active { opacity: 1; pointer-events: auto; }
 
-.at-carousel__arrow { position: absolute; top: 50%; z-index: 2; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgb(255 255 255 / 85%); color: var(--at-color-text); box-shadow: var(--at-shadow-sm); opacity: 0; transform: translateY(-50%); transition: opacity var(--at-motion-base), background-color var(--at-motion-fast), transform var(--at-motion-fast) var(--at-ease-emphasized); }
+.at-carousel__arrow { position: absolute; top: 50%; z-index: 2; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--at-color-surface) 85%, transparent); color: var(--at-color-text); box-shadow: var(--at-shadow-sm); opacity: 0; transform: translateY(-50%); transition: opacity var(--at-motion-base), background-color var(--at-motion-fast), transform var(--at-motion-fast) var(--at-ease-emphasized); }
 .at-carousel:hover .at-carousel__arrow, .at-carousel:focus-within .at-carousel__arrow { opacity: 1; }
-.at-carousel__arrow:hover:not(:disabled) { background: #fff; }
+.at-carousel__arrow:hover:not(:disabled) { background: var(--at-color-surface); }
 .at-carousel__arrow:disabled { opacity: 0 !important; }
 .at-carousel__arrow--prev { left: 12px; }
 .at-carousel__arrow--next { right: 12px; }

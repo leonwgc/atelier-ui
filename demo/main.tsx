@@ -529,6 +529,33 @@ export function ProjectTable() {
     />
   );
 }`,
+  tableFixedExpand: `import { Table, type TableColumn } from 'atelier-ui/table';
+
+type Project = { id: string; name: string; owner: string; status: string; members: number; updated: string };
+
+const projects: Project[] = [
+  { id: 'p-01', name: '品牌视觉升级', owner: '林知夏', status: '进行中', members: 8, updated: '2026-10-28' },
+  { id: 'p-02', name: '移动端体验优化', owner: '陈一川', status: '评审中', members: 5, updated: '2026-10-30' },
+];
+
+const columns: TableColumn<Project>[] = [
+  { key: 'name', title: '项目名称', dataIndex: 'name', width: 180, fixed: 'left' },
+  { key: 'owner', title: '负责人', dataIndex: 'owner', width: 240 },
+  { key: 'status', title: '状态', dataIndex: 'status', width: 240 },
+  { key: 'updated', title: '更新时间', dataIndex: 'updated', width: 240 },
+  { key: 'members', title: '成员', dataIndex: 'members', width: 100, align: 'center', fixed: 'right' },
+];
+
+export function FixedExpandableTable() {
+  return (
+    <Table<Project>
+      rowKey="id"
+      columns={columns}
+      dataSource={projects}
+      expandable={{ expandedRowRender: (record) => record.name + ' 由 ' + record.owner + ' 负责，共 ' + record.members + ' 位成员。' }}
+    />
+  );
+}`,
   serverTable: `import { useState } from 'react';
 import { Table, type TableChange, type TableColumn } from 'atelier-ui/table';
 
@@ -1352,9 +1379,12 @@ function TablePage() {
   const [serverPage, setServerPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const serverData = useMemo(() => localizedProjects.slice((serverPage - 1) * 4, serverPage * 4), [serverPage]);
+  const fixedColumns = localizedProjectColumns.map((column, index, all) => ({ ...column, width: index === 0 ? 180 : 220, fixed: index === 0 ? 'left' as const : index === all.length - 1 ? 'right' as const : undefined }));
   return <><PageHeading eyebrow="DATA DISPLAY" title={dt("Table 表格")} description={dt("结构化呈现数据，并将排序、筛选和选择等操作保持在用户视线之内。")} badge="Table" />
     <ExampleCard title={dt("项目列表")} description={dt("本地分页、排序、筛选与行选择。")} code={codeSamples.table}><div className="table-toolbar"><div><strong>{dt("所有项目")}</strong><span>{dt("共 9 个项目")}</span></div><div><Button onClick={() => { setLoading(true); window.setTimeout(() => setLoading(false), 850); }}>{dt("↻ 刷新数据")}</Button><Button variant="primary">{dt("＋ 新建项目")}</Button></div></div><Table<Project> rowKey="id" columns={localizedProjectColumns} dataSource={localizedProjects} rowSelection={{ selectedRowKeys: selected, onChange: setSelected }} loading={loading} onChange={(change) => console.info('Table change', change)} /><div className="table-selection-note">{selected.length ? dt("已选择 {0} 个项目", { 0: selected.length }) : dt("点击行首复选框，选择需要批量操作的项目")}</div></ExampleCard>
     <ExampleCard title={dt("服务端分页模式")} description={dt("通过受控模式将分页和筛选交给业务请求。")} code={codeSamples.serverTable}><div className="server-table-toolbar"><span>{dt("服务端数据模拟 · 每页 4 条")}</span><span>{dt("当前请求页：")}<b>{serverPage}</b></span></div><Table<Project> mode="server" rowKey="id" columns={localizedProjectColumns} dataSource={serverData} currentPage={serverPage} total={localizedProjects.length} pageSize={4} pageSizeOptions={[4]} onChange={(change) => { setServerPage(change.page); }} /></ExampleCard>
+    <ExampleCard title={dt("固定列与展开行")} description={dt("横向滚动时固定首尾列，并在行内展开详情。")} code={codeSamples.tableFixedExpand}><Table<Project> rowKey="id" columns={fixedColumns} dataSource={localizedProjects.slice(0, 3)} expandable={{ expandedRowRender: (record) => dt("{0} 由 {1} 负责，共 {2} 位成员。", { 0: record.name, 1: record.owner, 2: record.members }) }} /></ExampleCard>
+    <ApiTable rows={[["columns[].fixed", "'left' | 'right'", "-"], ["expandable.expandedRowRender", "(record, index) => ReactNode", "required"], ["expandable.rowExpandable", "(record) => boolean", "-"], ["expandable.expandedRowKeys", "Key[]", "-"], ["expandable.defaultExpandedRowKeys", "Key[]", "[]"], ["expandable.onExpandedRowsChange", "(keys: Key[]) => void", "-"]]} />
   </>;
 }
 
