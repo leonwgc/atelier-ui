@@ -69,24 +69,24 @@ test('every component navigation item opens its documentation page', async ({ pa
 test('Rate component keeps its visual style and responds to selection', async ({ page }) => {
   await page.getByRole('button', { name: 'Rate 评分' }).click();
 
-  const secondStar = page.getByRole('button', { name: '2 星' });
+  const secondStar = page.locator('.at-rate__star').nth(1);
   await expect(secondStar).toHaveCSS('border-top-style', 'none');
   await secondStar.click();
 
-  await expect(page.getByRole('button', { name: '1 星' })).toHaveAttribute('aria-pressed', 'true');
-  await expect(secondStar).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.getByRole('button', { name: '3 星' })).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.getByRole('slider', { name: '评分' }).first()).toHaveAttribute('aria-valuenow', '2');
+  await expect(page.locator('.at-rate__star--selected').first()).toBeVisible();
+  await expect(page.locator('.at-rate__star').nth(2)).not.toHaveClass(/at-rate__star--selected/);
 });
 
 test('Transfer component is laid out and moves a selected item', async ({ page }) => {
   await page.getByRole('button', { name: 'Transfer 穿梭框' }).click();
 
-  const transfer = page.locator('.at-transfer');
+  const transfer = page.locator('.at-transfer').first();
   await expect(transfer).toHaveCSS('display', 'flex');
-  await page.getByRole('checkbox', { name: '陈一川' }).check();
-  await page.getByRole('button', { name: '移至已选' }).click();
+  await transfer.getByRole('checkbox', { name: '陈一川' }).check();
+  await transfer.getByRole('button', { name: '移至已选' }).click();
 
-  await expect(page.locator('.at-transfer__panel').nth(1)).toContainText('陈一川');
+  await expect(transfer.locator('.at-transfer__panel').nth(1)).toContainText('陈一川');
 });
 
 test('InputOTP exposes styled numeric cells and accepts pasted verification codes', async ({ page }) => {
