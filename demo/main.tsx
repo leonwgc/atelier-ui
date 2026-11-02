@@ -63,6 +63,7 @@ function App() {
   const localizedNavigation = useMemo(() => translateDemoValue(navigation, dt), [dt]);
 
   const [page, setPage] = useState<PageId>(readPage);
+  const previousPageRef = useRef(page);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<string[]>([]);
@@ -111,6 +112,8 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (previousPageRef.current === page) return;
+    previousPageRef.current = page;
     window.scrollTo({ top: 0, behavior: 'instant' });
     const heading = contentRef.current?.querySelector('h1');
     if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
