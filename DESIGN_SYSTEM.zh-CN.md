@@ -15,7 +15,7 @@
 
 ## 视觉语言
 
-Atelier UI 使用中性表面、近黑色主要操作、语义状态色和紧凑控件。组件与文档站共用 `src/styles/theme.css` 中的运行时 token。
+Atelier UI 使用中性表面、浅色模式下的近黑色主要操作、深色模式下的蓝色主要操作、语义状态色和紧凑控件。组件与文档站共用 `src/styles/theme.css` 中的运行时 token。
 
 | 视觉元素 | 组件 | 设计规则 |
 | --- | --- | --- |
@@ -66,6 +66,8 @@ Atelier UI 使用中性表面、近黑色主要操作、语义状态色和紧凑
 上表列出浅色默认值。`src/styles/theme.css` 同时定义由 `data-at-theme="dark"` 启用的深色调色板；显式 `data-at-theme="light"` 将嵌套区域恢复为浅色。`design-tokens.json` 在相同 token 的 `darkValue` 中记录深色值。`--at-color-info` 表示信息强调色，`--at-color-on-accent` 表示实心强调控件上的可读前景色。保留语义色彩关系，不通过反色滤镜实现主题。
 
 `ConfigProvider.colorScheme` 支持 `light` / `dark`，省略时继承。Portal 保留显式主题；独立静态 API 接受主题参数，也可通过绑定 Provider 的 Hook 使用。自定义 token 仍然优先。原生控件使用 CSS `color-scheme`，图片与取色内容保持固有颜色。文档站在用户手动选择前跟随系统，并在渲染前设置根节点主题，避免浅色闪烁。
+
+深色模式参考 Ant Design，使用中性表面（`#141414` / `#1f1f1f`）、灰色分割线、柔和白色文字和白字蓝色主要操作。选中态使用深蓝底色，悬停与禁用表面保持中性灰；文档站画布与主深色表面一致。
 
 ### 圆角、层次与字体
 

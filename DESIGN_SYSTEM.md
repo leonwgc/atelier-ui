@@ -15,7 +15,7 @@ Accessibility rules below are acceptance criteria for future adapters, not an au
 
 ## Visual language
 
-Atelier UI uses neutral surfaces, near-black primary actions, semantic status colors, and compact controls. Components and documentation share the runtime tokens in `src/styles/theme.css`.
+Atelier UI uses neutral surfaces, near-black primary actions in light mode and blue primary actions in dark mode, semantic status colors, and compact controls. Components and documentation share the runtime tokens in `src/styles/theme.css`.
 
 | Visual element | Components | Design rules |
 | --- | --- | --- |
@@ -66,6 +66,8 @@ Use semantic tokens rather than hard-coding these values in new styles. A status
 The color table lists light-mode defaults. `src/styles/theme.css` also defines a dark palette selected by `data-at-theme="dark"`; an explicit `data-at-theme="light"` resets a nested region to the light palette. `design-tokens.json` records dark variants as `darkValue` on the same tokens. `--at-color-info` is the informational accent and `--at-color-on-accent` is readable foreground text on filled accent controls. Preserve these semantic roles rather than inverting rendered colors.
 
 `ConfigProvider.colorScheme` accepts `light` or `dark` and inherits when omitted. Portals preserve an explicit scheme; standalone APIs accept a scheme or use their provider-bound hooks. Custom token overrides remain authoritative. Native controls use CSS `color-scheme`; intrinsic image and color-picker content is not recolored. The documentation follows system preference until a manual choice is saved, and initializes the document theme before rendering to avoid a light flash.
+
+Dark mode uses Ant Design-inspired neutral surfaces (`#141414` / `#1f1f1f`), gray dividers, soft white text, and blue primary actions with white foregrounds. Selected surfaces use deep blue; hover and disabled surfaces remain neutral. The documentation canvas shares the main dark surface.
 
 ### Shape, depth, and type
 

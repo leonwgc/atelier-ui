@@ -307,6 +307,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--at-color-primar
   .language-switch button { padding: 5px 6px; }
 }
 
+:root[data-at-theme='dark'] { --page-bg: var(--at-color-surface); }
+:root[data-at-theme='dark'] .tile-mock-button--primary { background: var(--at-color-primary); color: var(--at-color-on-accent); }
 :root[data-at-theme='dark'] .topbar { background: var(--at-color-surface); }
 :root[data-at-theme='dark'] .floating-chip,
 :root[data-at-theme='dark'] .tile-tag { background: var(--at-color-surface-muted); }

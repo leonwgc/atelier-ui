@@ -28,7 +28,7 @@
 .at-transfer__move { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 0; border-radius: var(--at-radius-md); background: var(--at-color-primary); color: var(--at-color-on-accent); box-shadow: 0 4px 12px color-mix(in srgb, var(--at-color-primary) 25%, transparent); transition: background-color var(--at-motion-fast), box-shadow var(--at-motion-fast), transform var(--at-motion-fast) var(--at-ease-emphasized); }
 .at-transfer__move:hover:not(:disabled) { background: var(--at-color-primary-hover); }
 .at-transfer__move:disabled { background: var(--at-color-border); color: var(--at-color-surface); box-shadow: none; }
-.at-transfer__move-count { position: absolute; top: -6px; right: -6px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: var(--at-color-text); color: var(--at-color-on-accent); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; animation: at-motion-enter var(--at-motion-fast) var(--at-ease-emphasized) both; }
+.at-transfer__move-count { position: absolute; top: -6px; right: -6px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: var(--at-color-primary); color: var(--at-color-on-accent); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; animation: at-motion-enter var(--at-motion-fast) var(--at-ease-emphasized) both; }
 @media (max-width: 560px) {
   .at-transfer { flex-direction: column; }
   .at-transfer__panel { width: 100%; }

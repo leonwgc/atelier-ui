@@ -7,133 +7,133 @@
         "cssVariable": "--at-color-primary",
         "type": "color",
         "value": "#00131c",
-        "darkValue": "#edf0f1"
+        "darkValue": "#1668dc"
       },
       "primaryHover": {
         "cssVariable": "--at-color-primary-hover",
         "type": "color",
         "value": "#49565d",
-        "darkValue": "#d1d5d6"
+        "darkValue": "#3c89e8"
       },
       "primarySoft": {
         "cssVariable": "--at-color-primary-soft",
         "type": "color",
         "value": "#f6f7f7",
-        "darkValue": "#24353c"
+        "darkValue": "#15325b"
       },
       "text": {
         "cssVariable": "--at-color-text",
         "type": "color",
         "value": "#00131c",
-        "darkValue": "#edf0f1"
+        "darkValue": "#d9d9d9"
       },
       "subtle": {
         "cssVariable": "--at-color-subtle",
         "type": "color",
         "value": "#647075",
-        "darkValue": "#b6bcbe"
+        "darkValue": "#a6a6a6"
       },
       "muted": {
         "cssVariable": "--at-color-muted",
         "type": "color",
         "value": "#929a9e",
-        "darkValue": "#929a9e"
+        "darkValue": "#808080"
       },
       "border": {
         "cssVariable": "--at-color-border",
         "type": "color",
         "value": "#b6bcbe",
-        "darkValue": "#49565d"
+        "darkValue": "#424242"
       },
       "borderStrong": {
         "cssVariable": "--at-color-border-strong",
         "type": "color",
         "value": "#929a9e",
-        "darkValue": "#647075"
+        "darkValue": "#595959"
       },
       "surface": {
         "cssVariable": "--at-color-surface",
         "type": "color",
         "value": "#ffffff",
-        "darkValue": "#15262e"
+        "darkValue": "#141414"
       },
       "surfaceMuted": {
         "cssVariable": "--at-color-surface-muted",
         "type": "color",
         "value": "#f6f7f7",
-        "darkValue": "#1d3039"
+        "darkValue": "#1f1f1f"
       },
       "danger": {
         "cssVariable": "--at-color-danger",
         "type": "color",
         "value": "#e23a3a",
-        "darkValue": "#f2a4a4"
+        "darkValue": "#dc4446"
       },
       "success": {
         "cssVariable": "--at-color-success",
         "type": "color",
         "value": "#2abd13",
-        "darkValue": "#9de192"
+        "darkValue": "#49aa19"
       },
       "warning": {
         "cssVariable": "--at-color-warning",
         "type": "color",
         "value": "#efa610",
-        "darkValue": "#f8d691"
+        "darkValue": "#d89614"
       },
       "info": {
         "cssVariable": "--at-color-info",
         "type": "color",
         "value": "#0d7ee0",
-        "darkValue": "#90c4f1"
+        "darkValue": "#3c89e8"
       },
       "onAccent": {
         "cssVariable": "--at-color-on-accent",
         "type": "color",
         "value": "#ffffff",
-        "darkValue": "#00131c"
+        "darkValue": "#ffffff"
       },
       "primary-press": {
         "cssVariable": "--at-color-primary-press",
         "type": "color",
         "value": "#24353c",
-        "darkValue": "#b6bcbe"
+        "darkValue": "#1554ad"
       },
       "info-hover": {
         "cssVariable": "--at-color-info-hover",
         "type": "color",
         "value": "#3d98e6",
-        "darkValue": "#b4d7f5"
+        "darkValue": "#65a9f3"
       },
       "divider": {
         "cssVariable": "--at-color-divider",
         "type": "color",
         "value": "#d1d5d6",
-        "darkValue": "#354851"
+        "darkValue": "#303030"
       },
       "disabled": {
         "cssVariable": "--at-color-disabled",
         "type": "color",
         "value": "#929a9e",
-        "darkValue": "#929a9e"
+        "darkValue": "#737373"
       },
       "disabled-bg": {
         "cssVariable": "--at-color-disabled-bg",
         "type": "color",
         "value": "#f6f7f7",
-        "darkValue": "#1d3039"
+        "darkValue": "#262626"
       },
       "disabled-border": {
         "cssVariable": "--at-color-disabled-border",
         "type": "color",
         "value": "#d1d5d6",
-        "darkValue": "#354851"
+        "darkValue": "#303030"
       },
       "hover": {
         "cssVariable": "--at-color-hover",
         "type": "color",
         "value": "#efffff",
-        "darkValue": "#243d45"
+        "darkValue": "#262626"
       },
       "inverse": {
         "cssVariable": "--at-color-inverse",
@@ -143,7 +143,8 @@
       "inverse-surface": {
         "cssVariable": "--at-color-inverse-surface",
         "type": "color",
-        "value": "#00131c"
+        "value": "#00131c",
+        "darkValue": "#1f1f1f"
       },
       "overlay": {
         "cssVariable": "--at-color-overlay",
@@ -155,13 +156,13 @@
         "cssVariable": "--at-color-positive-text",
         "type": "color",
         "value": "#1e860d",
-        "darkValue": "#9de192"
+        "darkValue": "#6abe39"
       },
       "notice-text": {
         "cssVariable": "--at-color-notice-text",
         "type": "color",
         "value": "#835b09",
-        "darkValue": "#f8d691"
+        "darkValue": "#e8b339"
       }
     },
     "radius": {
